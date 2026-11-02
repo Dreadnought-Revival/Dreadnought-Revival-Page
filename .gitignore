@@ -1,0 +1,20 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+
+# Node (for when a build tool or framework is added)
+node_modules/
+dist/
+build/
+.env
+.env.*
+
+# Logs
+*.log
+npm-debug.log*
