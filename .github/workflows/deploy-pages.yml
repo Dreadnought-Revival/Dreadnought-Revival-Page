@@ -24,6 +24,20 @@ jobs:
       - name: Keep the published site free of non-site files
         run: rm -rf workflow
 
+      - name: Fetch ship art
+        run: |
+          set -eu
+          mkdir -p assets/market-images
+          SHA=fa3dc2c8c608b7cff79011b013843b74473efd71
+          BASE="https://raw.githubusercontent.com/darkace1998/Dreadnought-Revival-project/$SHA/data/market-images"
+          for img in UI_DreadnoughtM_Morningstar UI_DreadnoughtL_Leviathan UI_DreadnoughtH_Trident \
+                     UI_AssaultM_Autumn UI_AssaultH_Huscarl UI_ScoutM_Phoenix \
+                     UI_SniperM_Artemis UI_SupportM_Nereid; do
+            curl --fail --silent --show-error --location -o "assets/market-images/$img.png" "$BASE/$img.png"
+            test -s "assets/market-images/$img.png"
+          done
+          echo "Ship art fetched"
+
       - name: Validate site
         run: |
           set -e
@@ -31,6 +45,7 @@ jobs:
           test -f styles.css
           test -f app.js
           test -f 404.html
+          test -s assets/market-images/UI_DreadnoughtM_Morningstar.png
           python3 -m json.tool data/patch-notes.json > /dev/null
           echo "Site files OK"
 
