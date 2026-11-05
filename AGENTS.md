@@ -55,6 +55,10 @@ scripts/        update_patch_notes.py (patch-notes generator, run by a workflow)
 - The patch-notes workflow commits back to `main` as `github-actions[bot]`; that push
   triggers the Pages deploy, so the site updates itself. Do not add `[skip ci]` to those
   commits.
+- Every workflow has an `alert-on-failure` job: a failed run opens a deduplicated
+  `[workflow failure] <workflow name>` tracking issue (repeated failures comment on the
+  open one). If you cause a failure, diagnose it, fix it, and close the issue once the
+  workflow passes again. CI alerts fire only for pushes to `main`, not for PR checks.
 - Commit style: short imperative subject, lowercase, like the existing history
   (`Add .gitignore and basic CI workflow`). Work on a `vibe/<slug>-fa133d` branch and
   open a draft PR; push to `main` only via PR merge.
