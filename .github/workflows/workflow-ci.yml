@@ -10,6 +10,8 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     defaults:
       run:
         working-directory: workflow
@@ -42,6 +44,22 @@ jobs:
           grep -E "FAILED|ERRORS|ERROR|Error:|error:|assert|raise |ModuleNotFound|ImportError" pytest-output.log \
             | head -n 8 | cut -c1-240 \
             | while IFS= read -r line; do echo "::error title=pytest::$line"; done
+
+      - name: Comment failure log on the PR
+        if: failure() && github.event_name == 'pull_request'
+        working-directory: workflow
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -eu
+          {
+            echo "Workflow CI failed: last 200 lines of pytest output."
+            echo '```'
+            tail -n 200 pytest-output.log
+            echo '```'
+          } > /tmp/ci-failure-comment.md
+          gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" -F body=@/tmp/ci-failure-comment.md
 
   alert-on-failure:
     if: failure() && github.event_name == 'push'

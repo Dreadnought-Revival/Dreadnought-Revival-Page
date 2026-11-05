@@ -18,11 +18,10 @@ from typing import Any
 import pydantic
 
 import mistralai.workflows as workflows
-from env.github import env as github_settings
 from mistralai.workflows import Depends, workflow
 from mistralai.workflows.plugins.mistralai import ChatCompletionResponse, get_mistral_client
 
-from worker.workflows import github_rest, notes_format
+from worker.workflows import notes_format
 
 OWNER = "Dreadnought-Revival"
 PAGE_REPO = "Dreadnought-Revival-Page"
@@ -32,6 +31,11 @@ MODEL = "mistral-medium-latest"
 
 
 def _github_token() -> str:
+    # Imported inside the activity (not at module import): the workflow module is
+    # re-imported inside Temporal's sandbox, where reading the environment at import
+    # time is restricted; activities run unsandboxed, so this stays safe.
+    from env.github import env as github_settings
+
     token = github_settings.github_token
     if not token:
         raise RuntimeError(
@@ -63,6 +67,8 @@ class WebhookEvent(pydantic.BaseModel):
 @workflows.activity(name="fetch-patch-notes")
 async def fetch_patch_notes() -> str:
     """Read the current data/patch-notes.json from the page repo."""
+    from worker.workflows import github_rest
+
     return await github_rest.get_file_text(
         OWNER, PAGE_REPO, NOTES_PATH, token=_github_token()
     )
@@ -102,6 +108,8 @@ async def publish_patch_notes(
     date: str,
 ) -> str:
     """Branch, commit the updated notes and open a PR against the page repo's main."""
+    from worker.workflows import github_rest
+
     token = _github_token()
     await github_rest.create_branch(OWNER, PAGE_REPO, branch, token=token)
     await github_rest.put_file(
