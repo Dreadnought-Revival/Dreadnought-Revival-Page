@@ -71,14 +71,15 @@ header.scrolled{box-shadow:0 0 40px rgba(255,107,0,.12),0 8px 30px rgba(0,0,0,.6
 .brand span{font-family:var(--font-head);font-weight:800;font-size:15px;letter-spacing:.18em}
 .brand span em{font-style:normal;color:var(--amber)}
 .nav-links{display:flex;align-items:center;gap:6px;list-style:none}
-.nav-links a{
+.nav-links a,.nav-links button.tab{
   font-family:var(--font-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;
   color:var(--muted);text-decoration:none;padding:8px 12px;border:1px solid transparent;
   clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
   transition:color .2s,border-color .2s,background .2s;
 }
-.nav-links a:hover{color:var(--text)}
-.nav-links a.active{color:var(--amber);border-color:var(--line-bright);background:rgba(255,107,0,.07)}
+.nav-links a:hover,.nav-links button.tab:hover{color:var(--text)}
+.nav-links a.active,.nav-links button.tab[aria-selected="true"]{color:var(--amber);border-color:var(--line-bright);background:rgba(255,107,0,.07)}
+.nav-links button.tab{background:transparent;cursor:pointer}
 .nav-cta{
   font-family:var(--font-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;
   color:#000;background:linear-gradient(135deg,var(--amber),var(--amber-deep));
@@ -91,6 +92,8 @@ header.scrolled{box-shadow:0 0 40px rgba(255,107,0,.12),0 8px 30px rgba(0,0,0,.6
 
 main{position:relative;z-index:3}
 section{max-width:1240px;margin:0 auto;padding:110px 24px 40px}
+#panels{max-width:1240px;margin:0 auto;scroll-margin-top:84px}
+#panels section{padding:64px 24px 40px}
 
 /* ---------- shared section furniture ---------- */
 .sec-tag{
@@ -260,7 +263,13 @@ h2 em{font-style:normal;color:var(--amber);text-shadow:0 0 24px rgba(255,107,0,.
 .feature .tag.cyan{color:var(--cyan);border-color:rgba(0,176,255,.4);background:rgba(0,176,255,.06)}
 
 /* ---------- gallery ---------- */
-.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px}
+.gallery-group{
+  margin:38px 0 18px;display:flex;align-items:center;gap:16px;
+  font-family:var(--font-mono);font-size:13px;letter-spacing:.26em;text-transform:uppercase;color:var(--cyan);
+}
+.gallery-group::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(0,176,255,.5),transparent)}
+.gallery-group .cnt{color:var(--muted);letter-spacing:.14em;text-transform:none}
 .ship-card{
   cursor:pointer;padding:0;overflow:hidden;position:relative;
   transition:border-color .25s,box-shadow .25s,transform .25s;
@@ -400,7 +409,7 @@ footer{
 
 /* ---------- reveal ---------- */
 .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
-.reveal.in{opacity:1;transform:none}
+.reveal.in,.reveal.visible{opacity:1;transform:none}
 
 /* ---------- responsive ---------- */
 @media (max-width:960px){
@@ -414,7 +423,7 @@ footer{
     background:rgba(10,11,14,.97);border-bottom:1px solid var(--line);padding:12px 20px 18px;display:none;
   }
   .nav-links.open{display:flex}
-  .nav-links a{padding:12px}
+  .nav-links a,.nav-links button.tab{padding:12px;text-align:left}
   .nav-cta{display:none}
   .hero-stats{flex-direction:column}
   .hero-stats div{border-right:none;border-bottom:1px solid var(--line)}

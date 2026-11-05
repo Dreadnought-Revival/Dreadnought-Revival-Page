@@ -22,12 +22,14 @@ workflow project (see below); it is stripped from the Pages artifact before uplo
 never ships to the site.
 
 ```
-index.html      one-page HUD landing: hero, mission briefing, key systems, fleet gallery,
-                patch notes, roadmap, community, footer (scrollspy nav — no tabs)
+index.html      one-page HUD landing: full-height hero, then tabbed panels behind an
+                ARIA tablist in the header nav (Briefing / Systems / Fleet / Patch
+                Notes / Roadmap / Community), 31-ship gallery grouped by class, footer
 styles.css      dark space-combat HUD theme (void bg, amber/cyan accents, clipped
-                panels/buttons, grid + scanline overlays, reveal-on-scroll)
-app.js          burger nav, scrollspy, reveal-on-scroll, server-status badge,
-                patch-notes rendering (fetches data/), gallery lightbox, copy button
+                panels/buttons, tab bar, grid + scanline overlays, reveal-on-scroll)
+app.js          ARIA tabs + hash routing (arrow-key support), burger nav, reveal,
+                server-status badge, patch-notes rendering (fetches data/),
+                gallery lightbox, copy button
 404.html        custom not-found page (same theme)
 assets/         logo.svg, favicon.svg, og-image.png (social preview); ship art is
                 fetched at deploy time (see below) — assets/market-images/ is NOT in the repo
@@ -36,11 +38,17 @@ workflow/       Mistral Studio workflow project: revival-patch-notes (see below)
 .github/workflows/  ci.yml, deploy-pages.yml, workflow-ci.yml
 ```
 
+The tabs are real ARIA tabs: the header nav is a `tablist`, each panel is a
+`role="tabpanel"` section under the hero, `hidden` except the active one. Hash
+fragments (`#gallery`, `#community`, …) deep-link the tabs, including the hero CTAs
+and footer links. With JavaScript disabled, a `<noscript>` style block shows every
+panel stacked, so all content stays reachable.
+
 ### Ship art (deploy-time fetch)
 
 The hero and the fleet gallery use the game's own ship images. They are binary game
 data (cannot round-trip through text-only tooling and must not be committed by hand),
-so `deploy-pages.yml` fetches a pinned list from the old
+so `deploy-pages.yml` fetches a pinned list of 31 images from the old
 `darkace1998/Dreadnought-Revival-project` repo (pinned commit SHA) into
 `assets/market-images/` during every Pages build, after stripping `workflow/` and
 before validation. The fetch uses `--fail` and `test -s`, so a broken upstream fails
