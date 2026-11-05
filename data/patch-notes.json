@@ -1,905 +1,416 @@
 {
-  "generated_at": "2026-11-05T16:24:12.470315Z",
-  "entries": [
-    {
-      "repo": "server",
-      "sha": "ea0004606c8eddd267c36f070858039b419c41ac",
-      "short_sha": "ea00046",
-      "date": "2026-11-05T15:56:40Z",
-      "message": "docs: repository structure after the move; refresh CLAUDE.md, AGENTS.md, copilot instructions",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/ea0004606c8eddd267c36f070858039b419c41ac",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "49d847c08016cc4b00c92f1cb0881900f75d2191",
-      "short_sha": "49d847c",
-      "date": "2026-11-05T15:53:42Z",
-      "message": "dn-dedicated: comment names this repository, not the old one",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/49d847c08016cc4b00c92f1cb0881900f75d2191",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "853ac97e4a101160dced65866b10e646c997f696",
-      "short_sha": "853ac97",
-      "date": "2026-11-05T15:50:37Z",
-      "message": "README: list the project's three repositories, with the website repo",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/853ac97e4a101160dced65866b10e646c997f696",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "launcher",
-      "sha": "43fa42e152651155b16d957ff74d9bf56ba25af2",
-      "short_sha": "43fa42e",
-      "date": "2026-11-05T15:50:35Z",
-      "message": "README: link the server and website repositories",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/commit/43fa42e152651155b16d957ff74d9bf56ba25af2",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "27900c18e3117d435f3c22cba6f74f65154a7811",
-      "short_sha": "27900c1",
-      "date": "2026-11-05T15:39:31Z",
-      "message": "repo: move to Dreadnought-Revival/Dreadnought-Revival-server; launcher split out",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/27900c18e3117d435f3c22cba6f74f65154a7811",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "launcher",
-      "sha": "261802281b23b2fe9f3a06abfac3e15617dac55b",
-      "short_sha": "2618022",
-      "date": "2026-11-05T15:37:14Z",
-      "message": "launcher: standalone repository Dreadnought-Revival/Dreadnought-Revival-Launcher",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/commit/261802281b23b2fe9f3a06abfac3e15617dac55b",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "deb18f43a75acff6ed3a417e7f05dca1596de394",
-      "short_sha": "deb18f4",
-      "date": "2026-11-05T15:25:31Z",
-      "message": "market: gzip the catalog the way the client unpacks it",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/deb18f43a75acff6ed3a417e7f05dca1596de394",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "82fbbf372c6311bb9b4e350b635283fc50fdb39e",
-      "short_sha": "82fbbf3",
-      "date": "2026-11-05T15:25:31Z",
-      "message": "escalation: a lost ship drops two levels instead of back to fighters",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/82fbbf372c6311bb9b4e350b635283fc50fdb39e",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "77202b4c839b399c3e86f7d522321377a2eaddb1",
-      "short_sha": "77202b4",
-      "date": "2026-11-04T19:56:21Z",
-      "message": "escalation: fighters-first TDM with ships by score; custom game lobby rooms",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/77202b4c839b399c3e86f7d522321377a2eaddb1",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "8970caff8b4ba46d46ce1081038919946af704fd",
-      "short_sha": "8970caf",
-      "date": "2026-11-04T19:56:04Z",
-      "message": "market: slim the per-class cosmetic offers under the client's 180 s download limit",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/8970caff8b4ba46d46ce1081038919946af704fd",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "7ebb1a7c815870a312e802cb86d705122ee4911c",
-      "short_sha": "7ebb1a7",
-      "date": "2026-11-04T13:11:56Z",
-      "message": "market: coatings, decals and emblems buyable in the customizer; catalog a third the size",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/7ebb1a7c815870a312e802cb86d705122ee4911c",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "e5a8405f01a9e092411531a506f784b229b4a96d",
-      "short_sha": "e5a8405",
-      "date": "2026-11-04T12:09:24Z",
-      "message": "battle-server-mod: multicast the conquest capture so clients draw the territory",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/e5a8405f01a9e092411531a506f784b229b4a96d",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "a6d4abd894952eb6295eaccac4e4a47ee5645972",
-      "short_sha": "a6d4abd",
-      "date": "2026-11-04T12:09:24Z",
-      "message": "market: Halloween sale through the client's own campaign system",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/a6d4abd894952eb6295eaccac4e4a47ee5645972",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "9cceb89e5fac5ec38859a5c3b59f7794c0a1dd05",
-      "short_sha": "9cceb89",
-      "date": "2026-11-03T21:48:39Z",
-      "message": "battle-server-mod: conquest points before the match starts; network log per player",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/9cceb89e5fac5ec38859a5c3b59f7794c0a1dd05",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "f5487529b8bc1cf4c110e673dbb4bf999355da19",
-      "short_sha": "f548752",
-      "date": "2026-11-03T21:48:39Z",
-      "message": "player data: no CustomRoom object -- it hid the first match's rewards page",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/f5487529b8bc1cf4c110e673dbb4bf999355da19",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "d2912f5853fef8fcc168d90bbd5b4f6f4532af7b",
-      "short_sha": "d2912f5",
-      "date": "2026-11-03T21:48:39Z",
-      "message": "contracts: \"cpl\" is a non-empty-string bool; refresh the list after login",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/d2912f5853fef8fcc168d90bbd5b4f6f4532af7b",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "599ebe4effe52b1a849c23d2d2b46576373dc915",
-      "short_sha": "599ebe4",
-      "date": "2026-11-02T21:44:09Z",
-      "message": "captain: fill empty appearance slots; Standard Issue outfit is free",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/599ebe4effe52b1a849c23d2d2b46576373dc915",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "4dae6aa6ed6c34a2c901944692335fe26b6ba1dc",
-      "short_sha": "4dae6aa",
-      "date": "2026-11-02T17:06:38Z",
-      "message": "battle-server-mod: te round banner after the result replicates; own pick when every side start is blocked",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/4dae6aa6ed6c34a2c901944692335fe26b6ba1dc",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "f65a63f162a39fd70fb903715d46a3b6e9705c24",
-      "short_sha": "f65a63f",
-      "date": "2026-11-01T20:50:53Z",
-      "message": "battle-server-mod: onslaught ability guard + gun log; remove 38 switch files",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/f65a63f162a39fd70fb903715d46a3b6e9705c24",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "51abb6bc4a476c9ad95cead30d3fe8432d320860",
-      "short_sha": "51abb6b",
-      "date": "2026-11-01T19:34:07Z",
-      "message": "contracts: pay daily contracts when the player claims them",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/51abb6bc4a476c9ad95cead30d3fe8432d320860",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "54dde94df21cb230a15bd9b735bf871405596314",
-      "short_sha": "54dde94",
-      "date": "2026-10-31T21:07:00Z",
-      "message": "shipxp: key a hero only when no base hull shares its pawn",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/54dde94df21cb230a15bd9b735bf871405596314",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "36a40e87c4c83492583030510dd6a3fd2aa26d93",
-      "short_sha": "36a40e8",
-      "date": "2026-10-29T20:41:40Z",
-      "message": "shipxp: list every ship at login so mid-session ships get their XP",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/36a40e87c4c83492583030510dd6a3fd2aa26d93",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "9b6a2175f4f3d6047b6908afc2c1dbb52452fecc",
-      "short_sha": "9b6a217",
-      "date": "2026-10-29T20:24:03Z",
-      "message": "shipxp: send a hero ship's XP under its own loadout id",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/9b6a2175f4f3d6047b6908afc2c1dbb52452fecc",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "9c3bf149fff16124de8a655aa596fdc92fba06db",
-      "short_sha": "9c3bf14",
-      "date": "2026-10-29T19:38:55Z",
-      "message": "conquest: capture and ship-speed diagnostics",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/9c3bf149fff16124de8a655aa596fdc92fba06db",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "09204bca1a22a2e26974ccdb3c600461251e64e4",
-      "short_sha": "09204bc",
-      "date": "2026-10-29T15:16:09Z",
-      "message": "havoc: fighters while eliminated, no wave modifiers on wave 1",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/09204bca1a22a2e26974ccdb3c600461251e64e4",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "acbca814e91181eab2c9992bacfd82840566b2b2",
-      "short_sha": "acbca81",
-      "date": "2026-10-29T14:45:06Z",
-      "message": "ceres: a tech cache's buff ends when its collector is destroyed",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/acbca814e91181eab2c9992bacfd82840566b2b2",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "dcac0701a0342b7e0d3a8260a00d2c7b3d8fc8f4",
-      "short_sha": "dcac070",
-      "date": "2026-10-29T14:20:06Z",
-      "message": "skills: dreadnought-patch-notes (player-facing patch notes format)",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/dcac0701a0342b7e0d3a8260a00d2c7b3d8fc8f4",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "6742c5fa8d093aae1ad3d0d7bf15c35e71797072",
-      "short_sha": "6742c5f",
-      "date": "2026-10-29T14:10:59Z",
-      "message": "onslaught: command ship abilities (max tier before possess) + Elysium map",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/6742c5fa8d093aae1ad3d0d7bf15c35e71797072",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "a3df69d90c33c1f7c1e289f297b0f372cedf9f7c",
-      "short_sha": "a3df69d",
-      "date": "2026-10-29T10:55:47Z",
-      "message": "matchmaker: TDM adds Elysium (Paradise)",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/a3df69d90c33c1f7c1e289f297b0f372cedf9f7c",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "a77cc1070da2de557fa32253948cd02fcdecac17",
-      "short_sha": "a77cc10",
-      "date": "2026-10-29T10:05:36Z",
-      "message": "battle-server-mod: Team Elimination sides, fighter starts, winners' ships, ready-up, team HUD",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/a77cc1070da2de557fa32253948cd02fcdecac17",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "0f2dce752c225b4bb4ea5118ea3b88ad171e1d2e",
-      "short_sha": "0f2dce7",
-      "date": "2026-10-29T09:14:35Z",
-      "message": "bpdump: print enum bytes by name and dump DataTable rows",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/0f2dce752c225b4bb4ea5118ea3b88ad171e1d2e",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "cb0dd78f5ae731a4715d31a049465d36e3300ed3",
-      "short_sha": "cb0dd78",
-      "date": "2026-10-29T09:14:35Z",
-      "message": "matchmaker: TDM adds Ryugu Haven (Space02) and Amirani",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/cb0dd78f5ae731a4715d31a049465d36e3300ed3",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "5abdeb14de805881d49ac16ec7644c88f3a75495",
-      "short_sha": "5abdeb1",
-      "date": "2026-10-29T09:14:35Z",
-      "message": "battle-server-mod: Conquest captured points claim territory; spawns at Conquest starts",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/5abdeb14de805881d49ac16ec7644c88f3a75495",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "ca883ea414742d4d90e3a3c6663e79155373ab7f",
-      "short_sha": "ca883ea",
-      "date": "2026-10-29T08:10:41Z",
-      "message": "scoring: Ceres Awakens tech-cache pickups score and pay credits",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/ca883ea414742d4d90e3a3c6663e79155373ab7f",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "9ef857b5c1136bb2b335c4d047610b0e8698df48",
-      "short_sha": "9ef857b",
-      "date": "2026-10-29T06:18:04Z",
-      "message": "battle-server-mod: Conquest per the original rules; TE first-kill crash fix",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/9ef857b5c1136bb2b335c4d047610b0e8698df48",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "f8e7354c277397df122d12b4e6c919636188ea4d",
-      "short_sha": "f8e7354",
-      "date": "2026-10-25T21:49:53Z",
-      "message": "battle-server-mod: Team Elimination rounds -- best of 3, fighters after a lost ship",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/f8e7354c277397df122d12b4e6c919636188ea4d",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "e4d8e5bab915ac19e73859b1a964e79face3e4ee",
-      "short_sha": "e4d8e5b",
-      "date": "2026-10-25T21:11:43Z",
-      "message": "techtree: file fitted items no ship researches under their line's anchor",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/e4d8e5bab915ac19e73859b1a964e79face3e4ee",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "025efc2bb96ac43709f47e688bc9de2663bdcf50",
-      "short_sha": "025efc2",
-      "date": "2026-10-25T20:29:23Z",
-      "message": "techtree: heroes' makers from their hull line; ship pages show next ships and briefing",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/025efc2bb96ac43709f47e688bc9de2663bdcf50",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "8efed909d51383632f1e7ccc76d4a26e1a2163d3",
-      "short_sha": "8efed90",
-      "date": "2026-10-25T18:58:42Z",
-      "message": "mmogbrain: market picture URLs use PUBLIC_HOST instead of the request's IP",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/8efed909d51383632f1e7ccc76d4a26e1a2163d3",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "b4741848a325b06e2bb7b9d7b08b4baf7194b06e",
-      "short_sha": "b474184",
-      "date": "2026-10-25T18:58:42Z",
-      "message": "dn-launcher: original launcher look, DNS lookup per Play, display scaling",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/b4741848a325b06e2bb7b9d7b08b4baf7194b06e",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "launcher",
-      "sha": "8d9bfa44f523ef524a62cd336a140d74cdf733d1",
-      "short_sha": "8d9bfa4",
-      "date": "2026-10-25T18:58:42Z",
-      "message": "dn-launcher: original launcher look, DNS lookup per Play, display scaling",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/commit/8d9bfa44f523ef524a62cd336a140d74cdf733d1",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "a36f046fc7ad722da149ba9e5cfae0d9e3bb5272",
-      "short_sha": "a36f046",
-      "date": "2026-10-20T18:11:45Z",
-      "message": "havoc: HUD feeds, ready flag, reward list for the end screen",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/a36f046fc7ad722da149ba9e5cfae0d9e3bb5272",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "215d42c74bce3bab2c491f1a03d12ed415e4317b",
-      "short_sha": "215d42c",
-      "date": "2026-10-19T20:54:06Z",
-      "message": "havoc: team HUD, Junkyard Prince unlockable, live ships only for modifiers",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/215d42c74bce3bab2c491f1a03d12ed415e4317b",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "e5f0d1124b13519accb7961a99827a23f3ac4e08",
-      "short_sha": "e5f0d11",
-      "date": "2026-10-19T20:31:36Z",
-      "message": "havoc: wave mode from PR #80, rules from the game's own BPs and data",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/e5f0d1124b13519accb7961a99827a23f3ac4e08",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "edb5f44cb003465fe8dbb2376bde576e7ad40072",
-      "short_sha": "edb5f44",
-      "date": "2026-10-16T19:47:13Z",
-      "message": "leaderboard handler, in-match ribbon popup, clang build docs",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/edb5f44cb003465fe8dbb2376bde576e7ad40072",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "d5b5cff22c145dbfffb4321949d5b7afc59a548f",
-      "short_sha": "d5b5cff",
-      "date": "2026-10-16T13:29:35Z",
-      "message": "pr80: take the verified fixes from PR #80 (starveil-bunny)",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/d5b5cff22c145dbfffb4321949d5b7afc59a548f",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "7f8d675fc1c8bed3f85ad326963d8f2319cc2d62",
-      "short_sha": "7f8d675",
-      "date": "2026-10-15T21:14:38Z",
-      "message": "catalog: no gzip (the client cannot read it), full entities list again",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/7f8d675fc1c8bed3f85ad326963d8f2319cc2d62",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "254ec193c66b107b79443156fd0e3fc809d51893",
-      "short_sha": "254ec19",
-      "date": "2026-10-15T20:23:49Z",
-      "message": "Statistics fields, live ribbons, client scoring table, catalog download, hangar name",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/254ec193c66b107b79443156fd0e3fc809d51893",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "0b3fb88747b963655f201f5a7c8ccd0d2284810a",
-      "short_sha": "0b3fb88",
-      "date": "2026-10-14T20:52:29Z",
-      "message": "Catalog gzip, research price refresh, loadout save reply, admin password reset, hero fit ownership",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/0b3fb88747b963655f201f5a7c8ccd0d2284810a",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "bb7d3ac566b884d4cfb5b4a707f54282a991e207",
-      "short_sha": "bb7d3ac",
-      "date": "2026-10-09T21:01:43Z",
-      "message": "Statistics crash, in-session inventory/Elite refresh, original ribbons",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/bb7d3ac566b884d4cfb5b4a707f54282a991e207",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "8a7f8541addaafcb76a6ea9340ff0cc82b4c5faa",
-      "short_sha": "8a7f854",
-      "date": "2026-10-09T19:36:43Z",
-      "message": "Career progression rebuilt; contract activation time; admin contract reset",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/8a7f8541addaafcb76a6ea9340ff0cc82b4c5faa",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "9805e301181ddf31dfbd1014680500097f965613",
-      "short_sha": "9805e30",
-      "date": "2026-10-09T16:22:42Z",
-      "message": "Daily contracts, PvE season 1 events, matchmaking and host fixes",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/9805e301181ddf31dfbd1014680500097f965613",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "bfc57f7ba94959fe684577e322d5cfb63c51780f",
-      "short_sha": "bfc57f7",
-      "date": "2026-10-09T11:58:37Z",
-      "message": "cosmetics: heroes and owned ships lend their hull parts to their line; uncustomised ships wear their own look",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/bfc57f7ba94959fe684577e322d5cfb63c51780f",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "d56df8a40b714b3f0e2f7bf61824aed82395f30d",
-      "short_sha": "d56df8a",
-      "date": "2026-10-09T11:58:37Z",
-      "message": "admin dashboard: metrics, kick/ban, match history, audit log",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/d56df8a40b714b3f0e2f7bf61824aed82395f30d",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "8860cb16154bc6c8facd4b582bb433d29877f8fd",
-      "short_sha": "8860cb1",
-      "date": "2026-10-09T11:58:37Z",
-      "message": "mmogbrain: Onslaught on the regular map rotation; invest telemetry reported after the charge",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/8860cb16154bc6c8facd4b582bb433d29877f8fd",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "74f43126e7823a8de1d2b80e353027d53692c82d",
-      "short_sha": "74f4312",
-      "date": "2026-10-09T11:58:37Z",
-      "message": "battle-server-mod: start bots halted before the match, Veteran/Legendary command ship guns, Conquest share of claimed",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/74f43126e7823a8de1d2b80e353027d53692c82d",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "6e0492bdd08788f83ea7186e0c8c4d3089de944d",
-      "short_sha": "6e0492b",
-      "date": "2026-10-08T09:56:05Z",
-      "message": "battle-server-mod: Onslaught AI ships move; Conquest score and capture points",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/6e0492bdd08788f83ea7186e0c8c4d3089de944d",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "506ac65851a65c3a418e29cde651f36cd4f870f1",
-      "short_sha": "506ac65",
-      "date": "2026-10-08T09:56:05Z",
-      "message": "server chat: PodTDM is Ceres Awakens",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/506ac65851a65c3a418e29cde651f36cd4f870f1",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "c1fd0e3e82c98c430c9ac94622bb30abb709f1c6",
-      "short_sha": "c1fd0e3",
-      "date": "2026-10-07T23:24:57Z",
-      "message": "battle-server-mod: Onslaught points, AI ships, original match XP",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/c1fd0e3e82c98c430c9ac94622bb30abb709f1c6",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "ec023a5e57be3be979dd0ca8d085fd1778656070",
-      "short_sha": "ec023a5",
-      "date": "2026-10-07T23:24:57Z",
-      "message": "matchmaker: Conquest only on Territory maps; mode names in chat",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/ec023a5e57be3be979dd0ca8d085fd1778656070",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "e2174d8c6a1d54cf4878c63107f30f5c12542142",
-      "short_sha": "e2174d8",
-      "date": "2026-10-07T23:24:57Z",
-      "message": "scoring: the original per-mode scoring table and event XP",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/e2174d8c6a1d54cf4878c63107f30f5c12542142",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "0a3b31f286d302976a2e0732a545adeda38ad098",
-      "short_sha": "0a3b31f",
-      "date": "2026-10-07T23:24:57Z",
-      "message": "protocol: string scanners skip 1-/2-byte int tags",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/0a3b31f286d302976a2e0732a545adeda38ad098",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "125e03949c430262ae974ddb1b134f818ae54997",
-      "short_sha": "125e039",
-      "date": "2026-10-07T23:24:57Z",
-      "message": "cosmetics: other ships' blueprint hulls are not granted or sold",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/125e03949c430262ae974ddb1b134f818ae54997",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "5aea333076d1df06360f1608c7a777ca45682dca",
-      "short_sha": "5aea333",
-      "date": "2026-10-07T05:43:14Z",
-      "message": "loadouts: LOADOUT B, a second loadout per ship",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/5aea333076d1df06360f1608c7a777ca45682dca",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "94786122ba7965b4e399a06170f8eb852518fd8b",
-      "short_sha": "9478612",
-      "date": "2026-10-06T22:11:22Z",
-      "message": "social: chat rooms, direct messages, solo squads, profanity filter",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/94786122ba7965b4e399a06170f8eb852518fd8b",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "803de1daadc1f3f7d650ba79c27773c027d22301",
-      "short_sha": "803de1d",
-      "date": "2026-10-06T20:40:33Z",
-      "message": "cosmetics: ownership in the forms the client checks, free items, templates",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/803de1daadc1f3f7d650ba79c27773c027d22301",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "1e07c50e85c7de846982478088319fc0e9ddbc8d",
-      "short_sha": "1e07c50",
-      "date": "2026-10-06T20:40:33Z",
-      "message": "fleets: FlagShipLoadoutIndex is the ship's own loadout slot",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/1e07c50e85c7de846982478088319fc0e9ddbc8d",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "dd5944c1094a28c15a193d9a70113bcbbe479f9a",
-      "short_sha": "dd5944c",
-      "date": "2026-10-03T21:55:36Z",
-      "message": "dashboard: match results say team, not T",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/dd5944c1094a28c15a193d9a70113bcbbe479f9a",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "71f556c10d705aea85434c998da153342e78fc55",
-      "short_sha": "71f556c",
-      "date": "2026-10-03T21:55:36Z",
-      "message": "server chat: announce only queues that are still open",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/71f556c10d705aea85434c998da153342e78fc55",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "d4c52ce0cd775a9fcc4101101b4e27d33f1e9408",
-      "short_sha": "d4c52ce",
-      "date": "2026-10-03T21:55:36Z",
-      "message": "fleets: flagships are stored and applied; bought heroes reach the client",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/d4c52ce0cd775a9fcc4101101b4e27d33f1e9408",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "e7a70bcab593c183b53913bed5b41ac89d1da057",
-      "short_sha": "e7a70bc",
-      "date": "2026-10-03T21:55:36Z",
-      "message": "telemetry: the invest event precedes the research it describes",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/e7a70bcab593c183b53913bed5b41ac89d1da057",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "fb7353a7694c8e2e536d6b287acd0902b76ee785",
-      "short_sha": "fb7353a",
-      "date": "2026-10-03T19:17:04Z",
-      "message": "mmogbrain: client telemetry, server chat announcements, fleet in dashboard",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/fb7353a7694c8e2e536d6b287acd0902b76ee785",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "33bf4798ae87a70bcdae69e81c486aa3030997c9",
-      "short_sha": "33bf479",
-      "date": "2026-10-03T19:17:04Z",
-      "message": "matchmaker: optional backfill of running matches",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/33bf4798ae87a70bcdae69e81c486aa3030997c9",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "c10425e268b543e5d9ef28d70d2b347c7d0c071e",
-      "short_sha": "c10425e",
-      "date": "2026-10-03T19:16:49Z",
-      "message": "loadouts: owning a ship owns its blueprint look",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/c10425e268b543e5d9ef28d70d2b347c7d0c071e",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "6c1604693ef605e495f8f456470eab7ff0370314",
-      "short_sha": "6c16046",
-      "date": "2026-10-03T19:16:49Z",
-      "message": "dn-dedicated: InProgress is not readiness",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/6c1604693ef605e495f8f456470eab7ff0370314",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "569b42e7e685dc861f2af9740f74a188f44c684a",
-      "short_sha": "569b42e",
-      "date": "2026-10-03T19:16:49Z",
-      "message": "protocol: read 1- and 2-byte integers; squads queue with their fleet",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/569b42e7e685dc861f2af9740f74a188f44c684a",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "89fad5205aed2bbf60a856ae568c6784a3f00129",
-      "short_sha": "89fad52",
-      "date": "2026-10-03T19:16:49Z",
-      "message": "techtree: next-ship gate counts the modules the client counts",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/89fad5205aed2bbf60a856ae568c6784a3f00129",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "eb727de60ee048713383590ed4bc80e841793403",
-      "short_sha": "eb727de",
-      "date": "2026-10-03T19:16:49Z",
-      "message": "firmament: remember SHA-384 fallback clients across restarts",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/eb727de60ee048713383590ed4bc80e841793403",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "101310f8216d610fd01932dd4bcba7b05ecddaea",
-      "short_sha": "101310f",
-      "date": "2026-10-02T14:15:51Z",
-      "message": "mmog: hero ships report their own tier",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/101310f8216d610fd01932dd4bcba7b05ecddaea",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "5835957d5dc9e2876be3cf959ffbcd32cede8315",
-      "short_sha": "5835957",
-      "date": "2026-10-02T14:15:51Z",
-      "message": "dn-dedicated: a host is ready once its game mode has started",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/5835957d5dc9e2876be3cf959ffbcd32cede8315",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "09f3798ffa5e6bfa24e5923620e46c4b2592addc",
-      "short_sha": "09f3798",
-      "date": "2026-10-02T14:15:51Z",
-      "message": "firmament: SHA-384 fallback for clients failing TLS with bad record MAC",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/09f3798ffa5e6bfa24e5923620e46c4b2592addc",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "3de9bb5660bfd41d75dc4289df34f2356a83e74a",
-      "short_sha": "3de9bb5",
-      "date": "2026-10-01T14:40:49Z",
-      "message": "matchmaking: stop the battle server of a match a queue leave empties",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/3de9bb5660bfd41d75dc4289df34f2356a83e74a",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "3f795df01a4ebbef350a5ed7ec6e96ca503bc843",
-      "short_sha": "3f795df",
-      "date": "2026-10-01T14:40:49Z",
-      "message": "techtree: briefings come with their ship; next-ship gates by tier",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/3f795df01a4ebbef350a5ed7ec6e96ca503bc843",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "20d001020b58a9fe6f63c609cf43f8362c0348df",
-      "short_sha": "20d0010",
-      "date": "2026-10-01T13:58:52Z",
-      "message": "techtree: officer briefings in every tier III-V ship's tree",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/20d001020b58a9fe6f63c609cf43f8362c0348df",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "638ab2b144a88acaf796fd53f06e8dbd4fe5ea7b",
-      "short_sha": "638ab2b",
-      "date": "2026-10-01T13:58:52Z",
-      "message": "docs: credits",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/638ab2b144a88acaf796fd53f06e8dbd4fe5ea7b",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "23584ff58fc466fa65be89e4a74006c8f2b0112e",
-      "short_sha": "23584ff",
-      "date": "2026-10-01T12:22:57Z",
-      "message": "mmog: split large responses across frames instead of truncating them",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/23584ff58fc466fa65be89e4a74006c8f2b0112e",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "fb20ba5f3f9b2f5332f9860d768ef48a9f3557ad",
-      "short_sha": "fb20ba5",
-      "date": "2026-10-01T11:43:08Z",
-      "message": "battle: end-of-match rewards for the fleet of the match's type",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/fb20ba5f3f9b2f5332f9860d768ef48a9f3557ad",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "4d9ce109731180e3698ce6559416ee6372b50a2d",
-      "short_sha": "4d9ce10",
-      "date": "2026-10-01T11:43:08Z",
-      "message": "market, vanity: real bundles and hero offers, ship cosmetics, hero looks, full owned list",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/4d9ce109731180e3698ce6559416ee6372b50a2d",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "1bb503faac789c1c2577a2285cd5e5d1c953bb79",
-      "short_sha": "1bb503f",
-      "date": "2026-09-30T19:45:12Z",
-      "message": "mmogbrain: free XP, ship XP and ships in-session; the XP converter",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/1bb503faac789c1c2577a2285cd5e5d1c953bb79",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "955fd0b58ddedd2b531d3a819bc99aac097164c7",
-      "short_sha": "955fd0b",
-      "date": "2026-09-30T19:45:12Z",
-      "message": "admin dashboard: manage players (credits, GP, free XP, hero ships)",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/955fd0b58ddedd2b531d3a819bc99aac097164c7",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "22b4ac1642182ee6d8940cc4e605bb4b89fa46f2",
-      "short_sha": "22b4ac1",
-      "date": "2026-09-30T19:45:12Z",
-      "message": "dn-dedicated: an instance ends when its process does, not its pipe",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/22b4ac1642182ee6d8940cc4e605bb4b89fa46f2",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "4a7f32f78d079e2ab52bd331a93845829bc1a587",
-      "short_sha": "4a7f32f",
-      "date": "2026-09-30T19:45:12Z",
-      "message": "battle-server-mod: push only the PRI; the XP manager is not an actor",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/4a7f32f78d079e2ab52bd331a93845829bc1a587",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "d5c26357039eb1d41f5fc62ca4ac3f41fe9f143e",
-      "short_sha": "d5c2635",
-      "date": "2026-09-30T13:40:28Z",
-      "message": "mmogbrain: push the currency balance when the player is back in the hangar",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/d5c26357039eb1d41f5fc62ca4ac3f41fe9f143e",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "872bf99a8863b013997765cba2db6e179815c66a",
-      "short_sha": "872bf99",
-      "date": "2026-09-30T13:28:19Z",
-      "message": "rewards: every ship of the fleet earns ship XP; performance only for those played",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/872bf99a8863b013997765cba2db6e179815c66a",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "383f33673332e9fbb8b6de7407fcf10bb5e83cd8",
-      "short_sha": "383f336",
-      "date": "2026-09-30T11:50:27Z",
-      "message": "techtree, fleets: the original unlock rules, and the bugs that hid them",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/383f33673332e9fbb8b6de7407fcf10bb5e83cd8",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "989315cf808b4812b9ea8df7867473c6319bbe20",
-      "short_sha": "989315c",
-      "date": "2026-09-30T11:50:11Z",
-      "message": "battle-server-mod: force-replicate the EOM reward actors before the transition",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/989315cf808b4812b9ea8df7867473c6319bbe20",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "3b21e1facfd5834ef2b12a6802370b468e6f1704",
-      "short_sha": "3b21e1f",
-      "date": "2026-09-29T20:52:55Z",
-      "message": "mmogbrain: admin dashboard",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/3b21e1facfd5834ef2b12a6802370b468e6f1704",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "f75b65028a2196d0c98960015123e5b6074295ee",
-      "short_sha": "f75b650",
-      "date": "2026-09-29T20:52:55Z",
-      "message": "rewards: free XP is a share of match XP; refresh the hangar after a match",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/f75b65028a2196d0c98960015123e5b6074295ee",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "1c6b0516a7ca248a62dd78cedbfc6e6f2be32286",
-      "short_sha": "1c6b051",
-      "date": "2026-09-29T20:52:55Z",
-      "message": "battle-server-mod: fix the end-of-match overflow; personal stats page",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/1c6b0516a7ca248a62dd78cedbfc6e6f2be32286",
-      "author": "darkace1998"
-    },
-    {
-      "repo": "server",
-      "sha": "64c20c63bd9ba55e89d6f1677e7a7e75379fac46",
-      "short_sha": "64c20c6",
-      "date": "2026-09-29T19:14:32Z",
-      "message": "battle-server-mod: Team Elimination fixes, crash handler, end-of-match stack probe",
-      "url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/commit/64c20c63bd9ba55e89d6f1677e7a7e75379fac46",
-      "author": "darkace1998"
+  "generated_at": "2026-11-05T17:45:00Z",
+  "notes": [
+    {
+      "date": "2026-11-05",
+      "sections": [
+        {
+          "title": "Market",
+          "bullets": [
+            "The store loads faster: the catalog is packed the way the game itself unpacks it."
+          ]
+        },
+        {
+          "title": "Team Deathmatch",
+          "bullets": [
+            "Losing your ship drops you two levels down the ladder instead of all the way back to fighters."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-11-04",
+      "sections": [
+        {
+          "title": "Team Deathmatch",
+          "bullets": [
+            "Matches now start everyone in fighters, and bigger ships unlock as you score. Before, everyone spawned straight into their chosen ship."
+          ]
+        },
+        {
+          "title": "Conquest",
+          "bullets": [
+            "Claimed territory now draws on every player's screen."
+          ]
+        },
+        {
+          "title": "Market",
+          "bullets": [
+            "Coatings, decals and emblems are buyable in the ship customizer.",
+            "The **Halloween sale** is live, run through the game's own campaign system.",
+            "Per-class cosmetic offers are slimmer so the store stays inside the game's own download limit. Before, the store could stall for minutes."
+          ]
+        },
+        {
+          "title": "General",
+          "bullets": [
+            "Custom games have lobby rooms again."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-11-03",
+      "sections": [
+        {
+          "title": "Conquest",
+          "bullets": [
+            "Capture points are in place before the match starts."
+          ]
+        },
+        {
+          "title": "General",
+          "bullets": [
+            "The rewards page shows again after your first match. Before, it stayed hidden."
+          ]
+        },
+        {
+          "title": "Hangar",
+          "bullets": [
+            "Contracts load correctly and refresh after you log in."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-11-02",
+      "sections": [
+        {
+          "title": "Hangar",
+          "bullets": [
+            "Captains: empty appearance slots are filled, and the **Standard Issue** outfit is free."
+          ]
+        },
+        {
+          "title": "Team Elimination",
+          "bullets": [
+            "The round banner appears once the result is actually shown, and you get your own pick when every side start is blocked."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-11-01",
+      "sections": [
+        {
+          "title": "Onslaught",
+          "bullets": [
+            "Command Ship abilities fire reliably. Before, an ability could fail to register."
+          ]
+        },
+        {
+          "title": "Hangar",
+          "bullets": [
+            "Daily contracts pay out when you claim them."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-31",
+      "sections": [
+        {
+          "title": "Tech tree",
+          "bullets": [
+            "Hero ships keep their XP when their hull is shared with a regular ship."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-29",
+      "sections": [
+        {
+          "title": "Havoc",
+          "bullets": [
+            "Fighters fly while you are eliminated, and wave 1 never has modifiers."
+          ]
+        },
+        {
+          "title": "Team Deathmatch",
+          "bullets": [
+            "Adds **Elysium (Paradise)**, **Ryugu Haven (Space02)** and **Amirani**."
+          ]
+        },
+        {
+          "title": "Team Elimination",
+          "bullets": [
+            "Sides, fighter starts, ready-up and a team HUD — and the first-kill crash is fixed."
+          ]
+        },
+        {
+          "title": "Conquest",
+          "bullets": [
+            "Plays by the original rules: captured points claim territory, spawns sit at capture points, and everyone sees the territory update."
+          ]
+        },
+        {
+          "title": "Onslaught",
+          "bullets": [
+            "Adds **Elysium (Paradise)** and Command Ship abilities."
+          ]
+        },
+        {
+          "title": "Ceres Awakens",
+          "bullets": [
+            "Tech-cache pickups score and pay credits, and a cache's buff ends when its collector is destroyed."
+          ]
+        },
+        {
+          "title": "Tech tree",
+          "bullets": [
+            "The next-ship gate counts the modules the game counts."
+          ]
+        },
+        {
+          "title": "General",
+          "bullets": [
+            "Hero ships report their XP under their own loadout, and ships you unlock mid-session get their XP."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-25",
+      "sections": [
+        {
+          "title": "Team Elimination",
+          "bullets": [
+            "Rounds are best of 3, and you drop to fighters after a lost ship."
+          ]
+        },
+        {
+          "title": "Tech tree",
+          "bullets": [
+            "Officers' briefings sit in every tier III–V ship's tree.",
+            "Ship pages show the next ships and the briefing; fitted items no longer sit under the wrong line."
+          ]
+        },
+        {
+          "title": "Market",
+          "bullets": [
+            "Store images load reliably."
+          ]
+        },
+        {
+          "title": "Launcher",
+          "bullets": [
+            "The launcher gets the original launcher's look, resolves the server on every Play, and scales for your display."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "sections": [
+        {
+          "title": "Havoc",
+          "bullets": [
+            "HUD feeds and the ready flag work, and the end screen lists your rewards."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "sections": [
+        {
+          "title": "Havoc",
+          "bullets": [
+            "**Wave mode** is here, built from the game's own rules and data.",
+            "Team HUD; **Junkyard Prince** is unlockable; modifiers only apply to live ships."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-16",
+      "sections": [
+        {
+          "title": "General",
+          "bullets": [
+            "Leaderboards and the in-match ribbon popup work."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-15",
+      "sections": [
+        {
+          "title": "Market",
+          "bullets": [
+            "The store's catalog downloads in one piece again — the game could not read the compressed version."
+          ]
+        },
+        {
+          "title": "General",
+          "bullets": [
+            "Statistics, live ribbons, the scoring table and hangar names work."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-14",
+      "sections": [
+        {
+          "title": "Market",
+          "bullets": [
+            "Research prices refresh."
+          ]
+        },
+        {
+          "title": "Hangar",
+          "bullets": [
+            "Loadout saves confirm, and hero fits are owned."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-09",
+      "sections": [
+        {
+          "title": "General",
+          "bullets": [
+            "The statistics screen no longer crashes; inventory and Elite status refresh in-session, and the original ribbons are back.",
+            "Bots start halted before the match, and Veteran/Legendary Command Ship guns work."
+          ]
+        },
+        {
+          "title": "Hangar",
+          "bullets": [
+            "Career progression is rebuilt and contract activation times run correctly.",
+            "Daily contracts and PvE season 1 events."
+          ]
+        },
+        {
+          "title": "Market",
+          "bullets": [
+            "Heroes and owned ships lend their hull parts to their line; uncustomised ships wear their own look."
+          ]
+        },
+        {
+          "title": "Onslaught",
+          "bullets": [
+            "Onslaught joins the regular map rotation."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-08",
+      "sections": [
+        {
+          "title": "Onslaught",
+          "bullets": [
+            "AI ships move, and Conquest score and capture points work."
+          ]
+        },
+        {
+          "title": "General",
+          "bullets": [
+            "Chat calls PodTDM by its real name: **Ceres Awakens**."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-07",
+      "sections": [
+        {
+          "title": "Onslaught",
+          "bullets": [
+            "Onslaught points, AI ships and the original match XP."
+          ]
+        },
+        {
+          "title": "Conquest",
+          "bullets": [
+            "Only on Territory maps; mode names in chat."
+          ]
+        },
+        {
+          "title": "Market",
+          "bullets": [
+            "Other ships' blueprint hulls are no longer granted or sold."
+          ]
+        },
+        {
+          "title": "Hangar",
+          "bullets": [
+            "**LOADOUT B** — a second loadout per ship."
+          ]
+        },
+        {
+          "title": "General",
+          "bullets": [
+            "The original per-mode scoring table and event XP."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-06",
+      "sections": [
+        {
+          "title": "General",
+          "bullets": [
+            "Chat rooms, direct messages, solo squads and a profanity filter."
+          ]
+        },
+        {
+          "title": "Market",
+          "bullets": [
+            "Cosmetic ownership in the forms the game checks; free items and templates."
+          ]
+        },
+        {
+          "title": "Hangar",
+          "bullets": [
+            "Flagships use the ship's own loadout slot."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-03",
+      "sections": [
+        {
+          "title": "General",
+          "bullets": [
+            "Match results say team names, not 'T'.",
+            "Chat only announces queues that are still open.",
+            "The matchmaker can backfill running matches.",
+            "Clients that failed the secure handshake connect via a compatibility fallback."
+          ]
+        },
+        {
+          "title": "Hangar",
+          "bullets": [
+            "Flagships are stored and applied; bought heroes reach the client."
+          ]
+        },
+        {
+          "title": "Market",
+          "bullets": [
+            "Owning a ship owns its blueprint look."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-02",
+      "sections": [
+        {
+          "title": "General",
+          "bullets": [
+            "Hero ships report their own tier.",
+            "Matches start once the host's game mode is running."
+          ]
+        }
+      ]
     }
   ]
 }
