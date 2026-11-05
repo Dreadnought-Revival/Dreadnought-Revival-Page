@@ -64,12 +64,17 @@ the Deploy Pages run on purpose. To change the image set: update the gallery
 
 - **Never hand-edit `data/patch-notes.json`.** The notes are player-facing: dated
   batches, one section per game mode or area (Team Deathmatch, Team Elimination,
-  Conquest, Onslaught, Ceres Awakens, Proving Grounds, Havoc, Turbo TDM, or
-  Launcher / Hangar / Market / Tech tree / General), "Before, ..." context lines,
-  and a "Known issues / please report" closer. No internals: no hashes, file names,
-  function names or log lines. New notes are generated automatically (see the
-  patch-notes automation section below); to change the format, change the prompt in
-  `workflow/apps/worker/src/worker/workflows/patch_notes.py` and the renderer in
+  Conquest, Onslaught, Ceres Awakens, Proving Grounds, Havoc, Turbo TDM,
+  Escalation, All game modes, or Launcher / Hangar / Market / Tech tree / Social /
+  General), "Before, ..." context lines, and a "Known issues / please report"
+  closer. No internals: no hashes, file names, function names or log lines. The
+  format is defined by the server repo's patch-notes skill
+  (`.claude/skills/dreadnought-patch-notes/` in Dreadnought-Revival-server):
+  its commits end with a `Patch notes:` block of player-worded lines
+  (`Patch notes: none (internal)` marks a commit as internal, which is dropped).
+  New notes are generated automatically (see the patch-notes automation section
+  below); to change the format, change the prompt in
+  `workflow/apps/worker/src/worker/workflows/notes_format.py` and the renderer in
   `app.js`, not the data file.
 - Keep the site dependency-free and responsive from day one; test locally with
   `python3 -m http.server` before pushing.
@@ -117,9 +122,14 @@ deployment `revival-ops` on Mistral Cloud. Its single workflow:
 - **`revival-patch-notes`** — started by a GitHub webhook trigger when commits are
   pushed to `Dreadnought-Revival-server` (default branch only, other events and repos
   are ignored in code; the trigger filter also enforces `event_type == 'push'`).
-  It turns the push's commit subjects into a player-facing notes batch with
-  `mistral-medium-latest`, merges it into `data/patch-notes.json` (same-day pushes
-  merge into that day's entry), and opens a PR like `Patch notes <date>: N commit(s)`.
+  It reads each commit's `Patch notes:` block (the convention set by the server
+  repo's patch-notes skill): those lines are the source of truth, commits marked
+  `none (internal)` are dropped, and block-less (pre-convention) commits are
+  phrased for players by `mistral-medium-latest`. The batch is ordered by the
+  skill's section list (game modes first, then All game modes, Launcher / Hangar /
+  Market / Tech tree / Social, General, and a "Known issues / please report"
+  closer), merged into `data/patch-notes.json` (same-day pushes merge into that
+  day's entry), and opens a PR like `Patch notes <date>: N commit(s)`.
   It never merges the PR itself: the daily Vibe ops run reviews and merges it, and
   the Pages deploy follows.
 

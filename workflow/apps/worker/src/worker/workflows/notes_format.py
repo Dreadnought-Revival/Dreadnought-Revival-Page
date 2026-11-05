@@ -2,6 +2,13 @@
 
 Only the standard library here: these helpers run inside the workflow's
 deterministic sandbox and in plain pytest on a CI runner, with no SDK imports.
+
+The format follows the server repo's ``dreadnought-patch-notes`` skill
+(``.claude/skills/dreadnought-patch-notes``): every commit ends its body with a
+``Patch notes:`` block of per-mode, player-worded lines (or ``Patch notes:
+none (internal)`` for work players never see), and the notes are built starting
+from those blocks. Commits without a block (pre-convention) fall back to their
+subject, which the model phrases for players.
 """
 
 from __future__ import annotations
@@ -14,7 +21,10 @@ from typing import Any
 MAX_COMMITS = 20
 MAX_SUBJECT_LEN = 200
 
-# Titles the site's patch-notes tab expects. The prompt asks the model to use these.
+# The section order the skill prescribes: game modes first (in the skill's
+# order), then the cross-mode section, then the out-of-match areas, General,
+# and the closer. ``All game modes`` sits after the modes because a player
+# reads their own mode's section first and then the everything-section.
 KNOWN_SECTION_TITLES = (
     "Team Deathmatch",
     "Team Elimination",
@@ -24,15 +34,21 @@ KNOWN_SECTION_TITLES = (
     "Proving Grounds",
     "Havoc",
     "Turbo TDM",
+    "Escalation",
+    "All game modes",
     "Launcher",
     "Hangar",
     "Market",
     "Tech tree",
+    "Social",
     "General",
     "Known issues / please report",
 )
+SECTION_ORDER = KNOWN_SECTION_TITLES
 
 _FENCE_RE = re.compile(r"^```[a-zA-Z0-9_-]*\s*|\s*```$")
+_PATCH_NOTES_RE = re.compile(r"^patch notes:\s*(.*)$", re.IGNORECASE)
+_INTERNAL_BLOCK = "none (internal)"
 
 
 # ---------------------------------------------------------------------------
@@ -64,7 +80,11 @@ def _is_merge_subject(subject: str) -> bool:
 
 
 def commit_entries(push: dict[str, Any]) -> list[dict[str, str]]:
-    """Player-relevant commits of a push payload: [{"sha", "subject"}], merge commits dropped."""
+    """Player-relevant commits of a push payload: [{"sha", "subject", "message"}].
+
+    Merge commits and empty messages are dropped; the full message is kept so the
+    ``Patch notes:`` block can be parsed out of it later.
+    """
     commits = push.get("commits") or []
     if not isinstance(commits, list):
         return []
@@ -82,11 +102,47 @@ def commit_entries(push: dict[str, Any]) -> list[dict[str, str]]:
             {
                 "sha": str(commit.get("id") or commit.get("sha") or ""),
                 "subject": subject[:MAX_SUBJECT_LEN],
+                "message": message,
             }
         )
         if len(entries) >= MAX_COMMITS:
             break
     return entries
+
+
+def patch_note_lines(message: str) -> list[str] | None:
+    """The ``Patch notes:`` block of a commit message.
+
+    Returns the block's bullet lines without their leading ``-``, ``[]`` when the
+    block says ``none (internal)`` (explicitly internal: drop the commit), or
+    ``None`` when the commit has no block (pre-convention commit: fall back to
+    its subject).
+    """
+    if not message:
+        return None
+    lines = message.splitlines()
+    for idx, line in enumerate(lines):
+        match = _PATCH_NOTES_RE.match(line.strip())
+        if not match:
+            continue
+        rest = match.group(1).strip()
+        if rest.lower() == _INTERNAL_BLOCK:
+            return []
+        out: list[str] = []
+        if rest:
+            if rest.startswith("-"):
+                rest = rest[1:].strip()
+            if rest:
+                out.append(rest)
+        for follow in lines[idx + 1:]:
+            stripped = follow.strip()
+            if not stripped.startswith("-"):
+                break  # blank line, paragraph or trailer: the block is over
+            bullet = stripped[1:].strip()
+            if bullet:
+                out.append(bullet)
+        return out
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -144,32 +200,66 @@ def extract_pr_url(result: Any) -> str:
 # ---------------------------------------------------------------------------
 
 
-def build_prompt(date: str, subjects: list[str]) -> str:
+def _canonical_title(title: str) -> str:
+    """Map a model-written section title onto the skill's canonical spelling."""
+    for known in KNOWN_SECTION_TITLES:
+        if known.casefold() == title.strip().casefold():
+            return known
+    return title
+
+
+def build_prompt(date: str, notes_lines: list[str], subjects: list[str]) -> str:
+    """Ask the model for one player-facing batch.
+
+    ``notes_lines`` are the commits' ``Patch notes:`` block lines (already
+    player-worded, each prefixed with its game mode or area). ``subjects`` are
+    the bare subjects of commits without a block, which the model phrases for
+    players itself.
+    """
     return (
         "You write player-facing patch notes for Dreadnought Revival, a community "
-        "server for the discontinued game Dreadnought (UE4, Steam App 835860): "
+        "server for the discontinued game Dreadnought (UE4, Steam 835860): "
         "5v5/8v8 sci-fi capital-ship combat with game modes like Team Deathmatch, "
         "Team Elimination, Conquest, Onslaught, Ceres Awakens, Proving Grounds, "
-        "Havoc and Turbo TDM.\n\n"
-        f"Today is {date}. Turn the following commit subjects from the server repo "
-        "into a patch-notes batch for players.\n\n"
+        "Havoc, Turbo TDM and Escalation.\n\n"
+        f"Today is {date}. Build one patch-notes batch for players from the "
+        "commits below.\n\n"
+        "Most commits end with a \"Patch notes:\" block whose lines are already "
+        "written for players, each prefixed with the game mode or area it belongs "
+        "to (for example \"Conquest: Captured points now show as your team's "
+        "territory on the minimap.\"). Those lines are the source of truth: sort "
+        "each line into the section its prefix names, stripping the prefix from "
+        "the bullet. Merge lines that describe the same change; when two lines "
+        "correct each other, keep the newer wording. Commits marked "
+        "\"Patch notes: none (internal)\" have already been dropped.\n\n"
+        "Commits without a block (older style) are given as bare subjects: write "
+        "bullets for them in the same style, but only for what players can feel "
+        "in the game.\n\n"
         "Rules:\n"
-        "- Player perspective only. Skip chores, CI, refactors, internal tooling and "
-        "anything players cannot feel in the game.\n"
-        "- No commit hashes, ticket numbers, branch names, file paths or internal "
-        "identifiers. Never mention commits or repos.\n"
-        "- One change per bullet, phrased as Fixed/Added/Changed/Rebalanced/Tuned...\n"
-        "- Put names of new ships, modules, maps, modes or cosmetics in **bold**.\n"
-        "- When a change replaces old behavior players knew, add a short 'Before, ...' "
-        "clause inside the bullet.\n"
-        "- Group bullets into sections titled exactly one of: " + ", ".join(KNOWN_SECTION_TITLES[:-1]) + ", General.\n"
-        "- End with a section titled 'Known issues / please report' containing one bullet "
-        "inviting players to report issues on the community Discord.\n"
+        "- Group bullets into sections titled exactly one of: "
+        + ", ".join(KNOWN_SECTION_TITLES[:-1]) + ".\n"
+        "- Order the sections exactly like that list.\n"
+        "- One change per bullet, one or two plain sentences.\n"
+        "- \"Before, ...\" clauses are good when a change replaces behavior players knew.\n"
+        "- Bold a map or feature name when it is new or back.\n"
+        "- Map names as players know them: Ryugu Haven (Space02), Elysium (Paradise), "
+        "Amirani, Juno (Space03), Cronian Rapids (Space04), Thebe (DansMap). "
+        "Never the internal path.\n"
+        "- Never invent. If a value is our best estimate, say so plainly.\n"
+        "- No internals: no commit hashes, file names, offsets, function names or "
+        "log lines. Never mention commits or repos.\n"
+        "- End with a section titled 'Known issues / please report': one bullet "
+        "inviting players to report problems on the community Discord, and one "
+        "asking them to confirm the changes above in live matches, naming "
+        "exactly what to look for.\n"
         "- If nothing is player-facing, return {\"sections\": []}.\n\n"
         "Answer with strict JSON only, no markdown: "
-        '{\"sections\": [{\"title\": "...", \"bullets\": ["...", "..."]}]}\n\n'
-        "Commit subjects:\n"
-        + "\n".join(f"- {s}" for s in subjects)
+        '{"sections": [{"title": "...", "bullets": ["...", "..."]}]}\n\n'
+        "Patch-notes lines from the commits' blocks:\n"
+        + ("\n".join(f"- {line}" for line in notes_lines) if notes_lines else "- (none)")
+        + "\n\n"
+        "Commits without a block (bare subjects):\n"
+        + ("\n".join(f"- {s}" for s in subjects) if subjects else "- (none)")
     )
 
 
@@ -189,7 +279,7 @@ def parse_llm_batch(text: str) -> list[dict[str, Any]]:
     for section in sections_raw:
         if not isinstance(section, dict):
             continue
-        title = str(section.get("title") or "").strip()
+        title = _canonical_title(str(section.get("title") or ""))
         bullets_raw = section.get("bullets") or []
         if not title or not isinstance(bullets_raw, list):
             continue
@@ -197,6 +287,18 @@ def parse_llm_batch(text: str) -> list[dict[str, Any]]:
         if bullets:
             sections.append({"title": title, "bullets": bullets})
     return sections
+
+
+def sort_sections(sections: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Order sections the way the skill prescribes; unknown titles go last."""
+    def rank(section: dict[str, Any]) -> tuple[int, Any]:
+        title = str(section.get("title") or "").strip()
+        for position, known in enumerate(SECTION_ORDER):
+            if known.casefold() == title.casefold():
+                return (0, position)
+        return (1, title.lower())
+
+    return sorted(sections, key=rank)
 
 
 # ---------------------------------------------------------------------------

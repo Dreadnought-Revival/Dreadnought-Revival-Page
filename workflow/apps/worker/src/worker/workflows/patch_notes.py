@@ -8,6 +8,13 @@ the fine-grained PAT bound to ``GITHUB_TOKEN`` from the workspace Secrets
 Manager; model calls authenticate through the same worker identity. Never enable
 ``on_behalf_of`` here: webhook-started runs have no triggering user and OBO
 runs would be rejected.
+
+The format follows the server repo's ``dreadnought-patch-notes`` skill: commits
+end their body with a ``Patch notes:`` block of per-mode, player-worded lines,
+and the notes batch is built starting from those blocks. Commits marked
+``Patch notes: none (internal)`` are dropped; commits without a block
+(pre-convention) fall back to their subject, which the model phrases for
+players.
 """
 
 from __future__ import annotations
@@ -75,8 +82,14 @@ async def fetch_patch_notes() -> str:
 
 
 @workflows.activity(name="generate-note-batch")
-async def generate_note_batch(date: str, subjects: list[str], client=Depends(get_mistral_client)) -> str:
-    """Turn commit subjects into one player-facing batch; returns the model's JSON."""
+async def generate_note_batch(
+    date: str,
+    notes_lines: list[str],
+    subjects: list[str],
+    client=Depends(get_mistral_client),
+) -> str:
+    """Turn the commits' patch-notes block lines (plus fallback subjects) into one
+    player-facing batch; returns the model's JSON."""
     response: ChatCompletionResponse = await client.chat.complete_async(
         model=MODEL,
         messages=[
@@ -87,7 +100,10 @@ async def generate_note_batch(date: str, subjects: list[str], client=Depends(get
                     "You answer with strict JSON only, never markdown."
                 ),
             },
-            {"role": "user", "content": notes_format.build_prompt(date, subjects)},
+            {
+                "role": "user",
+                "content": notes_format.build_prompt(date, notes_lines, subjects),
+            },
         ],
         temperature=0.2,
     )
@@ -159,15 +175,32 @@ class PatchNotesWorkflow:
         commits = notes_format.commit_entries(push)
         if not commits:
             return "ignored: no player-relevant commits in payload"
-        subjects = [c["subject"] for c in commits]
+
+        # The commits' "Patch notes:" blocks are the source of truth; commits
+        # marked "none (internal)" are dropped here, pre-convention commits
+        # (no block) fall back to their subject for the model to phrase.
+        notes_lines: list[str] = []
+        fallback_subjects: list[str] = []
+        for entry in commits:
+            block = notes_format.patch_note_lines(entry.get("message") or "")
+            if block is None:
+                fallback_subjects.append(entry["subject"])
+            elif block:
+                notes_lines.extend(block)
+        if not notes_lines and not fallback_subjects:
+            return f"no player-facing changes in {len(commits)} commit(s); nothing published"
 
         now = workflow.now()
         date = now.date().isoformat()
 
         existing = await fetch_patch_notes()
-        batch_json = await generate_note_batch(date=date, subjects=subjects)
-        # Parsing and validation are deterministic: keep them on the workflow path so
-        # a malformed model answer retries the activity without re-publishing.
+        batch_json = await generate_note_batch(
+            date=date, notes_lines=notes_lines, subjects=fallback_subjects
+        )
+        # Parsing, validation and ordering are deterministic: keep them on the
+        # workflow path so a malformed model answer retries the activity without
+        # re-publishing, and the skill's section order holds regardless of the
+        # model's output order.
         try:
             notes_data = json.loads(existing)
             if not isinstance(notes_data, dict):
@@ -175,7 +208,7 @@ class PatchNotesWorkflow:
         except ValueError:
             notes_data = {}
 
-        sections = notes_format.parse_llm_batch(batch_json)
+        sections = notes_format.sort_sections(notes_format.parse_llm_batch(batch_json))
         if not sections:
             return f"no player-facing changes in {len(commits)} commit(s); nothing published"
 
