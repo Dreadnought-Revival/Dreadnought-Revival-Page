@@ -16,5 +16,12 @@ jobs:
         run: |
           set -e
           test -f README.md && echo "README.md OK"
+          test -f index.html && echo "index.html OK"
+          test -f styles.css && echo "styles.css OK"
+          test -f app.js && echo "app.js OK"
+          test -f 404.html && echo "404.html OK"
+          test -f AGENTS.md && echo "AGENTS.md OK"
+          python3 -m json.tool data/patch-notes.json > /dev/null && echo "patch-notes.json OK"
+          node --check app.js && echo "app.js syntax OK"
           find . -type f -size +10M -not -path "./.git/*" | tee /tmp/large_files
           test ! -s /tmp/large_files && echo "No accidentally large files"

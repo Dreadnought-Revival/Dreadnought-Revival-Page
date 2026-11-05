@@ -1,0 +1,41 @@
+name: Update patch notes
+
+on:
+  schedule:
+    # hourly; the script only picks up commits newer than the last stored entry
+    - cron: "17 * * * *"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [update-patch-notes]
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Regenerate data/patch-notes.json from server and launcher commits
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/update_patch_notes.py
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/patch-notes.json
+          if git diff --cached --quiet; then
+            echo "No patch-note changes"
+          else
+            git commit -m "docs(page): refresh patch notes from server and launcher commits"
+            git push
+          fi

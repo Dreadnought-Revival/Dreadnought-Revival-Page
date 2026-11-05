@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dreadnought Revival — Community Private Server</title>
+  <meta name="description" content="Dreadnought Revival is a community-operated private server for the discontinued game Dreadnought. Unmodified game client, everything emulated server-side, one replacement launcher to install.">
+  <meta property="og:title" content="Dreadnought Revival — Community Private Server">
+  <meta property="og:description" content="Play the discontinued space-combat game Dreadnought again on a community-run private server. Unmodified client, server-side emulation, one launcher.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav container">
+      <a class="brand" href="#top">
+        <img src="assets/logo.svg" alt="" class="brand-logo" width="36" height="36">
+        <span>Dreadnought <strong>Revival</strong></span>
+      </a>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#join">How to join</a></li>
+        <li><a href="#status">Server status</a></li>
+        <li><a href="#patch-notes">Patch notes</a></li>
+        <li><a href="#community">Community</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero container">
+      <img src="assets/logo.svg" alt="Dreadnought Revival logo" class="hero-logo" width="120" height="120">
+      <h1>Fly Dreadnought again.</h1>
+      <p class="tagline">
+        A community-operated private server for the discontinued space-combat game
+        <strong>Dreadnought</strong> — the original, unmodified game client against our own
+        server-side emulated backend.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#join">How to join</a>
+        <a class="btn btn-ghost" href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher">Get the launcher</a>
+      </div>
+    </section>
+
+    <section id="about" class="container section">
+      <h2>About the project</h2>
+      <p>
+        Dreadnought Revival runs a private server for <strong>Dreadnought</strong>
+        (Unreal Engine 4, Steam App 835860), which was shut down by its original publisher.
+        The goal is to keep the <strong>unmodified game client</strong> playable: everything
+        the game expects from the official backend — login, hangar, inventory, market,
+        loadouts, career progression and matchmaking — is emulated server-side by our own services.
+      </p>
+      <p>
+        The only thing a player installs is a <strong>replacement launcher</strong> that points
+        the game at our servers. The project is split across three repositories:
+      </p>
+      <ul class="repo-cards">
+        <li>
+          <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server">Dreadnought-Revival-server</a>
+          <span>backend services, battle-server mod, data and docs</span>
+        </li>
+        <li>
+          <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher">Dreadnought-Revival-Launcher</a>
+          <span>the Windows launcher — the only thing a player installs</span>
+        </li>
+        <li>
+          <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Page">Dreadnought-Revival-Page</a>
+          <span>this website</span>
+        </li>
+      </ul>
+      <p class="disclaimer">
+        Disclaimer: this is a fan-run project, not affiliated with Greybox or Yager.
+        Dreadnought and all related assets belong to their respective owners. You need a
+        legitimate copy of the game client (Steam App 835860).
+      </p>
+    </section>
+
+    <section id="join" class="container section">
+      <h2>How to join</h2>
+      <ol class="steps">
+        <li>
+          <strong>Get the game client.</strong> Install Dreadnought (Steam App 835860) in Steam as usual — the client itself is not modified.
+        </li>
+        <li>
+          <strong>Download the launcher.</strong> Grab the latest release from
+          <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases">Dreadnought-Revival-Launcher</a>.
+        </li>
+        <li>
+          <strong>Run the launcher and register.</strong> The launcher signs you in and starts the game pointed at the Revival servers.
+        </li>
+        <li>
+          <strong>Play.</strong> Queue for a match from the in-game matchmaking — the backend handles the rest.
+        </li>
+      </ol>
+      <p>
+        Server operators: see the
+        <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server">server repository</a>
+        for build and run instructions.
+      </p>
+    </section>
+
+    <section id="status" class="container section">
+      <h2>Server status</h2>
+      <p class="status-line">
+        <span class="status-badge" id="status-badge">status loading…</span>
+        <span id="status-detail">Live status is reported by the community — see the links below.</span>
+      </p>
+      <p>
+        The backend status (login, matchmaking, battle servers) is operated by the community.
+        For the current online/offline state and player counts, check the community channels.
+      </p>
+    </section>
+
+    <section id="patch-notes" class="container section">
+      <h2>Patch notes</h2>
+      <p>
+        Automatically generated from commits in the
+        <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server">server</a> and
+        <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher">launcher</a>
+        repositories. Newest first.
+      </p>
+      <div class="patch-filters" id="patch-filters">
+        <button class="chip active" data-repo="all">All</button>
+        <button class="chip" data-repo="server">Server</button>
+        <button class="chip" data-repo="launcher">Launcher</button>
+      </div>
+      <div id="patch-notes-list" class="patch-notes">
+        <p class="muted">Loading patch notes…</p>
+      </div>
+      <noscript><p class="muted">Patch notes require JavaScript — or read the commit history directly on GitHub.</p></noscript>
+    </section>
+
+    <section id="community" class="container section">
+      <h2>Community</h2>
+      <ul class="link-list">
+        <li><a href="https://github.com/Dreadnought-Revival">Dreadnought-Revival on GitHub</a> — all three repositories</li>
+        <li><a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server">Server repository</a> — backend, docs, operator instructions</li>
+        <li><a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher">Launcher repository</a> — downloads and releases</li>
+        <li>Discord — see the link in the server repository README</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>
+        Dreadnought Revival — a community project. Not affiliated with Greybox or Yager.
+        Source on <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Page">GitHub</a>.
+      </p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
