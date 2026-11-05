@@ -136,7 +136,12 @@ class TestLlmBatch:
             }
         )
         titles = [s["title"] for s in nf.parse_llm_batch(text)]
-        assert titles == ["All game modes", "Known issues / please report", "Fresh unknown area"]
+        # parse canonicalizes titles but keeps the model's order; sorting is sort_sections' job
+        assert titles == [
+            "Known issues / please report",
+            "All game modes",
+            "Fresh unknown area",
+        ]
 
     def test_prompt_embeds_blocks_subjects_and_format(self):
         prompt = nf.build_prompt(
