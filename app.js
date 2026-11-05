@@ -1,6 +1,6 @@
 /* Dreadnought Revival — HUD landing page script.
  * Sections: header/nav behaviour, ARIA tabs + hash routing, reveal,
- * status badge, patch-notes renderer, ship gallery lightbox. */
+ * status badge, patch-notes renderer, supporters list, ship gallery lightbox. */
 (function () {
   'use strict';
 
@@ -69,7 +69,7 @@
 
   /* ---------- tabs (the nav is a tablist; panels switch, hash routes deep links) ---------- */
 
-  var TABS = ['play', 'status', 'modes', 'patch-notes', 'gallery', 'roadmap', 'contribute'];
+  var TABS = ['play', 'status', 'modes', 'patch-notes', 'gallery', 'roadmap', 'contribute', 'support'];
   /* tab ids before the 2026-11 reorganisation, so old links still land */
   var ALIASES = { briefing: 'status', systems: 'status', community: 'play' };
   function tabFromHash() {
@@ -231,6 +231,52 @@
       });
   }
 
+  /* ---------- supporters (data/supporters.txt, edited by hand) ---------- */
+
+  var PATREON_URL = 'https://www.patreon.com/cw/DARKACE39';
+
+  /* one name per line; "## Group" starts a group; "//" lines and blanks ignored */
+  function parseSupporters(text) {
+    var groups = [{ title: '', names: [] }];
+    String(text).split(/\r?\n/).forEach(function (raw) {
+      var line = raw.trim();
+      if (!line || line.indexOf('//') === 0) return;
+      if (line.indexOf('## ') === 0) {
+        groups.push({ title: line.slice(3).trim(), names: [] });
+        return;
+      }
+      groups[groups.length - 1].names.push(line);
+    });
+    return groups.filter(function (g) { return g.names.length; });
+  }
+
+  function renderSupporters(groups) {
+    var box = $('#supporters-list');
+    if (!box) return;
+    if (!groups.length) {
+      box.innerHTML = '<p class="supporters-empty">No names here yet — <a href="' + PATREON_URL +
+        '" target="_blank" rel="noopener">be the first to support the project</a>.</p>';
+      return;
+    }
+    var html = '';
+    groups.forEach(function (g) {
+      html += '<div class="supporters-group">';
+      if (g.title) html += '<h4>' + escapeHtml(g.title) + '</h4>';
+      html += '<ul>';
+      g.names.forEach(function (n) { html += '<li>' + escapeHtml(n) + '</li>'; });
+      html += '</ul></div>';
+    });
+    box.innerHTML = html;
+  }
+
+  function loadSupporters() {
+    if (!$('#supporters-list')) return;
+    fetch('data/supporters.txt', { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error('supporters ' + r.status); return r.text(); })
+      .then(function (t) { renderSupporters(parseSupporters(t)); })
+      .catch(function () { renderSupporters([]); });
+  }
+
   /* ---------- gallery lightbox ---------- */
 
   var lightbox = $('#lightbox');
@@ -283,4 +329,5 @@
 
   loadStatus();
   loadPatchNotes();
+  loadSupporters();
 })();

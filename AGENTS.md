@@ -25,8 +25,8 @@ never ships to the site.
 index.html      one-page HUD landing: full-height hero (one primary Download button,
                 secondary links, a four-step how-to strip), then tabbed panels behind
                 an ARIA tablist in the header nav (Play / Status / Game Modes / Patch
-                Notes / Fleet / Roadmap / Contribute), 31-ship gallery grouped by
-                class, footer
+                Notes / Fleet / Roadmap / Contribute / Support), 31-ship gallery
+                grouped by class, footer
 styles.css      dark space-combat HUD theme (void bg, amber/cyan accents, clipped
                 panels/buttons, tab bar, grid + scanline overlays, reveal-on-scroll)
 app.js          ARIA tabs + hash routing (arrow-key support), burger nav, reveal,
@@ -35,7 +35,8 @@ app.js          ARIA tabs + hash routing (arrow-key support), burger nav, reveal
 404.html        custom not-found page (same theme)
 assets/         logo.svg, favicon.svg, og-image.png (social preview); ship art is
                 fetched at deploy time (see below) — assets/market-images/ is NOT in the repo
-data/           patch-notes.json (player-facing notes — see below), server-status.json (optional)
+data/           patch-notes.json (player-facing notes — see below), supporters.txt (Patreon
+                supporters, hand-edited), server-status.json (optional)
 workflow/       Mistral Studio workflow project: revival-patch-notes (see below)
 .github/workflows/  ci.yml, deploy-pages.yml, workflow-ci.yml
 ```
@@ -75,14 +76,19 @@ the Deploy Pages run on purpose. To change the image set: update the gallery
 - Content rules: describe the project exactly as the server repo README does (unmodified
   client, server-side emulation, launcher-only install); always link to the server and
   launcher repositories; keep the disclaimer (not affiliated with Greybox/Yager).
-- The Discord invite is https://discord.gg/yKYUt5Qh2c (header icon, Play tab card,
-  hero links, Contribute, footer). Download buttons use GitHub's
+- The Discord invite is https://discord.gg/dreadnought (header icon, Play tab card,
+  hero links, Contribute, Support, footer). The Support tab and the footer link the
+  maintainer's Patreon, https://www.patreon.com/cw/DARKACE39. Download buttons use GitHub's
   `releases/latest/download/<asset>` links, so they follow every launcher release
   as long as the asset names (`Dreadnought-Revival.exe`,
   `Dreadnought-Revival-linux.tar.gz`) stay the same.
 - The "Known issues" box at the top of the Patch Notes tab is hand-written in
   `index.html` (unlike the notes themselves): player-facing, no internals. Remove an
   entry once its fix ships.
+- `data/supporters.txt` is the Patreon supporters list on the Support tab, edited by
+  hand by the maintainer: one name per line, `## Tier` starts a group, `//` lines are
+  comments. `app.js` escapes every name. Only list people who agreed to be named; never
+  add names yourself.
 - Server status is a static badge by default ("Public Test Server Live"). `app.js` upgrades it if
   `data/server-status.json` exists (`{"online": true, "players": 12, "updated_at": "..."}`);
   do not invent a live-status backend.

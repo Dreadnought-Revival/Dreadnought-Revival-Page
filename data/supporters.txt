@@ -1,0 +1,14 @@
+// Patreon supporters, shown on the website's Support tab.
+//
+// How to edit (GitHub's web editor is fine):
+//   - one name per line, exactly as it should appear on the site
+//   - a line starting with "## " starts a group, e.g. a Patreon tier;
+//     names before the first group are shown without a heading
+//   - lines starting with "//" and empty lines are ignored
+//   - only list people who agreed to be named publicly
+//
+// Example (remove the "//" to use it):
+// ## Admiral
+// Jane Doe
+// ## Captain
+// SomeCallsign

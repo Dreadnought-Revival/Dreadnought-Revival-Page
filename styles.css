@@ -74,10 +74,10 @@ header.scrolled{box-shadow:0 0 40px rgba(255,107,0,.12),0 8px 30px rgba(0,0,0,.6
 .brand img{width:34px;height:34px;filter:drop-shadow(0 0 8px rgba(255,107,0,.6))}
 .brand span{font-family:var(--font-head);font-weight:800;font-size:15px;letter-spacing:.18em}
 .brand span em{font-style:normal;color:var(--amber)}
-.nav-links{display:flex;align-items:center;gap:6px;list-style:none}
+.nav-links{display:flex;align-items:center;gap:2px;list-style:none}
 .nav-links a,.nav-links button.tab{
   font-family:var(--font-body);font-weight:600;font-size:14px;letter-spacing:0.05em;text-transform:uppercase;
-  color:var(--muted);text-decoration:none;padding:8px 10px;border:1px solid transparent;
+  color:var(--muted);text-decoration:none;padding:8px 8px;border:1px solid transparent;
   clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
   transition:color .2s,border-color .2s,background .2s;
 }
@@ -501,7 +501,7 @@ footer{
 
 /* seven tabs plus the actions no longer fit beside the brand: drop the
    brand text first, then fold the tabs into the menu */
-@media (max-width:1340px){ .brand span{display:none} }
+@media (max-width:1400px){ .brand span{display:none} }
 @media (max-width:1100px){
   .burger{display:inline-flex}
   .nav-links{
@@ -520,6 +520,29 @@ footer{
   .hero-steps li:nth-child(n+3){border-top:1px solid var(--line)}
   .nav-actions .nav-icon{display:none}
 }
-@media (max-width:520px){
+@media (max-width:680px){
   .brand span{display:none}
 }
+
+/* ---------- support tab ---------- */
+.nav-links button.tab-support span{color:var(--amber)}
+.support-card{padding:32px 36px}
+.support-card p{color:var(--muted);font-size:16px;margin-bottom:22px}
+.btn-patreon{display:inline-block;color:#fff;font-weight:bold;background:#f96854}
+.btn-patreon:hover{box-shadow:0 0 30px rgba(249,104,84,.55);transform:translateY(-2px)}
+.help-card b{color:var(--text)}
+
+/* ---------- support tab: supporters list (data/supporters.txt) ---------- */
+.supporters{padding:32px 36px;margin-top:24px}
+.supporters .panel-h span{font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;color:var(--muted);text-transform:none;margin-left:6px;font-weight:400}
+.supporters-group+.supporters-group{margin-top:22px}
+.supporters-group h4{font-family:var(--font-mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:10px}
+.supporters-group ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.supporters-group li{
+  padding:6px 14px;font-weight:600;font-size:15px;color:var(--text);
+  background:rgba(249,104,84,.07);border:1px solid rgba(249,104,84,.3);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+}
+.supporters-empty{color:var(--muted);font-size:16px;margin:0}
+.supporters-empty a{color:var(--cyan);text-decoration:none;border-bottom:1px dotted rgba(0,176,255,.5)}
+.supporters-empty a:hover{color:#fff}
