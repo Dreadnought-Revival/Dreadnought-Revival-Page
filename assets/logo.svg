@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Dreadnought Revival logo">
+  <rect width="64" height="64" rx="14" fill="#0d1424"/>
+  <path d="M32 6 L44 26 L40 26 L40 44 L24 44 L24 26 L20 26 Z" fill="#4cc3ff"/>
+  <path d="M32 12 L39 26 L25 26 Z" fill="#ff9d3c"/>
+  <rect x="29" y="44" width="6" height="8" rx="2" fill="#8fa1c0"/>
+  <circle cx="32" cy="52" r="2.5" fill="#4cc3ff"/>
+</svg>
