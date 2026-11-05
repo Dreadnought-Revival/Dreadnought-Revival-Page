@@ -35,7 +35,8 @@ app.js          ARIA tabs + hash routing (arrow-key support), burger nav, reveal
 404.html        custom not-found page (same theme)
 assets/         logo.svg, favicon.svg, og-image.png (social preview); ship art is
                 fetched at deploy time (see below) — assets/market-images/ is NOT in the repo
-data/           patch-notes.json (player-facing notes — see below), server-status.json (optional)
+data/           patch-notes.json (player-facing notes — see below), supporters.txt (Patreon
+                supporters, hand-edited), server-status.json (optional)
 workflow/       Mistral Studio workflow project: revival-patch-notes (see below)
 .github/workflows/  ci.yml, deploy-pages.yml, workflow-ci.yml
 ```
@@ -84,6 +85,10 @@ the Deploy Pages run on purpose. To change the image set: update the gallery
 - The "Known issues" box at the top of the Patch Notes tab is hand-written in
   `index.html` (unlike the notes themselves): player-facing, no internals. Remove an
   entry once its fix ships.
+- `data/supporters.txt` is the Patreon supporters list on the Support tab, edited by
+  hand by the maintainer: one name per line, `## Tier` starts a group, `//` lines are
+  comments. `app.js` escapes every name. Only list people who agreed to be named; never
+  add names yourself.
 - Server status is a static badge by default ("Public Test Server Live"). `app.js` upgrades it if
   `data/server-status.json` exists (`{"online": true, "players": 12, "updated_at": "..."}`);
   do not invent a live-status backend.

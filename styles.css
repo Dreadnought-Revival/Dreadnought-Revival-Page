@@ -531,3 +531,18 @@ footer{
 .btn-patreon{display:inline-block;color:#fff;font-weight:bold;background:#f96854}
 .btn-patreon:hover{box-shadow:0 0 30px rgba(249,104,84,.55);transform:translateY(-2px)}
 .help-card b{color:var(--text)}
+
+/* ---------- support tab: supporters list (data/supporters.txt) ---------- */
+.supporters{padding:32px 36px;margin-top:24px}
+.supporters .panel-h span{font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;color:var(--muted);text-transform:none;margin-left:6px;font-weight:400}
+.supporters-group+.supporters-group{margin-top:22px}
+.supporters-group h4{font-family:var(--font-mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:10px}
+.supporters-group ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.supporters-group li{
+  padding:6px 14px;font-weight:600;font-size:15px;color:var(--text);
+  background:rgba(249,104,84,.07);border:1px solid rgba(249,104,84,.3);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+}
+.supporters-empty{color:var(--muted);font-size:16px;margin:0}
+.supporters-empty a{color:var(--cyan);text-decoration:none;border-bottom:1px dotted rgba(0,176,255,.5)}
+.supporters-empty a:hover{color:#fff}
