@@ -13,8 +13,14 @@
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&amp;family=Rajdhani:wght@400;500;600;700&amp;family=Share+Tech+Mono&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<noscript>
+<style>
+  #panels section[hidden]{display:block}
+  .reveal{opacity:1;transform:none}
+</style>
+</noscript>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -28,13 +34,13 @@
       <span>DREAD<em>NOUGHT</em> // REVIVAL</span>
     </a>
     <button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false">[ MENU ]</button>
-    <ul class="nav-links" id="nav-links">
-      <li><a href="#briefing">Briefing</a></li>
-      <li><a href="#systems">Systems</a></li>
-      <li><a href="#gallery">Fleet</a></li>
-      <li><a href="#patch-notes">Patch Notes</a></li>
-      <li><a href="#roadmap">Roadmap</a></li>
-      <li><a href="#community">Community</a></li>
+    <ul class="nav-links" id="nav-links" role="tablist" aria-label="Site sections">
+      <li role="presentation"><button class="tab" type="button" role="tab" id="tab-briefing" data-panel="briefing" aria-controls="briefing" aria-selected="true">Briefing</button></li>
+      <li role="presentation"><button class="tab" type="button" role="tab" id="tab-systems" data-panel="systems" aria-controls="systems" aria-selected="false" tabindex="-1">Systems</button></li>
+      <li role="presentation"><button class="tab" type="button" role="tab" id="tab-gallery" data-panel="gallery" aria-controls="gallery" aria-selected="false" tabindex="-1">Fleet</button></li>
+      <li role="presentation"><button class="tab" type="button" role="tab" id="tab-patch-notes" data-panel="patch-notes" aria-controls="patch-notes" aria-selected="false" tabindex="-1">Patch Notes</button></li>
+      <li role="presentation"><button class="tab" type="button" role="tab" id="tab-roadmap" data-panel="roadmap" aria-controls="roadmap" aria-selected="false" tabindex="-1">Roadmap</button></li>
+      <li role="presentation"><button class="tab" type="button" role="tab" id="tab-community" data-panel="community" aria-controls="community" aria-selected="false" tabindex="-1">Community</button></li>
     </ul>
     <a class="nav-cta" href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases" target="_blank" rel="noopener">Get the Launcher ↗</a>
   </nav>
@@ -63,15 +69,17 @@
     <div class="scroll-hint" aria-hidden="true">▼ SCROLL</div>
   </section>
 
+  <div id="panels">
+
   <!-- ============ BRIEFING ============ -->
-  <section id="briefing">
+  <section id="briefing" role="tabpanel" aria-labelledby="tab-briefing">
     <p class="sec-tag reveal">01 // Mission Briefing</p>
     <h2 class="reveal">The Mission: <em>Bring Her Back</em></h2>
     <div class="briefing-grid">
       <div class="panel briefing-main reveal">
         <p><strong>Dreadnought</strong> was a massive-scale space combat game — dreadnoughts, cruisers and fighters clashing across open maps — shut down with its publisher. This project is a fan-led revival: a <strong>community-operated private server</strong> that runs the <strong>completely unmodified game client</strong> against our own backend.</p>
         <p>Everything is emulated server-side — login, hangar, inventory, market, loadouts, career progression and matchmaking. The only thing a player installs is a <strong>replacement launcher</strong> that signs them into our servers. No game files are modified, and no game code or assets are distributed here.</p>
-        <p>Operators can additionally host matches themselves: the server stack spawns headless <strong>dedicated battle servers</strong>, one per match.</p>
+        <p>Operators can additionally host matches themselves: a seven-service Go stack spawns headless <strong>dedicated battle servers</strong> (Wine + the original executable), one per match, on UDP 7777–7877.</p>
         <div class="mono-line">&gt; objective: preserve a piece of online-game history — playable, forever.</div>
         <ul class="repo-cards">
           <li>
@@ -104,7 +112,7 @@
   </section>
 
   <!-- ============ FEATURES ============ -->
-  <section id="systems">
+  <section id="systems" role="tabpanel" aria-labelledby="tab-systems" hidden>
     <p class="sec-tag reveal">02 // Key Systems</p>
     <h2 class="reveal">Game Systems <em>Online</em></h2>
     <p class="sec-lead reveal">Everything below runs today on the community server. <strong>No client patch is ever required</strong> — the server speaks the original protocol.</p>
@@ -112,13 +120,13 @@
       <article class="panel feature reveal">
         <div class="ico">◈</div>
         <h3>Dedicated Server Revival</h3>
-        <p>A multi-service Go backend (auth, legacy API, matchmaking brain, master server, game manager, gateway) spawns headless battle servers — one per match — and keeps them healthy.</p>
+        <p>A seven-service Go backend (auth, legacy API, matchmaking brain, master server, game manager, gateway) spawns headless Wine battle servers — one per match — and keeps them healthy.</p>
         <span class="tag">Live</span>
       </article>
       <article class="panel feature reveal">
         <div class="ico">⬡</div>
         <h3>Unmodified Client</h3>
-        <p>Players run the original Steam build untouched. A replacement launcher handles sign-in and hands the game the right server addresses.</p>
+        <p>Players run the original Steam build untouched. A replacement launcher handles sign-in, certificate install and hands the game the right server addresses.</p>
         <span class="tag">Live</span>
       </article>
       <article class="panel feature reveal">
@@ -149,49 +157,155 @@
   </section>
 
   <!-- ============ GALLERY ============ -->
-  <section id="gallery">
+  <section id="gallery" role="tabpanel" aria-labelledby="tab-gallery" hidden>
     <p class="sec-tag reveal">03 // Fleet Gallery</p>
     <h2 class="reveal">Ships of the <em>Line</em></h2>
-    <p class="sec-lead reveal">Real in-game ship art from the project's extracted game data. Click any hull to inspect it.</p>
-    <div class="gallery-grid" id="gallery-grid">
-      <figure class="panel ship-card reveal" data-name="Morningstar" data-cls="Dreadnought · T5" data-cls-type="dread" tabindex="0" role="button" aria-label="Inspect Morningstar dreadnought">
+    <p class="sec-lead reveal">Real in-game ship art from the project's extracted game data — 31 hulls across five classes. Click any ship to inspect it.</p>
+      <h3 class="gallery-group">DREADNOUGHTS <span class="cnt">// CAPITALS OF THE LINE · 6 HULLS</span></h3>
+      <div class="gallery-grid">
+      <figure class="panel ship-card reveal" data-name="Morningstar" data-cls="Dreadnought · T5" tabindex="0" role="button" aria-label="Inspect Morningstar dreadnought">
         <img src="assets/market-images/UI_DreadnoughtM_Morningstar.png" alt="Dreadnought-class ship Morningstar" loading="lazy">
         <figcaption class="meta"><span class="name">Morningstar</span><span class="cls dread">Dreadnought</span></figcaption>
       </figure>
-      <figure class="panel ship-card reveal" data-name="Leviathan" data-cls="Dreadnought · Legendary" data-cls-type="dread" tabindex="0" role="button" aria-label="Inspect Leviathan dreadnought">
+      <figure class="panel ship-card reveal" data-name="Leviathan" data-cls="Dreadnought · Legendary" tabindex="0" role="button" aria-label="Inspect Leviathan dreadnought">
         <img src="assets/market-images/UI_DreadnoughtL_Leviathan.png" alt="Dreadnought-class ship Leviathan" loading="lazy">
         <figcaption class="meta"><span class="name">Leviathan</span><span class="cls dread">Dreadnought</span></figcaption>
       </figure>
-      <figure class="panel ship-card reveal" data-name="Trident" data-cls="Dreadnought · Heavy" data-cls-type="dread" tabindex="0" role="button" aria-label="Inspect Trident dreadnought">
+      <figure class="panel ship-card reveal" data-name="Trident" data-cls="Dreadnought · Heavy" tabindex="0" role="button" aria-label="Inspect Trident dreadnought">
         <img src="assets/market-images/UI_DreadnoughtH_Trident.png" alt="Dreadnought-class ship Trident" loading="lazy">
         <figcaption class="meta"><span class="name">Trident</span><span class="cls dread">Dreadnought</span></figcaption>
       </figure>
-      <figure class="panel ship-card reveal" data-name="Autumn" data-cls="Assault · Medium" tabindex="0" role="button" aria-label="Inspect Autumn assault cruiser">
-        <img src="assets/market-images/UI_AssaultM_Autumn.png" alt="Assault-class ship Autumn" loading="lazy">
-        <figcaption class="meta"><span class="name">Autumn</span><span class="cls">Assault</span></figcaption>
+      <figure class="panel ship-card reveal" data-name="Dragon" data-cls="Dreadnought · Legendary" tabindex="0" role="button" aria-label="Inspect Dragon dreadnought">
+        <img src="assets/market-images/UI_DreadnoughtL_Dragon.png" alt="Dreadnought-class ship Dragon" loading="lazy">
+        <figcaption class="meta"><span class="name">Dragon</span><span class="cls dread">Dreadnought</span></figcaption>
       </figure>
-      <figure class="panel ship-card reveal" data-name="Huscarl" data-cls="Assault · Heavy" tabindex="0" role="button" aria-label="Inspect Huscarl assault cruiser">
+      <figure class="panel ship-card reveal" data-name="Mad King" data-cls="Dreadnought · Legendary" tabindex="0" role="button" aria-label="Inspect Mad King dreadnought">
+        <img src="assets/market-images/UI_DreadnoughtL_MadKing.png" alt="Dreadnought-class ship Mad King" loading="lazy">
+        <figcaption class="meta"><span class="name">Mad King</span><span class="cls dread">Dreadnought</span></figcaption>
+      </figure>
+      <figure class="panel ship-card reveal" data-name="Zilant" data-cls="Dreadnought · Medium" tabindex="0" role="button" aria-label="Inspect Zilant dreadnought">
+        <img src="assets/market-images/UI_DreadnoughtM_Zilant.png" alt="Dreadnought-class ship Zilant" loading="lazy">
+        <figcaption class="meta"><span class="name">Zilant</span><span class="cls dread">Dreadnought</span></figcaption>
+      </figure>
+      </div>
+      <h3 class="gallery-group">ASSAULT <span class="cnt">// BRAWLERS &amp; BOARDERS · 7 HULLS</span></h3>
+      <div class="gallery-grid">
+      <figure class="panel ship-card reveal" data-name="Huscarl" data-cls="Assault · Heavy" tabindex="0" role="button" aria-label="Inspect Huscarl assault">
         <img src="assets/market-images/UI_AssaultH_Huscarl.png" alt="Assault-class ship Huscarl" loading="lazy">
         <figcaption class="meta"><span class="name">Huscarl</span><span class="cls">Assault</span></figcaption>
       </figure>
-      <figure class="panel ship-card reveal" data-name="Phoenix" data-cls="Scout · Medium" tabindex="0" role="button" aria-label="Inspect Phoenix scout fighter">
+      <figure class="panel ship-card reveal" data-name="Marzanna" data-cls="Assault · Heavy" tabindex="0" role="button" aria-label="Inspect Marzanna assault">
+        <img src="assets/market-images/UI_AssaultH_Marzanna.png" alt="Assault-class ship Marzanna" loading="lazy">
+        <figcaption class="meta"><span class="name">Marzanna</span><span class="cls">Assault</span></figcaption>
+      </figure>
+      <figure class="panel ship-card reveal" data-name="Daggertooth" data-cls="Assault · Legendary" tabindex="0" role="button" aria-label="Inspect Daggertooth assault">
+        <img src="assets/market-images/UI_AssaultL_Daggertooth.png" alt="Assault-class ship Daggertooth" loading="lazy">
+        <figcaption class="meta"><span class="name">Daggertooth</span><span class="cls">Assault</span></figcaption>
+      </figure>
+      <figure class="panel ship-card reveal" data-name="Fenrir" data-cls="Assault · Legendary" tabindex="0" role="button" aria-label="Inspect Fenrir assault">
+        <img src="assets/market-images/UI_AssaultL_Fenrir.png" alt="Assault-class ship Fenrir" loading="lazy">
+        <figcaption class="meta"><span class="name">Fenrir</span><span class="cls">Assault</span></figcaption>
+      </figure>
+      <figure class="panel ship-card reveal" data-name="Autumn" data-cls="Assault · Medium" tabindex="0" role="button" aria-label="Inspect Autumn assault">
+        <img src="assets/market-images/UI_AssaultM_Autumn.png" alt="Assault-class ship Autumn" loading="lazy">
+        <figcaption class="meta"><span class="name">Autumn</span><span class="cls">Assault</span></figcaption>
+      </figure>
+      <figure class="panel ship-card reveal" data-name="Hammerhead" data-cls="Assault · Medium" tabindex="0" role="button" aria-label="Inspect Hammerhead assault">
+        <img src="assets/market-images/UI_AssaultM_Hammerhead.png" alt="Assault-class ship Hammerhead" loading="lazy">
+        <figcaption class="meta"><span class="name">Hammerhead</span><span class="cls">Assault</span></figcaption>
+      </figure>
+      <figure class="panel ship-card reveal" data-name="Troy" data-cls="Assault · Medium" tabindex="0" role="button" aria-label="Inspect Troy assault">
+        <img src="assets/market-images/UI_AssaultM_Troy.png" alt="Assault-class ship Troy" loading="lazy">
+        <figcaption class="meta"><span class="name">Troy</span><span class="cls">Assault</span></figcaption>
+      </figure>
+      </div>
+      <h3 class="gallery-group">SCOUT <span class="cnt">// EYES OF THE FLEET · 5 HULLS</span></h3>
+      <div class="gallery-grid">
+      <figure class="panel ship-card reveal" data-name="Demeter" data-cls="Scout · Heavy" tabindex="0" role="button" aria-label="Inspect Demeter scout">
+        <img src="assets/market-images/UI_ScoutH_Demeter.png" alt="Scout-class ship Demeter" loading="lazy">
+        <figcaption class="meta"><span class="name">Demeter</span><span class="cls">Scout</span></figcaption>
+      </figure>
+      <figure class="panel ship-card reveal" data-name="Hermes" data-cls="Scout · Legendary" tabindex="0" role="button" aria-label="Inspect Hermes scout">
+        <img src="assets/market-images/UI_ScoutL_Hermes.png" alt="Scout-class ship Hermes" loading="lazy">
+        <figcaption class="meta"><span class="name">Hermes</span><span class="cls">Scout</span></figcaption>
+      </figure>
+      <figure class="panel ship-card reveal" data-name="Viper" data-cls="Scout · Legendary" tabindex="0" role="button" aria-label="Inspect Viper scout">
+        <img src="assets/market-images/UI_ScoutL_Viper.png" alt="Scout-class ship Viper" loading="lazy">
+        <figcaption class="meta"><span class="name">Viper</span><span class="cls">Scout</span></figcaption>
+      </figure>
+      <figure class="panel ship-card reveal" data-name="Outis" data-cls="Scout · Medium" tabindex="0" role="button" aria-label="Inspect Outis scout">
+        <img src="assets/market-images/UI_ScoutM_Outis.png" alt="Scout-class ship Outis" loading="lazy">
+        <figcaption class="meta"><span class="name">Outis</span><span class="cls">Scout</span></figcaption>
+      </figure>
+      <figure class="panel ship-card reveal" data-name="Phoenix" data-cls="Scout · Medium" tabindex="0" role="button" aria-label="Inspect Phoenix scout">
         <img src="assets/market-images/UI_ScoutM_Phoenix.png" alt="Scout-class ship Phoenix" loading="lazy">
         <figcaption class="meta"><span class="name">Phoenix</span><span class="cls">Scout</span></figcaption>
+      </figure>
+      </div>
+      <h3 class="gallery-group">SNIPER <span class="cnt">// LONG-RANGE GUNS · 6 HULLS</span></h3>
+      <div class="gallery-grid">
+      <figure class="panel ship-card reveal" data-name="Kore" data-cls="Sniper · Heavy" tabindex="0" role="button" aria-label="Inspect Kore sniper">
+        <img src="assets/market-images/UI_SniperH_Kore.png" alt="Sniper-class ship Kore" loading="lazy">
+        <figcaption class="meta"><span class="name">Kore</span><span class="cls">Sniper</span></figcaption>
+      </figure>
+      <figure class="panel ship-card reveal" data-name="Tunmen" data-cls="Sniper · Heavy" tabindex="0" role="button" aria-label="Inspect Tunmen sniper">
+        <img src="assets/market-images/UI_SniperH_Tunmen.png" alt="Sniper-class ship Tunmen" loading="lazy">
+        <figcaption class="meta"><span class="name">Tunmen</span><span class="cls">Sniper</span></figcaption>
+      </figure>
+      <figure class="panel ship-card reveal" data-name="Hasta" data-cls="Sniper · Legendary" tabindex="0" role="button" aria-label="Inspect Hasta sniper">
+        <img src="assets/market-images/UI_SniperL_Hasta.png" alt="Sniper-class ship Hasta" loading="lazy">
+        <figcaption class="meta"><span class="name">Hasta</span><span class="cls">Sniper</span></figcaption>
+      </figure>
+      <figure class="panel ship-card reveal" data-name="Silesia" data-cls="Sniper · Legendary" tabindex="0" role="button" aria-label="Inspect Silesia sniper">
+        <img src="assets/market-images/UI_SniperL_Silesia.png" alt="Sniper-class ship Silesia" loading="lazy">
+        <figcaption class="meta"><span class="name">Silesia</span><span class="cls">Sniper</span></figcaption>
       </figure>
       <figure class="panel ship-card reveal" data-name="Artemis" data-cls="Sniper · Medium" tabindex="0" role="button" aria-label="Inspect Artemis sniper">
         <img src="assets/market-images/UI_SniperM_Artemis.png" alt="Sniper-class ship Artemis" loading="lazy">
         <figcaption class="meta"><span class="name">Artemis</span><span class="cls">Sniper</span></figcaption>
       </figure>
-      <figure class="panel ship-card reveal" data-name="Nereid" data-cls="Support · Medium" tabindex="0" role="button" aria-label="Inspect Nereid support ship">
+      <figure class="panel ship-card reveal" data-name="Junker" data-cls="Sniper · Medium" tabindex="0" role="button" aria-label="Inspect Junker sniper">
+        <img src="assets/market-images/UI_SniperM_Junker.png" alt="Sniper-class ship Junker" loading="lazy">
+        <figcaption class="meta"><span class="name">Junker</span><span class="cls">Sniper</span></figcaption>
+      </figure>
+      </div>
+      <h3 class="gallery-group">SUPPORT <span class="cnt">// LOGISTICS &amp; REPAIR · 7 HULLS</span></h3>
+      <div class="gallery-grid">
+      <figure class="panel ship-card reveal" data-name="Indrik" data-cls="Support · Heavy" tabindex="0" role="button" aria-label="Inspect Indrik support">
+        <img src="assets/market-images/UI_SupportH_Indrik.png" alt="Support-class ship Indrik" loading="lazy">
+        <figcaption class="meta"><span class="name">Indrik</span><span class="cls">Support</span></figcaption>
+      </figure>
+      <figure class="panel ship-card reveal" data-name="Kali" data-cls="Support · Heavy" tabindex="0" role="button" aria-label="Inspect Kali support">
+        <img src="assets/market-images/UI_SupportH_Kali.png" alt="Support-class ship Kali" loading="lazy">
+        <figcaption class="meta"><span class="name">Kali</span><span class="cls">Support</span></figcaption>
+      </figure>
+      <figure class="panel ship-card reveal" data-name="Hactar" data-cls="Support · Legendary" tabindex="0" role="button" aria-label="Inspect Hactar support">
+        <img src="assets/market-images/UI_SupportL_Hactar.png" alt="Support-class ship Hactar" loading="lazy">
+        <figcaption class="meta"><span class="name">Hactar</span><span class="cls">Support</span></figcaption>
+      </figure>
+      <figure class="panel ship-card reveal" data-name="Marauder" data-cls="Support · Legendary" tabindex="0" role="button" aria-label="Inspect Marauder support">
+        <img src="assets/market-images/UI_SupportL_Marauder.png" alt="Support-class ship Marauder" loading="lazy">
+        <figcaption class="meta"><span class="name">Marauder</span><span class="cls">Support</span></figcaption>
+      </figure>
+      <figure class="panel ship-card reveal" data-name="Strix" data-cls="Support · Legendary" tabindex="0" role="button" aria-label="Inspect Strix support">
+        <img src="assets/market-images/UI_SupportL_Strix.png" alt="Support-class ship Strix" loading="lazy">
+        <figcaption class="meta"><span class="name">Strix</span><span class="cls">Support</span></figcaption>
+      </figure>
+      <figure class="panel ship-card reveal" data-name="Akkoro" data-cls="Support · Medium" tabindex="0" role="button" aria-label="Inspect Akkoro support">
+        <img src="assets/market-images/UI_SupportM_Akkoro.png" alt="Support-class ship Akkoro" loading="lazy">
+        <figcaption class="meta"><span class="name">Akkoro</span><span class="cls">Support</span></figcaption>
+      </figure>
+      <figure class="panel ship-card reveal" data-name="Nereid" data-cls="Support · Medium" tabindex="0" role="button" aria-label="Inspect Nereid support">
         <img src="assets/market-images/UI_SupportM_Nereid.png" alt="Support-class ship Nereid" loading="lazy">
         <figcaption class="meta"><span class="name">Nereid</span><span class="cls">Support</span></figcaption>
       </figure>
-    </div>
+      </div>
+
     <p class="gallery-note">// Artwork: extracted from the game's own UI assets — fan-preservation use only. Click a card for full view.</p>
   </section>
 
   <!-- ============ PATCH NOTES ============ -->
-  <section id="patch-notes">
+  <section id="patch-notes" role="tabpanel" aria-labelledby="tab-patch-notes" hidden>
     <p class="sec-tag reveal">04 // Patch Notes</p>
     <h2 class="reveal">Patch <em>Notes</em></h2>
     <p class="sec-lead reveal">Player-facing notes for the <strong>server</strong> and <strong>launcher</strong> — what plays differently, not how it was fixed. Newest first.</p>
@@ -202,7 +316,7 @@
   </section>
 
   <!-- ============ ROADMAP ============ -->
-  <section id="roadmap">
+  <section id="roadmap" role="tabpanel" aria-labelledby="tab-roadmap" hidden>
     <p class="sec-tag reveal">05 // Mission Timeline</p>
     <h2 class="reveal">The Road <em>Back to War</em></h2>
     <div class="timeline">
@@ -214,17 +328,17 @@
       <div class="milestone done reveal">
         <div class="phase">Phase 02 — Complete</div>
         <h3>Backend Emulation</h3>
-        <p>Multiple Go microservices reimplement the Greybox/Yager backend: registration, profiles, inventory, market, fleets, matchmaking and the Firmament social socket.</p>
+        <p>Seven Go microservices reimplement the Greybox/Yager backend: registration, profiles, inventory, market, fleets, matchmaking and the Firmament social socket.</p>
       </div>
       <div class="milestone done reveal">
         <div class="phase">Phase 03 — Complete</div>
         <h3>Replacement Launcher</h3>
-        <p>dn-launcher.exe (Windows) plus a Linux/Proton wrapper: sign-in, CA install without admin rights, news tiles, and one-click Play into the unmodified game.</p>
+        <p>dn-launcher.exe (Windows, WebView2) plus a Linux/Proton wrapper: sign-in, CA install without admin rights, news tiles, and one-click Play into the unmodified game.</p>
       </div>
       <div class="milestone done reveal">
         <div class="phase">Phase 04 — Complete</div>
         <h3>Dedicated Battle Servers</h3>
-        <p>game-manager / dn-dedicated spawns headless battle servers per match with a managed UDP port pool, readiness gating and per-instance logs. The battle-server mod supplies host loadouts.</p>
+        <p>game-manager / dn-dedicated spawns headless Wine battle servers per match with a managed UDP port pool (7777–7877), readiness gating and per-instance logs. The battle-server mod supplies host loadouts.</p>
       </div>
       <div class="milestone active reveal">
         <div class="phase">Phase 05 — In Progress</div>
@@ -240,7 +354,7 @@
   </section>
 
   <!-- ============ COMMUNITY ============ -->
-  <section id="community">
+  <section id="community" role="tabpanel" aria-labelledby="tab-community" hidden>
     <p class="sec-tag reveal">06 // Join the Fight</p>
     <h2 class="reveal">How to <em>Play &amp; Contribute</em></h2>
     <div class="community-grid">
@@ -253,7 +367,7 @@
         <div class="step">
           <div class="n">02</div>
           <div><h4>Get the launcher</h4>
-            <p>Grab the latest release of <code>dn-launcher.exe</code> from the launcher repository's releases:</p>
+            <p>Grab the latest release of <code>dn-launcher.exe</code> (Windows, WebView2) from the launcher repository's releases:</p>
             <div class="cmd-row">
               <code id="clone-cmd">github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases</code>
               <button class="copy-btn" id="copy-btn" type="button">Copy</button>
@@ -262,7 +376,7 @@
         </div>
         <div class="step">
           <div class="n">03</div>
-          <div><h4>Run the launcher and register</h4><p>Create an account in the launcher, install the server certificate when prompted — the launcher handles it without admin rights.</p></div>
+          <div><h4>Run the launcher and register</h4><p>Create an account in the launcher, install the server certificate (<code>ca.crt</code>) when prompted — the launcher handles it without admin rights, with a <code>dn-launcher.json</code> pointing at the server baked in.</p></div>
         </div>
         <div class="step">
           <div class="n">04</div>
@@ -273,15 +387,18 @@
         <h3>Contribute (Developers)</h3>
         <p>This is a server for a client we cannot change — <strong>never invent data</strong>: everything the server sends must be traceable to the client's own tables or binary. Read the client's parsers before forming a theory.</p>
         <ul>
-          <li>The <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server" target="_blank" rel="noopener">server repository</a> carries the backend, the battle-server mod, data and docs.</li>
-          <li>The <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher" target="_blank" rel="noopener">launcher repository</a> holds the Windows launcher and its releases.</li>
-          <li>This site lives in <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Page" target="_blank" rel="noopener">Dreadnought-Revival-Page</a> — content fixes and style tweaks via pull requests.</li>
+          <li>Read the <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">contributing guide</a> and the client-data docs in the <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server" target="_blank" rel="noopener">server repository</a>.</li>
+          <li>It's a Go workspace — build one service with <code>go build ./mmogbrain</code>, test per-module with <code>go test ./...</code>.</li>
+          <li>Run the stack locally: <code>bash scripts/setup.sh</code> then <code>bash scripts/start-services.sh</code>.</li>
+          <li>Open issues for bugs, PRs for fixes — see open work in <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/issues" target="_blank" rel="noopener">server issues</a>; site fixes go through <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Page/pulls" target="_blank" rel="noopener">pull requests on this repo</a>.</li>
         </ul>
         <p>Testers, bug reporters and Discord regulars keep the servers alive — every playtest report matters.</p>
         <a class="btn btn-primary" style="display:inline-block;margin-top:8px" href="https://github.com/Dreadnought-Revival" target="_blank" rel="noopener">Open the Organization ↗</a>
       </div>
     </div>
   </section>
+
+  </div><!-- /panels -->
 
 </main>
 
@@ -299,6 +416,7 @@
         <li><a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases" target="_blank" rel="noopener">Launcher Releases</a></li>
         <li><a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server" target="_blank" rel="noopener">Server Repository</a></li>
         <li><a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/blob/main/README.md" target="_blank" rel="noopener">Server Setup Guide</a></li>
+        <li><a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/issues" target="_blank" rel="noopener">Report a Bug</a></li>
       </ul>
     </div>
     <div>

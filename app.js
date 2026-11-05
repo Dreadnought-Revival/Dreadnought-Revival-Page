@@ -1,6 +1,6 @@
 /* Dreadnought Revival — HUD landing page script.
- * Sections: header/nav behaviour, scrollspy, reveal-on-scroll, status badge,
- * patch-notes renderer, ship gallery lightbox, copy button. */
+ * Sections: header/nav behaviour, ARIA tabs + hash routing, reveal,
+ * status badge, patch-notes renderer, ship gallery lightbox, copy button. */
 (function () {
   'use strict';
 
@@ -50,22 +50,97 @@
   window.addEventListener('scroll', onScrollHeader, { passive: true });
   onScrollHeader();
 
+  function closeMenu() {
+    if (!navLinks || !navLinks.classList.contains('open')) return;
+    navLinks.classList.remove('open');
+    if (burger) {
+      burger.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+    }
+  }
+
   if (burger && navLinks) {
     burger.addEventListener('click', function () {
       var open = navLinks.classList.toggle('open');
       burger.classList.toggle('open', open);
       burger.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
-    navLinks.addEventListener('click', function (e) {
-      if (e.target && e.target.tagName === 'A') {
-        navLinks.classList.remove('open');
-        burger.classList.remove('open');
-        burger.setAttribute('aria-expanded', 'false');
-      }
+  }
+
+  /* ---------- tabs (the nav is a tablist; panels switch, hash routes deep links) ---------- */
+
+  var TABS = ['briefing', 'systems', 'gallery', 'patch-notes', 'roadmap', 'community'];
+  var tabButtons = $all('[role="tab"]');
+  var panelsEl = $('#panels');
+
+  function scrollToPanels(smooth) {
+    if (!panelsEl) return;
+    var top = panelsEl.getBoundingClientRect().top + window.scrollY - 84;
+    window.scrollTo({ top: top, behavior: smooth && !prefersReduced ? 'smooth' : 'auto' });
+  }
+
+  function revealPanel(panel) {
+    if (!panel) return;
+    $all('.reveal', panel).forEach(function (el, i) {
+      el.style.transitionDelay = Math.min(i * 30, 300) + 'ms';
+      el.classList.add('visible');
     });
   }
 
-  /* ---------- reveal on scroll ---------- */
+  function selectTab(id, pushHash, scroll) {
+    if (TABS.indexOf(id) === -1) return false;
+    tabButtons.forEach(function (btn) {
+      var pid = btn.getAttribute('data-panel');
+      var panel = document.getElementById(pid);
+      var on = pid === id;
+      if (panel) panel.hidden = !on;
+      btn.setAttribute('aria-selected', on ? 'true' : 'false');
+      btn.tabIndex = on ? 0 : -1;
+      btn.classList.toggle('active', on);
+    });
+    revealPanel(document.getElementById(id));
+    if (pushHash && location.hash !== '#' + id) {
+      history.pushState(null, '', '#' + id);
+    }
+    if (scroll) scrollToPanels(true);
+    return true;
+  }
+
+  tabButtons.forEach(function (btn, i) {
+    btn.addEventListener('click', function () {
+      selectTab(btn.getAttribute('data-panel'), true, true);
+      closeMenu();
+    });
+    btn.addEventListener('keydown', function (e) {
+      var n = null;
+      if (e.key === 'ArrowRight') n = (i + 1) % tabButtons.length;
+      else if (e.key === 'ArrowLeft') n = (i - 1 + tabButtons.length) % tabButtons.length;
+      else if (e.key === 'Home') n = 0;
+      else if (e.key === 'End') n = tabButtons.length - 1;
+      if (n === null) return;
+      e.preventDefault();
+      tabButtons[n].focus();
+      selectTab(tabButtons[n].getAttribute('data-panel'), true, false);
+    });
+  });
+
+  function onHashChange() {
+    var id = location.hash.slice(1);
+    /* #top and unknown hashes: leave the tabs alone */
+    if (TABS.indexOf(id) === -1) return;
+    if (selectTab(id, false, false)) scrollToPanels(true);
+  }
+  window.addEventListener('hashchange', onHashChange);
+  window.addEventListener('popstate', onHashChange);
+
+  /* initial state: deep link selects the tab, otherwise briefing */
+  if (!selectTab(location.hash.slice(1), false, false)) {
+    selectTab('briefing', false, false);
+  } else {
+    scrollToPanels(false);
+  }
+
+  /* ---------- reveal on scroll (elements outside the tab panels) ---------- */
 
   var revealEls = $all('.reveal');
 
@@ -78,34 +153,13 @@
         }
       });
     }, { threshold: 0.12 });
-    revealEls.forEach(function (el) { revealObs.observe(el); });
+    revealEls.forEach(function (el) {
+      /* panel content is revealed by selectTab instead */
+      if (!panelsEl || !panelsEl.contains(el)) revealObs.observe(el);
+    });
   } else {
     revealEls.forEach(function (el) { el.classList.add('visible'); });
   }
-
-  /* ---------- scrollspy ---------- */
-
-  var navAnchors = $all('.nav-links a[href^="#"]');
-  var sections = navAnchors.map(function (a) {
-    return document.getElementById(a.getAttribute('href').slice(1));
-  }).filter(Boolean);
-
-  function onScrollSpy() {
-    if (!sections.length) return;
-    var pos = window.scrollY + window.innerHeight * 0.35;
-    var current = sections[0];
-    for (var i = 0; i < sections.length; i++) {
-      if (sections[i].offsetTop <= pos) current = sections[i];
-    }
-    navAnchors.forEach(function (a) {
-      var active = a.getAttribute('href') === '#' + current.id;
-      a.classList.toggle('active', active);
-      if (active) a.setAttribute('aria-current', 'true');
-      else a.removeAttribute('aria-current');
-    });
-  }
-  window.addEventListener('scroll', onScrollSpy, { passive: true });
-  onScrollSpy();
 
   /* ---------- status badge ---------- */
 
@@ -146,14 +200,12 @@
     var html = '';
     notes.forEach(function (note) {
       html += '<article class="patch-day">';
-      html += '<h3>' + escapeHtml(dayLabel(note.date)) + '</h3>';
+      html += '<h3>Patch notes – ' + escapeHtml(dayLabel(note.date)) + '</h3>';
       (note.sections || []).forEach(function (section) {
-        var title = String(section.title || '').toLowerCase();
-        var h = /^summary|release|general/.test(title) ? 'h4' : 'h4';
-        html += '<' + h + '>' + escapeHtml(section.title || '') + '</' + h + '>';
+        html += '<h4>' + escapeHtml(section.title || '') + '</h4>';
         html += '<ul>';
         (section.bullets || []).forEach(function (b) {
-          html += '<li>' + fmt(b) + '</li>';
+          html += '<li><span class="msg">' + fmt(b) + '</span></li>';
         });
         html += '</ul>';
       });

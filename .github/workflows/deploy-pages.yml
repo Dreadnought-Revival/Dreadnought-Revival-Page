@@ -31,8 +31,14 @@ jobs:
           SHA=fa3dc2c8c608b7cff79011b013843b74473efd71
           BASE="https://raw.githubusercontent.com/darkace1998/Dreadnought-Revival-project/$SHA/data/market-images"
           for img in UI_DreadnoughtM_Morningstar UI_DreadnoughtL_Leviathan UI_DreadnoughtH_Trident \
-                     UI_AssaultM_Autumn UI_AssaultH_Huscarl UI_ScoutM_Phoenix \
-                     UI_SniperM_Artemis UI_SupportM_Nereid; do
+                     UI_DreadnoughtL_Dragon UI_DreadnoughtL_MadKing UI_DreadnoughtM_Zilant \
+                     UI_AssaultH_Huscarl UI_AssaultH_Marzanna UI_AssaultL_Daggertooth UI_AssaultL_Fenrir \
+                     UI_AssaultM_Autumn UI_AssaultM_Hammerhead UI_AssaultM_Troy \
+                     UI_ScoutH_Demeter UI_ScoutL_Hermes UI_ScoutL_Viper UI_ScoutM_Outis UI_ScoutM_Phoenix \
+                     UI_SniperH_Kore UI_SniperH_Tunmen UI_SniperL_Hasta UI_SniperL_Silesia \
+                     UI_SniperM_Artemis UI_SniperM_Junker \
+                     UI_SupportH_Indrik UI_SupportH_Kali UI_SupportL_Hactar UI_SupportL_Marauder \
+                     UI_SupportL_Strix UI_SupportM_Akkoro UI_SupportM_Nereid; do
             curl --fail --silent --show-error --location -o "assets/market-images/$img.png" "$BASE/$img.png"
             test -s "assets/market-images/$img.png"
           done
