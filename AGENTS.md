@@ -16,8 +16,10 @@ emulated server-side, one replacement launcher. Sibling repositories:
 
 ## Stack and layout
 
-Plain static HTML/CSS/JS. **No build step, no framework, no dependencies** — GitHub Pages
-serves the repo root as-is.
+Plain static HTML/CSS/JS site. **No build step, no framework, no dependencies** — GitHub
+Pages serves the repo root as-is. The one exception is `workflow/`, the Mistral Studio
+workflow project (see below); it is stripped from the Pages artifact before upload and
+never ships to the site.
 
 ```
 index.html      single page: hero, about, how to join, status, patch notes, community
@@ -25,9 +27,9 @@ styles.css      dark space-combat theme
 app.js          nav toggle, server-status badge, patch-notes rendering (fetches data/)
 404.html        custom not-found page
 assets/         logo.svg, favicon.svg, og-image.png (social preview)
-data/           patch-notes.json (player-facing notes written by the AI agent — see
-                below), server-status.json (optional)
-.github/workflows/  ci.yml, deploy-pages.yml
+data/           patch-notes.json (player-facing notes — see below), server-status.json (optional)
+workflow/       Mistral Studio workflow project: revival-patch-notes (see below)
+.github/workflows/  ci.yml, deploy-pages.yml, workflow-ci.yml
 ```
 
 ## Working rules
@@ -35,11 +37,12 @@ data/           patch-notes.json (player-facing notes written by the AI agent �
 - **Never hand-edit `data/patch-notes.json`.** The notes are player-facing: dated
   batches, one section per game mode or area (Team Deathmatch, Team Elimination,
   Conquest, Onslaught, Ceres Awakens, Proving Grounds, Havoc, Turbo TDM, or
-  Launcher / Hangar / Market / Tech tree / General), “Before, ...” context lines,
-  and a “Known issues / please report” closer. No internals: no hashes, file names,
-  function names or log lines. They are written by the project's AI agent from new
-  commits in the server and launcher repos; to change the format, change the agent's
-  patch-notes skill and the renderer in `app.js`, not the data file.
+  Launcher / Hangar / Market / Tech tree / General), "Before, ..." context lines,
+  and a "Known issues / please report" closer. No internals: no hashes, file names,
+  function names or log lines. New notes are generated automatically (see the
+  patch-notes automation section below); to change the format, change the prompt in
+  `workflow/apps/worker/src/worker/workflows/patch_notes.py` and the renderer in
+  `app.js`, not the data file.
 - Keep the site dependency-free and responsive from day one; test locally with
   `python3 -m http.server` before pushing.
 - Content rules: describe the project exactly as the server repo README does (unmodified
@@ -51,8 +54,9 @@ data/           patch-notes.json (player-facing notes written by the AI agent �
 - Validate before pushing: `python3 -m json.tool data/patch-notes.json`, and the checks
   in `.github/workflows/ci.yml` (file presence, no files over 10M).
 - Deployment is GitHub Pages with **Source: GitHub Actions** (Settings → Pages);
-  `.github/workflows/deploy-pages.yml` uploads the repo root on every push to `main`.
-  Do not add a build/deploy pipeline for a framework — there is no build step.
+  `.github/workflows/deploy-pages.yml` uploads the repo root (minus `workflow/`) on
+  every push to `main`. Do not add a build/deploy pipeline for a framework — there is
+  no build step for the site.
 - Patch-notes updates land on `main` through the normal PR flow; that push triggers
   the Pages deploy, so the site updates itself. Do not add `[skip ci]` to those
   commits.
@@ -63,3 +67,35 @@ data/           patch-notes.json (player-facing notes written by the AI agent �
 - Commit style: short imperative subject, lowercase, like the existing history
   (`Add .gitignore and basic CI workflow`). Work on a `vibe/<slug>-fa133d` branch and
   open a draft PR; push to `main` only via PR merge.
+
+## Patch-notes automation (Mistral Studio workflow)
+
+`workflow/` is a Mistral Workflows (Python/uv) project deployed as the managed
+deployment `revival-ops` on Mistral Cloud. Its single workflow:
+
+- **`revival-patch-notes`** — started by a GitHub webhook trigger when commits are
+  pushed to `Dreadnought-Revival-server` (default branch only, other events and repos
+  are ignored in code; the trigger filter also enforces `event_type == 'push'`).
+  It turns the push's commit subjects into a player-facing notes batch with
+  `mistral-medium-latest`, merges it into `data/patch-notes.json` (same-day pushes
+  merge into that day's entry), and opens a PR like `Patch notes <date>: N commit(s)`.
+  It never merges the PR itself: the daily Vibe ops run reviews and merges it, and
+  the Pages deploy follows.
+
+How to work on it:
+
+- Code: `workflow/apps/worker/src/worker/workflows/` (`patch_notes.py` is the workflow,
+  `notes_format.py` the stdlib-only helpers). The Workflows SDK docs are at
+  https://docs.mistral.ai/studio/workflows (start with "build your first workflow"
+  and "connectors in workflows").
+- Tests: `workflow/apps/worker/tests/` — pure-logic tests plus SDK tests with the
+  connector/model activities faked. `bash tools/uv.sh sync --all-packages` then
+  `bash tools/uv.sh run --all-packages pytest apps/worker/tests -q` from `workflow/`.
+  GitHub Actions runs them on every change under `workflow/` (workflow-ci.yml).
+- The Docker build resolves dependencies at build time (no committed `uv.lock`); keep
+  it that way unless you also start committing a lockfile.
+- The deployment is unattended: it authenticates GitHub through the workspace-scope
+  credential on the `github_app` connector in Mistral Studio, and model calls through
+  the worker identity. Never enable `on_behalf_of` on this workflow.
+- After merging changes to `workflow/`, redeploy the `revival-ops` deployment
+  (Mistral Studio, or ask the Vibe agent) so the running worker picks them up.

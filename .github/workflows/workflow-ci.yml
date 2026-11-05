@@ -1,0 +1,68 @@
+name: Workflow CI
+
+on:
+  push:
+    branches: [main]
+    paths: ["workflow/**", ".github/workflows/workflow-ci.yml"]
+  pull_request:
+    paths: ["workflow/**", ".github/workflows/workflow-ci.yml"]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: workflow
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install dependencies
+        run: bash tools/uv.sh sync --all-packages
+
+      - name: Run workflow tests
+        run: |
+          set -o pipefail
+          bash tools/uv.sh run --all-packages pytest apps/worker/tests -q 2>&1 | tee pytest-output.log
+
+      - name: Report failure details
+        if: failure()
+        working-directory: workflow
+        run: |
+          set -eu
+          echo "Pytest failures (last 100 lines):" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          tail -n 100 pytest-output.log >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          # Surface the informative lines as annotations so they are visible without log access
+          grep -E "FAILED|ERRORS|ERROR|Error:|error:|assert|raise |ModuleNotFound|ImportError" pytest-output.log \
+            | head -n 8 | cut -c1-240 \
+            | while IFS= read -r line; do echo "::error title=pytest::$line"; done
+
+  alert-on-failure:
+    if: failure() && github.event_name == 'push'
+    needs: [tests]
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - name: Open or update a tracking issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -eu
+          RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          TITLE="[workflow failure] ${{ github.workflow }}"
+          OPEN=$(gh api "repos/$GITHUB_REPOSITORY/issues?state=open&per_page=100" --jq ".[] | select(.title == \"$TITLE\") | .number" | head -n 1 || true)
+          if [ -n "$OPEN" ]; then
+            gh api "repos/$GITHUB_REPOSITORY/issues/$OPEN/comments" -f body="Failed again: $RUN_URL"
+          else
+            gh api "repos/$GITHUB_REPOSITORY/issues" -f title="$TITLE" -f body="The [${{ github.workflow }} run]($RUN_URL) failed. Auto-opened for tracking; the Vibe daily ops run will pick it up."
+          fi
