@@ -25,3 +25,24 @@ jobs:
           node --check app.js && echo "app.js syntax OK"
           find . -type f -size +10M -not -path "./.git/*" | tee /tmp/large_files
           test ! -s /tmp/large_files && echo "No accidentally large files"
+
+  alert-on-failure:
+    if: failure() && github.event_name == 'push'
+    needs: [checks]
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Open or update a tracking issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -eu
+          RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          TITLE="[workflow failure] ${{ github.workflow }}"
+          OPEN=$(gh api "repos/$GITHUB_REPOSITORY/issues?state=open&per_page=100" --jq ".[] | select(.title == \"$TITLE\") | .number" | head -n 1 || true)
+          if [ -n "$OPEN" ]; then
+            gh api "repos/$GITHUB_REPOSITORY/issues/$OPEN/comments" -f body="Failed again: $RUN_URL"
+          else
+            gh api "repos/$GITHUB_REPOSITORY/issues" -f title="$TITLE" -f body="The [${{ github.workflow }} run]($RUN_URL) failed. Auto-opened for tracking; the Vibe daily ops run will pick it up."
+          fi
