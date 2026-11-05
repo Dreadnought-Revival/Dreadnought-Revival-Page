@@ -21,12 +21,12 @@
         <span>Dreadnought <strong>Revival</strong></span>
       </a>
       <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
-      <ul class="nav-links" id="nav-links">
-        <li><a href="#about">About</a></li>
-        <li><a href="#join">How to join</a></li>
-        <li><a href="#status">Server status</a></li>
-        <li><a href="#patch-notes">Patch notes</a></li>
-        <li><a href="#community">Community</a></li>
+      <ul class="nav-links" id="nav-links" role="tablist" aria-label="Site sections">
+        <li role="presentation"><button class="tab" role="tab" id="tab-about" data-panel="about" aria-controls="about" aria-selected="true">About</button></li>
+        <li role="presentation"><button class="tab" role="tab" id="tab-join" data-panel="join" aria-controls="join" aria-selected="false">How to join</button></li>
+        <li role="presentation"><button class="tab" role="tab" id="tab-status" data-panel="status" aria-controls="status" aria-selected="false">Server status</button></li>
+        <li role="presentation"><button class="tab" role="tab" id="tab-patch-notes" data-panel="patch-notes" aria-controls="patch-notes" aria-selected="false">Patch notes</button></li>
+        <li role="presentation"><button class="tab" role="tab" id="tab-community" data-panel="community" aria-controls="community" aria-selected="false">Community</button></li>
       </ul>
     </nav>
   </header>
@@ -46,7 +46,7 @@
       </div>
     </section>
 
-    <section id="about" class="container section">
+    <section id="about" class="container section panel" role="tabpanel" aria-labelledby="tab-about">
       <h2>About the project</h2>
       <p>
         Dreadnought Revival runs a private server for <strong>Dreadnought</strong>
@@ -80,7 +80,7 @@
       </p>
     </section>
 
-    <section id="join" class="container section">
+    <section id="join" class="container section panel" role="tabpanel" aria-labelledby="tab-join" hidden>
       <h2>How to join</h2>
       <ol class="steps">
         <li>
@@ -104,7 +104,7 @@
       </p>
     </section>
 
-    <section id="status" class="container section">
+    <section id="status" class="container section panel" role="tabpanel" aria-labelledby="tab-status" hidden>
       <h2>Server status</h2>
       <p class="status-line">
         <span class="status-badge" id="status-badge">status loading…</span>
@@ -116,7 +116,7 @@
       </p>
     </section>
 
-    <section id="patch-notes" class="container section">
+    <section id="patch-notes" class="container section panel" role="tabpanel" aria-labelledby="tab-patch-notes" hidden>
       <h2>Patch notes</h2>
       <p>
         Player-facing notes for the
@@ -130,7 +130,7 @@
       <noscript><p class="muted">Patch notes require JavaScript — or read the commit history directly on GitHub.</p></noscript>
     </section>
 
-    <section id="community" class="container section">
+    <section id="community" class="container section panel" role="tabpanel" aria-labelledby="tab-community" hidden>
       <h2>Community</h2>
       <ul class="link-list">
         <li><a href="https://github.com/Dreadnought-Revival">Dreadnought-Revival on GitHub</a> — all three repositories</li>
@@ -139,6 +139,8 @@
         <li>Discord — see the link in the server repository README</li>
       </ul>
     </section>
+
+    <noscript><p class="container muted">JavaScript is off, so all sections are shown at once below each other.</p></noscript>
   </main>
 
   <footer class="site-footer">

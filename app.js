@@ -1,6 +1,8 @@
 (function () {
   "use strict";
 
+  var TABS = ["about", "join", "status", "patch-notes", "community"];
+
   // Mobile nav toggle
   var toggle = document.querySelector(".nav-toggle");
   var links = document.getElementById("nav-links");
@@ -9,6 +11,56 @@
       var open = links.classList.toggle("open");
       toggle.setAttribute("aria-expanded", open ? "true" : "false");
     });
+  }
+
+  // Tabs: the nav is a tablist; panels switch, hash routes deep links
+  function selectTab(id, updateHash) {
+    if (TABS.indexOf(id) === -1) id = "about";
+    TABS.forEach(function (t) {
+      var panel = document.getElementById(t);
+      var tab = document.getElementById("tab-" + t);
+      if (!panel || !tab) return;
+      var on = t === id;
+      panel.hidden = !on;
+      tab.setAttribute("aria-selected", on ? "true" : "false");
+      tab.tabIndex = on ? 0 : -1;
+      tab.classList.toggle("active", on);
+    });
+    if (updateHash !== false && location.hash !== "#" + id) {
+      history.pushState(null, "", "#" + id);
+    }
+  }
+
+  function wireTabs() {
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        selectTab(tab.getAttribute("data-panel"));
+        if (links && links.classList.contains("open")) {
+          links.classList.remove("open");
+          if (toggle) toggle.setAttribute("aria-expanded", "false");
+        }
+      });
+      tab.addEventListener("keydown", function (e) {
+        var i = tabs.indexOf(tab);
+        var n = null;
+        if (e.key === "ArrowRight") n = (i + 1) % tabs.length;
+        else if (e.key === "ArrowLeft") n = (i - 1 + tabs.length) % tabs.length;
+        else if (e.key === "Home") n = 0;
+        else if (e.key === "End") n = tabs.length - 1;
+        if (n === null) return;
+        e.preventDefault();
+        tabs[n].focus();
+        selectTab(tabs[n].getAttribute("data-panel"));
+      });
+    });
+    window.addEventListener("hashchange", function () {
+      selectTab(location.hash.slice(1), false);
+    });
+    window.addEventListener("popstate", function () {
+      selectTab(location.hash.slice(1), false);
+    });
+    selectTab(location.hash.slice(1), false);
   }
 
   // Server status badge: static fallback, upgraded if data/server-status.json exists
@@ -36,7 +88,6 @@
   }
 
   // Patch notes: player-facing, rendered from data/patch-notes.json
-  // (written by the project's AI agent; sections per game mode or area)
   var state = { notes: [] };
 
   function dayLabel(iso) {
@@ -95,6 +146,7 @@
       });
   }
 
+  wireTabs();
   loadStatus();
   loadPatchNotes();
 })();
