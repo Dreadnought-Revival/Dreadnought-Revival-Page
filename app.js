@@ -69,7 +69,7 @@
 
   /* ---------- tabs (the nav is a tablist; panels switch, hash routes deep links) ---------- */
 
-  var TABS = ['play', 'status', 'modes', 'patch-notes', 'gallery', 'roadmap', 'contribute'];
+  var TABS = ['play', 'status', 'modes', 'patch-notes', 'gallery', 'roadmap', 'contribute', 'support'];
   /* tab ids before the 2026-11 reorganisation, so old links still land */
   var ALIASES = { briefing: 'status', systems: 'status', community: 'play' };
   function tabFromHash() {

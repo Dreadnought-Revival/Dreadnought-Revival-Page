@@ -25,8 +25,8 @@ never ships to the site.
 index.html      one-page HUD landing: full-height hero (one primary Download button,
                 secondary links, a four-step how-to strip), then tabbed panels behind
                 an ARIA tablist in the header nav (Play / Status / Game Modes / Patch
-                Notes / Fleet / Roadmap / Contribute), 31-ship gallery grouped by
-                class, footer
+                Notes / Fleet / Roadmap / Contribute / Support), 31-ship gallery
+                grouped by class, footer
 styles.css      dark space-combat HUD theme (void bg, amber/cyan accents, clipped
                 panels/buttons, tab bar, grid + scanline overlays, reveal-on-scroll)
 app.js          ARIA tabs + hash routing (arrow-key support), burger nav, reveal,
@@ -75,8 +75,9 @@ the Deploy Pages run on purpose. To change the image set: update the gallery
 - Content rules: describe the project exactly as the server repo README does (unmodified
   client, server-side emulation, launcher-only install); always link to the server and
   launcher repositories; keep the disclaimer (not affiliated with Greybox/Yager).
-- The Discord invite is https://discord.gg/yKYUt5Qh2c (header icon, Play tab card,
-  hero links, Contribute, footer). Download buttons use GitHub's
+- The Discord invite is https://discord.gg/dreadnought (header icon, Play tab card,
+  hero links, Contribute, Support, footer). The Support tab and the footer link the
+  maintainer's Patreon, https://www.patreon.com/cw/DARKACE39. Download buttons use GitHub's
   `releases/latest/download/<asset>` links, so they follow every launcher release
   as long as the asset names (`Dreadnought-Revival.exe`,
   `Dreadnought-Revival-linux.tar.gz`) stay the same.

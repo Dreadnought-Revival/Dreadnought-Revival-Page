@@ -13,7 +13,7 @@ Plain static HTML/CSS/JS — no build step, no dependencies. Pages serves the re
 (`workflow/`, the automation project below, is excluded from the published site).
 
 ```
-index.html      one-page HUD landing: hero with the Download button, then tabbed panels (play, status, game modes, patch notes, fleet gallery, roadmap, contribute)
+index.html      one-page HUD landing: hero with the Download button, then tabbed panels (play, status, game modes, patch notes, fleet gallery, roadmap, contribute, support)
 styles.css      dark space-combat HUD theme (Orbitron for display headings, IBM Plex Sans/Mono for text, amber/cyan accents)
 app.js          ARIA tabs + hash routing, burger nav, reveal-on-scroll, status badge, patch-notes rendering, gallery lightbox
 404.html        custom not-found page (same theme)
@@ -23,7 +23,7 @@ workflow/       Mistral Studio workflow project (revival-patch-notes)
 ```
 
 The site is a HUD-style hero followed by an ARIA tab bar (Play / Status / Game Modes /
-Patch Notes / Fleet / Roadmap / Contribute); URL fragments deep-link the tabs, and with
+Patch Notes / Fleet / Roadmap / Contribute / Support); URL fragments deep-link the tabs, and with
 JavaScript disabled every panel stays visible. The fleet gallery shows 31 ships
 grouped by class. Ship art (`assets/market-images/`) is **not in this
 repo** — it is binary game data, so `deploy-pages.yml` fetches the pinned set from
