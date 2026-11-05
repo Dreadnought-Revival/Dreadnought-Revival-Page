@@ -22,13 +22,16 @@ workflow project (see below); it is stripped from the Pages artifact before uplo
 never ships to the site.
 
 ```
-index.html      one-page HUD landing: full-height hero (one primary Download button,
-                secondary links, a four-step how-to strip), then tabbed panels behind
+index.html      one-page landing: two-row header (centred brand row, then the tab bar),
+                hero (one primary Download button, secondary links, four HUD step
+                cards), three overview banners (ship art + text), then tabbed panels behind
                 an ARIA tablist in the header nav (Play / Status / Game Modes / Patch
                 Notes / Fleet / Roadmap / Contribute / Support), 31-ship gallery
                 grouped by class, footer
-styles.css      dark space-combat HUD theme (void bg, amber/cyan accents, clipped
-                panels/buttons, tab bar, grid + scanline overlays, reveal-on-scroll)
+styles.css      dark HUD theme after the original game site's visual language: Teko
+                headings, cyan on dotted dark-teal panels, thin HUD lines and a tick
+                ruler, orange-red buttons with a corner mark (no original logo or
+                copy); IBM Plex Sans/Mono for text; reveal-on-scroll
 app.js          ARIA tabs + hash routing (arrow-key support), burger nav, reveal,
                 server-status badge, patch-notes rendering (fetches data/),
                 gallery lightbox
@@ -51,7 +54,7 @@ panel stacked, so all content stays reachable.
 
 ### Ship art (deploy-time fetch)
 
-The hero and the fleet gallery use the game's own ship images. They are binary game
+The hero, the overview banners and the fleet gallery use the game's own ship images. They are binary game
 data (cannot round-trip through text-only tooling and must not be committed by hand),
 so `deploy-pages.yml` fetches a pinned list of 31 images from the old
 `darkace1998/Dreadnought-Revival-project` repo (pinned commit SHA) into
