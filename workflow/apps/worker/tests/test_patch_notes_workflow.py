@@ -1,7 +1,7 @@
 """End-to-end test of the revival-patch-notes workflow with side-effect activities faked.
 
 The workflow's deterministic orchestration is what's under test: filtering,
-batch merging and the dry-run/publish decision. The connector and model
+batch merging and the dry-run/publish decision. The GitHub REST and model
 activities are replaced by fakes registered under the same activity names, so
 no GitHub or Mistral credentials are touched. The dry-run input path exercises
 everything except publishing; the publish test captures what would be pushed.
