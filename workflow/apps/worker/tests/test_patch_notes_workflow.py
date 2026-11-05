@@ -83,6 +83,22 @@ async def _run(temporal_env, event, activities, test_id):
         return await asyncio.wait_for(handle.result(), timeout=60)
 
 
+def as_text(result, label: str) -> str:
+    """Unwrap the workflow result to its text, tolerating SDK result envelopes.
+
+    The SDK may deliver the entrypoint's return value wrapped in a dict; the
+    assertion message keeps the full repr so a shape change is visible in CI.
+    """
+    assert result is not None, f"{label}: result was None"
+    if isinstance(result, dict):
+        for key in ("result", "output", "value", "text"):
+            if isinstance(result.get(key), str):
+                return result[key]
+        raise AssertionError(f"{label}: unexpected dict result: {result!r}")
+    assert isinstance(result, str), f"{label}: unexpected result type {type(result)}: {result!r}"
+    return result
+
+
 async def test_dry_run_skips_publishing(temporal_env):
     result = await _run(
         temporal_env,
@@ -90,9 +106,10 @@ async def test_dry_run_skips_publishing(temporal_env):
         [fake_fetch_patch_notes, fake_generate_note_batch, fake_publish_patch_notes],
         "test-revival-patch-notes-dry-run",
     )
-    assert result.startswith("dry run:")
-    assert "1 section(s)" in result
-    assert "1 bullet(s)" in result
+    text = as_text(result, "dry-run")
+    assert text.startswith("dry run:"), f"dry-run text: {text!r}"
+    assert "1 section(s)" in text
+    assert "1 bullet(s)" in text
     assert not hasattr(fake_publish_patch_notes, "captured")
 
 
@@ -104,16 +121,18 @@ async def test_publish_branch_and_pr(temporal_env):
         [fake_fetch_patch_notes, fake_generate_note_batch, fake_publish_patch_notes],
         "test-revival-patch-notes-publish",
     )
-    assert result.endswith("pull/99")
+    text = as_text(result, "publish")
+    assert text.endswith("pull/99"), f"publish text: {text!r}"
     captured = fake_publish_patch_notes.captured  # type: ignore[attr-defined]
-    assert captured["branch"].startswith("vibe/patch-notes-")
-    assert captured["branch"].endswith("-abc1234")
-    assert captured["title"].startswith("Patch notes ")
+    assert captured["branch"].startswith("vibe/patch-notes-"), f"branch: {captured['branch']!r}"
+    assert captured["branch"].endswith("-abc1234"), f"branch: {captured['branch']!r}"
+    assert captured["title"].startswith("Patch notes "), f"title: {captured['title']!r}"
     data = json.loads(captured["content"])
     newest = data["notes"][0]
     assert newest["date"] != "2026-11-01"  # today's batch prepended before the old one
-    assert any("Havoc" in s["title"] or s["title"] == "General" for s in newest["sections"])
+    assert any(s["title"] == "General" for s in newest["sections"])
     assert data["notes"][1]["date"] == "2026-11-01"
+    assert "`abc1234` add havoc rotation" in captured["body"], f"body: {captured['body']!r}"
     if captured_before is None:
         del fake_publish_patch_notes.captured  # type: ignore[attr-defined]
 
@@ -127,7 +146,8 @@ async def test_ignores_non_push_events(temporal_env):
         [fake_fetch_patch_notes, fake_generate_note_batch, fake_publish_patch_notes],
         "test-revival-patch-notes-ping",
     )
-    assert result.startswith("ignored: event_type='ping'")
+    text = as_text(result, "ping")
+    assert text.startswith("ignored: event_type='ping'"), f"ping text: {text!r}"
 
 
 async def test_ignores_other_repos(temporal_env):
@@ -139,7 +159,8 @@ async def test_ignores_other_repos(temporal_env):
         [fake_fetch_patch_notes, fake_generate_note_batch, fake_publish_patch_notes],
         "test-revival-patch-notes-other-repo",
     )
-    assert result.startswith("ignored: repo=")
+    text = as_text(result, "other-repo")
+    assert text.startswith("ignored: repo="), f"other-repo text: {text!r}"
 
 
 async def test_ignores_non_default_branch(temporal_env):
@@ -151,4 +172,5 @@ async def test_ignores_non_default_branch(temporal_env):
         [fake_fetch_patch_notes, fake_generate_note_batch, fake_publish_patch_notes],
         "test-revival-patch-notes-feature-branch",
     )
-    assert result.startswith("ignored: 'refs/heads/feature-x'")
+    text = as_text(result, "feature-branch")
+    assert text.startswith("ignored: 'refs/heads/feature-x'"), f"feature-branch text: {text!r}"
