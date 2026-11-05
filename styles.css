@@ -101,6 +101,8 @@ a:hover { color: #8ad8ff; }
 .status-badge.offline { background: rgba(231, 76, 60, 0.15); border-color: #e74c3c; color: #e74c3c; }
 
 /* Patch notes */
+.patch-day h4 { margin: 1.1rem 0 0.4rem; font-size: 0.95rem; color: var(--text); }
+.patch-day ul { gap: 0.4rem; }
 .patch-filters { display: flex; gap: 0.5rem; margin: 0.75rem 0 1.25rem; flex-wrap: wrap; }
 .chip {
   background: var(--bg-card);

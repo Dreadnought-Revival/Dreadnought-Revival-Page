@@ -15,8 +15,7 @@ Plain static HTML/CSS/JS — no build step, no dependencies. Pages serves the re
 index.html      single page (about, how to join, status, patch notes, community)
 styles.css      dark space-combat theme
 app.js          nav toggle, status badge, patch-notes rendering
-data/           patch-notes.json (generated), server-status.json (optional)
-scripts/        update_patch_notes.py — patch-notes generator
+data/           patch-notes.json (player-facing notes, written by the AI agent), server-status.json (optional)
 assets/         logo, favicon, social preview image
 ```
 
@@ -30,13 +29,11 @@ python3 -m http.server 8000
 ## Automation
 
 - `.github/workflows/deploy-pages.yml` — deploys the site to GitHub Pages on every push to `main`.
-- `.github/workflows/update-patch-notes.yml` — hourly (and on demand) regenerates
-  `data/patch-notes.json` from commits in
+- Patch notes are written for players by the project's AI agent — dated batches,
+  sectioned by game mode or area, no internals — from new commits in
   [Dreadnought-Revival-server](https://github.com/Dreadnought-Revival/Dreadnought-Revival-server)
-  and [Dreadnought-Revival-Launcher](https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher),
-  commits the change to `main`, which re-triggers the deploy. Never hand-edit the JSON —
-  change `scripts/update_patch_notes.py` instead. Trigger manually:
-  `gh workflow run "Update patch notes" --repo Dreadnought-Revival/Dreadnought-Revival-Page`.
+  and [Dreadnought-Revival-Launcher](https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher).
+  Never hand-edit `data/patch-notes.json`; notes go live through the normal PR flow.
 
 ## Agents
 
