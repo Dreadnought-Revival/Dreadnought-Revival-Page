@@ -36,8 +36,14 @@ app.js          ARIA tabs + hash routing (arrow-key support), burger nav, reveal
                 server-status badge, patch-notes rendering (fetches data/),
                 gallery lightbox
 404.html        custom not-found page (same theme)
-assets/         logo.svg, favicon.svg, og-image.png (social preview); ship art is
-                fetched at deploy time (see below) — assets/market-images/ is NOT in the repo
+assets/         the maintainer's asset library: dreadnought-logo_small/_highres.png
+                (Dreadnought Revival logo, header), dn_favicon.png + DNfavicon.png (favicon,
+                touch icon, compact header), dn_development-logo-beta.png (BETA badge),
+                button*.png / btn-submit-gray.png (button images, used as CSS border
+                images: orange primary, aqua secondary, grey); dreadnought.png (the plain
+                game logo) is deliberately unused; og-image.png (social preview);
+                logo.svg / favicon.svg (older marks, unused). Ship art is fetched at
+                deploy time (see below) — assets/market-images/ is NOT in the repo
 data/           patch-notes.json (player-facing notes — see below), supporters.txt (Patreon
                 supporters, hand-edited), server-status.json (optional)
 workflow/       Mistral Studio workflow project: revival-patch-notes (see below)
