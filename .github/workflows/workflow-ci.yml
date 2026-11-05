@@ -24,7 +24,24 @@ jobs:
         run: bash tools/uv.sh sync --all-packages
 
       - name: Run workflow tests
-        run: bash tools/uv.sh run --all-packages pytest apps/worker/tests -q
+        run: |
+          set -o pipefail
+          bash tools/uv.sh run --all-packages pytest apps/worker/tests -q 2>&1 | tee pytest-output.log
+
+      - name: Report failure details
+        if: failure()
+        working-directory: workflow
+        run: |
+          set -eu
+          echo "Pytest failures (last 100 lines):" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          tail -n 100 pytest-output.log >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          # Surface the informative lines as annotations so they are visible without log access
+          grep -E "FAILED|ERRORS|ERROR|Error:|error:|assert|raise |ModuleNotFound|ImportError" pytest-output.log \
+            | head -n 8 | cut -c1-240 \
+            | while IFS= read -r line; do echo "::error title=pytest::$line"; done
 
   alert-on-failure:
     if: failure() && github.event_name == 'push'
