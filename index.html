@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DREADNOUGHT REVIVAL — Community Private Server</title>
-<meta name="description" content="A community-operated private server reviving Dreadnought (UE4, Steam 835860). Unmodified client, emulated backend, dedicated battle servers.">
+<meta name="description" content="A community-operated private server reviving Dreadnought (UE4, Steam 835860). Unmodified client, emulated backend, full matches in six game modes.">
 <meta property="og:title" content="Dreadnought Revival — Community Private Server">
 <meta property="og:description" content="Play the discontinued space-combat game Dreadnought again on a community-run private server. Unmodified client, server-side emulation, one launcher.">
 <meta property="og:type" content="website">
@@ -54,7 +54,7 @@
     <img class="hero-ship" src="assets/market-images/UI_DreadnoughtM_Morningstar.png" alt="" aria-hidden="true">
     <div class="status-badge" id="status-badge"><span class="pulse-dot" aria-hidden="true"></span> <span id="status-text">Status: Active Development — Revival in Progress</span></div>
     <h1><span class="hollow">DREAD</span><span class="amber">NOUGHT</span><br>REVIVAL</h1>
-    <p class="tagline">The guns of the fleet are hot again. A community-operated private server bringing the discontinued sci-fi space combat game <b>Dreadnought</b> (UE4 · Steam 835860) back online — unmodified client, emulated backend, dedicated battle servers.</p>
+    <p class="tagline">The guns of the fleet are hot again. A community-operated private server bringing the discontinued sci-fi space combat game <b>Dreadnought</b> (UE4 · Steam 835860) back online — unmodified client, emulated backend, full matches from orbit drop to victory screen.</p>
     <div class="cta-row">
       <a class="btn btn-primary" href="#community">▶ Join the Playtest</a>
       <a class="btn btn-ghost" href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases" target="_blank" rel="noopener">Get the Launcher</a>
@@ -63,7 +63,7 @@
     <div class="hero-stats" aria-label="Project stats">
       <div><div class="num">7</div><div class="lbl">Backend Services</div></div>
       <div><div class="num">0</div><div class="lbl">Client Mods Required</div></div>
-      <div><div class="num">62</div><div class="lbl">Market Items Live</div></div>
+      <div><div class="num">6</div><div class="lbl">Game Modes Live</div></div>
       <div><div class="num">1</div><div class="lbl">Launcher Install</div></div>
     </div>
     <div class="scroll-hint" aria-hidden="true">▼ SCROLL</div>
@@ -78,8 +78,8 @@
     <div class="briefing-grid">
       <div class="panel briefing-main reveal">
         <p><strong>Dreadnought</strong> was a massive-scale space combat game — dreadnoughts, cruisers and fighters clashing across open maps — shut down with its publisher. This project is a fan-led revival: a <strong>community-operated private server</strong> that runs the <strong>completely unmodified game client</strong> against our own backend.</p>
-        <p>Everything is emulated server-side — login, hangar, inventory, market, loadouts, career progression and matchmaking. The only thing a player installs is a <strong>replacement launcher</strong> that signs them into our servers. No game files are modified, and no game code or assets are distributed here.</p>
-        <p>Operators can additionally host matches themselves: a seven-service Go stack spawns headless <strong>dedicated battle servers</strong> (Wine + the original executable), one per match, on UDP 7777–7877.</p>
+        <p>Everything is emulated server-side — login, hangar, inventory, market, tech tree, loadouts, contracts, career progression and matchmaking. The only thing a player installs is a <strong>replacement launcher</strong> that signs them into a server, trusts its certificate and starts the game. No game files are modified, and no game code or assets are distributed here.</p>
+        <p>Matches are played on battle servers the backend starts on demand: the original game executable run headless under Wine, one process per match, on UDP 7777–7877. Anyone can run the whole stack and list their server in the launcher.</p>
         <div class="mono-line">&gt; objective: preserve a piece of online-game history — playable, forever.</div>
         <ul class="repo-cards">
           <li>
@@ -101,12 +101,16 @@
         <h3>Ship Systems Status</h3>
         <div class="kv"><span class="k">LOGIN / ACCOUNTS</span><span class="v ok">OPERATIONAL</span></div>
         <div class="kv"><span class="k">HANGAR &amp; FLEETS</span><span class="v ok">OPERATIONAL</span></div>
-        <div class="kv"><span class="k">INVENTORY &amp; MARKET</span><span class="v ok">OPERATIONAL</span></div>
-        <div class="kv"><span class="k">LOADOUTS &amp; CAREER</span><span class="v ok">OPERATIONAL</span></div>
+        <div class="kv"><span class="k">MARKET &amp; COSMETICS</span><span class="v ok">OPERATIONAL</span></div>
+        <div class="kv"><span class="k">TECH TREE</span><span class="v ok">OPERATIONAL</span></div>
+        <div class="kv"><span class="k">DAILY CONTRACTS</span><span class="v ok">OPERATIONAL</span></div>
         <div class="kv"><span class="k">MATCHMAKING</span><span class="v ok">OPERATIONAL</span></div>
-        <div class="kv"><span class="k">BATTLE SERVERS</span><span class="v ok">OPERATIONAL</span></div>
-        <div class="kv"><span class="k">TECH TREE</span><span class="v wip">IN PROGRESS</span></div>
-        <div class="kv"><span class="k">DAILY CONTRACTS</span><span class="v wip">IN PROGRESS</span></div>
+        <div class="kv"><span class="k">MATCHES &amp; LOADOUTS</span><span class="v ok">OPERATIONAL</span></div>
+        <div class="kv"><span class="k">SCORES &amp; VICTORY SCREEN</span><span class="v ok">OPERATIONAL</span></div>
+        <div class="kv"><span class="k">MATCH REWARDS</span><span class="v wip">PROVISIONAL</span></div>
+        <div class="kv"><span class="k">CAREER GOALS</span><span class="v wip">PROVISIONAL</span></div>
+        <div class="kv"><span class="k">HAVOC (PvE)</span><span class="v wip">EXPERIMENTAL</span></div>
+        <p class="kv-note">Provisional: the system works, but its numbers (reward amounts, goal targets, research and purchase costs) are placeholders until the original values are recovered.</p>
       </div>
     </div>
   </section>
@@ -119,41 +123,52 @@
     <div class="feature-grid">
       <article class="panel feature reveal">
         <div class="ico">◈</div>
-        <h3>Dedicated Server Revival</h3>
-        <p>A seven-service Go backend (auth, legacy API, matchmaking brain, master server, game manager, gateway) spawns headless Wine battle servers — one per match — and keeps them healthy.</p>
+        <h3>Emulated Backend</h3>
+        <p>Seven Go services stand in for the original backend: a TLS gateway, accounts, profiles, the server browser, the matchmaking brain (hangar, market, tech tree, contracts, the game's own binary protocol) and the control plane that runs the battle servers.</p>
         <span class="tag">Live</span>
       </article>
       <article class="panel feature reveal">
         <div class="ico">⬡</div>
         <h3>Unmodified Client</h3>
-        <p>Players run the original Steam build untouched. A replacement launcher handles sign-in, certificate install and hands the game the right server addresses.</p>
+        <p>Players run the original Steam build untouched. The launcher signs in, shows the server's certificate fingerprint before trusting it, and starts the game pointed at the chosen server.</p>
         <span class="tag">Live</span>
       </article>
       <article class="panel feature reveal">
         <div class="ico">⚙</div>
         <h3>Full Meta Layer</h3>
-        <p>Hangar, fleets, inventory, the 62-item market catalog, ship and captain customisation, career goals, daily login bonuses and auto-scaled matchmaking all work end to end.</p>
+        <p>Hangar, fleets, inventory, the market with coatings, decals and emblems, the tech tree (research, then buy), ship and captain customisation, daily contracts, career goals, statistics and the daily login bonus.</p>
         <span class="tag">Live</span>
       </article>
       <article class="panel feature reveal">
         <div class="ico">✦</div>
-        <h3>Battle-Server Mod</h3>
-        <p>An optional operator-side mod for the headless host process supplies loadouts the host cannot obtain without a login — this is what lets players actually spawn into a match. Also rebuilds Havoc wave defence.</p>
-        <span class="tag cyan">Operator Tool</span>
-      </article>
-      <article class="panel feature reveal">
-        <div class="ico">⬢</div>
-        <h3>Modern Patch Support</h3>
-        <p>Server-side fixes (tech-tree encoding, conquest diagnostics, contract payouts, XP tracking) ship as backend updates — players just get a working game, no client surgery.</p>
-        <span class="tag amber">Ongoing</span>
+        <h3>Complete Matches</h3>
+        <p>Orbit drop, your own fitted loadout on any tier, bots in the Proving Grounds, live scores, the victory screen and a rewards page at the end. A server-side mod fills in what the original backend used to feed the battle server.</p>
+        <span class="tag">Live</span>
       </article>
       <article class="panel feature reveal">
         <div class="ico">♜</div>
-        <h3>Community Matchmaking</h3>
-        <p>Auto-scaling matches size themselves to whoever is online — a lone player launches instantly, groups land together. Private matches per player by default, PvP with 2+.</p>
+        <h3>Matchmaking That Fits</h3>
+        <p>Matches size themselves to who is online: a lone player launches at once, players who are around land in the same match (up to ten by default).</p>
         <span class="tag">Live</span>
       </article>
+      <article class="panel feature reveal">
+        <div class="ico">⬢</div>
+        <h3>Fair Play Checks</h3>
+        <p>Battle servers measure ship speed and damage dealt on their own and compare them with what each match reports, so a tampered result is flagged for the operators.</p>
+        <span class="tag cyan">New</span>
+      </article>
     </div>
+
+    <h3 class="modes-head reveal">Game Modes</h3>
+    <ul class="mode-list">
+      <li class="panel reveal"><b>Team Deathmatch</b><span>Start in fighters, unlock bigger ships as you score. Turbo TDM variant included.</span></li>
+      <li class="panel reveal"><b>Team Elimination</b><span>Best of three rounds; a lost ship sends you back out in a fighter.</span></li>
+      <li class="panel reveal"><b>Conquest</b><span>Capture points and claim territory, played by the original rules.</span></li>
+      <li class="panel reveal"><b>Onslaught</b><span>Destroy the enemy command ship, with its abilities working.</span></li>
+      <li class="panel reveal"><b>Ceres Awakens</b><span>Team fight over tech caches that buff their collector.</span></li>
+      <li class="panel reveal"><b>Proving Grounds</b><span>Practice against bots, with your own loadout.</span></li>
+      <li class="panel reveal exp"><b>Havoc <em>experimental</em></b><span>PvE wave defence, rebuilt from the game's own rules. Not on every server.</span></li>
+    </ul>
   </section>
 
   <!-- ============ GALLERY ============ -->
@@ -333,22 +348,22 @@
       <div class="milestone done reveal">
         <div class="phase">Phase 03 — Complete</div>
         <h3>Replacement Launcher</h3>
-        <p>dn-launcher.exe (Windows, WebView2) plus a Linux/Proton wrapper: sign-in, CA install without admin rights, news tiles, and one-click Play into the unmodified game.</p>
+        <p>Dreadnought-Revival.exe (Windows, WebView2) plus a Linux/Proton script: sign-in, a server list to pick from, certificate install without admin rights, news tiles, versioned releases with one-click self-update, and Play into the unmodified game.</p>
       </div>
       <div class="milestone done reveal">
         <div class="phase">Phase 04 — Complete</div>
         <h3>Dedicated Battle Servers</h3>
-        <p>game-manager / dn-dedicated spawns headless Wine battle servers per match with a managed UDP port pool (7777–7877), readiness gating and per-instance logs. The battle-server mod supplies host loadouts.</p>
+        <p>dn-dedicated starts a headless Wine battle server per match from a UDP port pool (7777–7877), waits until it is ready, and cleans up idle ones. The battle-server mod supplies what the host never received: player loadouts, scoring, bots and the end-of-match screens.</p>
       </div>
       <div class="milestone active reveal">
         <div class="phase">Phase 05 — In Progress</div>
         <h3>Public Playtests</h3>
-        <p>Community alpha playtests: matchmaking auto-scaling, Havoc wave defence rebuilt by the battle-server mod, conquest and Onslaught modes, contract and XP economies being tuned live.</p>
+        <p>Full matches in Team Deathmatch, Team Elimination, Conquest, Onslaught, Ceres Awakens and the Proving Grounds, with scores, rewards, contracts, ship XP and fair-play checks. Havoc and custom games are still being built.</p>
       </div>
       <div class="milestone reveal">
         <div class="phase">Phase 06 — Queued</div>
-        <h3>Full Release</h3>
-        <p>Tech tree and daily contracts fully unlocked, storefront artwork restored, stable public deployment with documented one-command setup for new operators and players.</p>
+        <h3>The Original Numbers</h3>
+        <p>Replace the placeholder values with the real ones — match reward tables, career goals, research and purchase costs — from archives, wiki snapshots and gameplay footage. If you have screenshots or videos of these screens, they help.</p>
       </div>
     </div>
   </section>
@@ -366,21 +381,22 @@
         </div>
         <div class="step">
           <div class="n">02</div>
-          <div><h4>Get the launcher</h4>
-            <p>Grab the latest release of <code>dn-launcher.exe</code> (Windows, WebView2) from the launcher repository's releases:</p>
-            <div class="cmd-row">
-              <code id="clone-cmd">github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases</code>
-              <button class="copy-btn" id="copy-btn" type="button">Copy</button>
+          <div><h4>Download the launcher</h4>
+            <p>One file, nothing to install. It keeps itself up to date.</p>
+            <div class="dl-row">
+              <a class="btn btn-primary" href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases/latest/download/Dreadnought-Revival.exe">⬇ Windows</a>
+              <a class="btn btn-ghost" href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases/latest/download/Dreadnought-Revival-linux.tar.gz">⬇ Linux (Proton/Wine)</a>
             </div>
+            <p class="dl-meta"><code>Dreadnought-Revival.exe</code> · latest release · <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases/latest" target="_blank" rel="noopener">release notes &amp; SHA-256 checksums ↗</a></p>
           </div>
         </div>
         <div class="step">
           <div class="n">03</div>
-          <div><h4>Run the launcher and register</h4><p>Create an account in the launcher, install the server certificate (<code>ca.crt</code>) when prompted — the launcher handles it without admin rights, with a <code>dn-launcher.json</code> pointing at the server baked in.</p></div>
+          <div><h4>Pick a server, trust its certificate</h4><p>The launcher lists the available servers and picks the project's own by default. On first start it shows the server's certificate fingerprint and asks Windows to trust it, for your user only — no admin rights. Certificates you stop using are removed again after 30 days.</p></div>
         </div>
         <div class="step">
           <div class="n">04</div>
-          <div><h4>Sign in &amp; play</h4><p>Hit <strong>PLAY</strong>, queue for a match and fly. Linux players use the bundled Proton/Wine wrapper script.</p></div>
+          <div><h4>Create an account &amp; play</h4><p>Register in the launcher, hit <strong>PLAY GAME</strong>, queue for a match and fly. On Linux, run the bundled <code>dn-launcher-linux.sh</code>: it finds the game's Proton prefix and opens the launcher in your browser.</p></div>
         </div>
       </div>
       <div class="panel contribute reveal">
@@ -388,11 +404,12 @@
         <p>This is a server for a client we cannot change — <strong>never invent data</strong>: everything the server sends must be traceable to the client's own tables or binary. Read the client's parsers before forming a theory.</p>
         <ul>
           <li>Read the <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">contributing guide</a> and the client-data docs in the <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server" target="_blank" rel="noopener">server repository</a>.</li>
-          <li>It's a Go workspace — build one service with <code>go build ./mmogbrain</code>, test per-module with <code>go test ./...</code>.</li>
+          <li>It's a Go workspace (Go 1.24+) of independent modules — build and test inside each one: <code>cd mmogbrain &amp;&amp; go test ./...</code>.</li>
           <li>Run the stack locally: <code>bash scripts/setup.sh</code> then <code>bash scripts/start-services.sh</code>.</li>
           <li>Open issues for bugs, PRs for fixes — see open work in <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/issues" target="_blank" rel="noopener">server issues</a>; site fixes go through <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Page/pulls" target="_blank" rel="noopener">pull requests on this repo</a>.</li>
+          <li>Running a community server? List it in the launcher with a pull request to <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/blob/main/serverlist.yaml" target="_blank" rel="noopener">serverlist.yaml</a>.</li>
         </ul>
-        <p>Testers, bug reporters and Discord regulars keep the servers alive — every playtest report matters.</p>
+        <p>Testers and bug reporters keep the servers alive — every playtest report matters.</p>
         <a class="btn btn-primary" style="display:inline-block;margin-top:8px" href="https://github.com/Dreadnought-Revival" target="_blank" rel="noopener">Open the Organization ↗</a>
       </div>
     </div>

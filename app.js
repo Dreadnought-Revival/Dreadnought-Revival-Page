@@ -1,6 +1,6 @@
 /* Dreadnought Revival — HUD landing page script.
  * Sections: header/nav behaviour, ARIA tabs + hash routing, reveal,
- * status badge, patch-notes renderer, ship gallery lightbox, copy button. */
+ * status badge, patch-notes renderer, ship gallery lightbox. */
 (function () {
   'use strict';
 
@@ -270,31 +270,6 @@
     if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
-    });
-  }
-
-  /* ---------- copy button ---------- */
-
-  var copyBtn = $('#copy-btn');
-  var copyCmd = $('#clone-cmd');
-  if (copyBtn && copyCmd) {
-    copyBtn.addEventListener('click', function () {
-      var done = function () {
-        copyBtn.textContent = 'Copied!';
-        setTimeout(function () { copyBtn.textContent = 'Copy'; }, 1500);
-      };
-      var text = copyCmd.textContent;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(done, done);
-      } else {
-        var ta = document.createElement('textarea');
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        try { document.execCommand('copy'); } catch (err) { /* noop */ }
-        document.body.removeChild(ta);
-        done();
-      }
     });
   }
 

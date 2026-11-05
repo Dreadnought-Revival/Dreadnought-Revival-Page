@@ -29,7 +29,7 @@ styles.css      dark space-combat HUD theme (void bg, amber/cyan accents, clippe
                 panels/buttons, tab bar, grid + scanline overlays, reveal-on-scroll)
 app.js          ARIA tabs + hash routing (arrow-key support), burger nav, reveal,
                 server-status badge, patch-notes rendering (fetches data/),
-                gallery lightbox, copy button
+                gallery lightbox
 404.html        custom not-found page (same theme)
 assets/         logo.svg, favicon.svg, og-image.png (social preview); ship art is
                 fetched at deploy time (see below) — assets/market-images/ is NOT in the repo
