@@ -41,8 +41,7 @@ FROM runtime AS workflows
 # deploy/docker/worker-packages/<capability>.txt (see install.sh there). Installed here, not in build
 # or runtime, so those stay byte-identical across the Python images and BuildKit builds them once
 # for api, worker and init. The apt lists are a cache mount, so a rerun skips most of `apt-get
-# update`, and the script exits at once when no capability lists
- any.
+# update`, and the script exits at once when no capability lists any.
 USER 0:0
 RUN --mount=type=bind,source=deploy/docker/worker-packages,target=/tmp/worker-packages \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
