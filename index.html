@@ -10,7 +10,8 @@
 <meta property="og:type" content="website">
 <meta property="og:image" content="assets/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/dn_favicon.png">
+<link rel="apple-touch-icon" href="assets/DNfavicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&amp;family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
@@ -31,15 +32,14 @@
   <div class="brand-row">
     <span class="hud-readout l" aria-hidden="true">SYS // 835860<br>FLEET LINK OK</span>
     <a class="brand-big" href="#top" aria-label="Dreadnought Revival, back to top">
-      <img src="assets/logo.svg" alt="">
-      <span>DREADNOUGHT <em>REVIVAL</em></span>
+      <img src="assets/dreadnought-logo_small.png" srcset="assets/dreadnought-logo_small.png 819w, assets/dreadnought-logo_highres.png 4096w" sizes="290px" width="290" height="63" alt="Dreadnought Revival">
     </a>
-    <span class="hud-readout r" aria-hidden="true">PUBLIC TEST<br>SERVER ONLINE</span>
+    <img class="beta-badge" src="assets/dn_development-logo-beta.png" width="111" height="55" alt="Beta, in development">
   </div>
   <nav class="nav" aria-label="Primary">
-    <a class="brand" href="#top">
-      <img src="assets/logo.svg" alt="Dreadnought Revival logo">
-      <span>DREADNOUGHT <em>REVIVAL</em></span>
+    <a class="brand" href="#top" aria-label="Dreadnought Revival, back to top">
+      <img class="brand-mark" src="assets/dn_favicon.png" width="36" height="36" alt="">
+      <img class="brand-word" src="assets/dreadnought-logo_small.png" width="161" height="35" alt="">
     </a>
     <button class="burger" id="burger" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links"><span class="burger-ico" aria-hidden="true">☰</span> Menu</button>
     <ul class="nav-links" id="nav-links" role="tablist" aria-label="Site sections">
@@ -67,6 +67,7 @@
   <section class="hero" id="top">
     <div class="hero-bg" aria-hidden="true"></div>
     <img class="hero-ship" src="assets/market-images/UI_DreadnoughtM_Morningstar.png" alt="" aria-hidden="true">
+    <img class="hero-beta" src="assets/dn_development-logo-beta.png" width="139" height="69" alt="Beta, in development">
     <div class="status-badge online" id="status-badge"><span class="pulse-dot" aria-hidden="true"></span> <span id="status-text">Public Test Server Live</span></div>
     <h1>The Fleet Flies Again</h1>
     <p class="hero-sub">Dreadnought, back online on PC</p>

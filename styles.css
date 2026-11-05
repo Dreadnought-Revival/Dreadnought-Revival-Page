@@ -743,3 +743,51 @@ footer{border-top:1px solid var(--hud-line);background:linear-gradient(180deg,#0
 /* scrolled header on wide screens: logo only (the name is in the brand row above) */
 @media (min-width:1101px){ header.scrolled .nav .brand span{display:none} }
 @media (min-width:1101px) and (max-width:1220px){ .nav-links button.tab{padding:12px 7px 8px} .nav-cta{padding:11px 18px 8px} }
+
+/* =====================================================================
+   Uploaded asset library (2026-11-06): the Dreadnought Revival logo,
+   the "D" icon, the BETA badge and the button images.
+   ===================================================================== */
+/* header: the Revival logo centred, BETA badge on the right */
+.brand-row{height:86px}
+.brand-big img{display:block;height:63px;width:auto;filter:drop-shadow(0 0 18px rgba(95,243,255,.15))}
+.beta-badge{position:absolute;right:28px;top:50%;transform:translateY(-50%);height:55px;width:auto}
+.hero-beta{display:none;height:64px;width:auto;margin:0 auto 16px}
+
+/* compact bar: the "D" icon; the wordmark only where the bar has room */
+.nav .brand img{width:auto;height:36px;filter:none}
+.nav .brand .brand-mark{border:1px solid var(--hud-line)}
+.nav .brand .brand-word{display:none;height:34px}
+
+/* buttons: the uploaded button images as a border image, so the cut
+   top-right corner and the long bottom-left slant keep their angle at
+   any width (slices measured from the 550x141 PNGs: 46px corner cut,
+   68px slant) */
+.btn,.nav-cta{
+  clip-path:polygon(0 0,calc(100% - .7em) 0,100% 33%,100% 100%,1em 100%,0 52%);
+  border-style:solid;border-color:transparent;border-width:0;
+}
+.btn-primary,.btn-ghost,.btn-dim,.nav-cta{
+  clip-path:none;background:none;box-shadow:none;color:#fff;
+  border-image-source:url("assets/button.png");
+  border-image-slice:0 50 0 70 fill;
+  border-image-width:0 .72em 0 1em;
+  border-image-repeat:stretch;
+  transition:filter .2s,transform .2s;
+}
+.btn-primary:hover,.nav-cta:hover{border-image-source:url("assets/button-hover.png");box-shadow:none;filter:drop-shadow(0 0 14px rgba(242,51,4,.45))}
+.btn-ghost{border-image-source:url("assets/button-aqua.png");color:#fff}
+.btn-ghost:hover{border-image-source:url("assets/button-aqua-hover.png");box-shadow:none;filter:drop-shadow(0 0 14px rgba(22,133,131,.5))}
+.btn-dim{border-image-source:url("assets/btn-submit-gray.png");color:#e4e8f0}
+.btn-ghost::after,.btn-dim::after{border-bottom-color:rgba(255,255,255,.85)}
+.btn-discord:hover,.btn-patreon:hover{box-shadow:none;filter:brightness(1.12)}
+
+@media (max-width:1100px){
+  .hero-beta{display:block}
+  .nav .brand .brand-mark{display:none}
+  .nav .brand .brand-word{display:block}
+}
+@media (max-width:700px){
+  .nav .brand .brand-mark{display:block}
+  .nav .brand .brand-word{display:none}
+}
