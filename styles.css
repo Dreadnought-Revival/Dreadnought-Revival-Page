@@ -66,7 +66,7 @@ header.scrolled{box-shadow:0 0 40px rgba(255,107,0,.12),0 8px 30px rgba(0,0,0,.6
   max-width:1240px;margin:0 auto;padding:0 24px;height:68px;
   display:flex;align-items:center;justify-content:space-between;gap:16px;
 }
-.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);flex:none;white-space:nowrap}
 .brand img{width:34px;height:34px;filter:drop-shadow(0 0 8px rgba(255,107,0,.6))}
 .brand span{font-family:var(--font-head);font-weight:800;font-size:15px;letter-spacing:.18em}
 .brand span em{font-style:normal;color:var(--amber)}
@@ -88,7 +88,9 @@ header.scrolled{box-shadow:0 0 40px rgba(255,107,0,.12),0 8px 30px rgba(0,0,0,.6
   transition:box-shadow .2s,transform .2s;
 }
 .nav-cta:hover{box-shadow:0 0 22px rgba(255,107,0,.55);transform:translateY(-1px)}
-.burger{display:none;background:none;border:1px solid var(--line);color:var(--text);padding:8px 10px;cursor:pointer;font-family:var(--font-mono)}
+.burger{display:none;align-items:center;gap:8px;background:none;border:1px solid var(--line-bright);color:var(--text);padding:8px 14px;cursor:pointer;font-family:var(--font-mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+.burger-ico{font-size:18px;line-height:1;color:var(--amber)}
+.burger[aria-expanded="true"] .burger-ico{color:var(--cyan)}
 
 main{position:relative;z-index:3}
 section{max-width:1240px;margin:0 auto;padding:110px 24px 40px}
@@ -180,19 +182,18 @@ h2 em{font-style:normal;color:var(--amber);text-shadow:0 0 24px rgba(255,107,0,.
 }
 .btn-primary{color:#000;font-weight:bold;background:linear-gradient(135deg,var(--amber),var(--amber-deep))}
 .btn-primary:hover{box-shadow:0 0 34px rgba(255,107,0,.6);transform:translateY(-2px)}
-.btn-ghost{color:var(--cyan);background:rgba(0,176,255,.05);border:1px solid rgba(0,176,255,.45)}
-.btn-ghost{box-shadow:inset 0 0 0 1px rgba(0,176,255,.45)}
+.btn-ghost{color:var(--cyan);background:rgba(0,176,255,.05);box-shadow:inset 0 0 0 1px rgba(0,176,255,.45)}
 .btn-ghost:hover{box-shadow:0 0 26px rgba(0,176,255,.4),inset 0 0 0 1px rgba(0,176,255,.8);transform:translateY(-2px)}
 .btn-dim{color:var(--text);background:rgba(43,50,69,.5);box-shadow:inset 0 0 0 1px var(--line)}
 .btn-dim:hover{box-shadow:0 0 22px rgba(139,149,169,.3),inset 0 0 0 1px rgba(139,149,169,.5);transform:translateY(-2px)}
-.hero-stats{
-  display:flex;flex-wrap:wrap;gap:0;margin-top:64px;border:1px solid var(--line);
+.status-stats{
+  display:inline-flex;flex-wrap:wrap;gap:0;margin:0 0 28px;border:1px solid var(--line);
   background:rgba(18,21,28,.6);backdrop-filter:blur(8px);
 }
-.hero-stats div{padding:18px 34px;border-right:1px solid var(--line)}
-.hero-stats div:last-child{border-right:none}
-.hero-stats .num{font-family:var(--font-head);font-weight:800;font-size:26px;color:var(--amber)}
-.hero-stats .lbl{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.status-stats>div{padding:18px 34px;border-right:1px solid var(--line)}
+.status-stats>div:last-child{border-right:none}
+.status-stats .num{font-family:var(--font-head);font-weight:800;font-size:26px;color:var(--amber)}
+.status-stats .lbl{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
 .scroll-hint{
   position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
   font-family:var(--font-mono);font-size:11px;letter-spacing:.3em;color:var(--muted);
@@ -406,17 +407,10 @@ footer{
   .footer-inner{grid-template-columns:1fr 1fr}
 }
 @media (max-width:760px){
-  .burger{display:block}
-  .nav-links{
-    position:absolute;top:68px;left:0;right:0;flex-direction:column;align-items:stretch;
-    background:rgba(10,11,14,.97);border-bottom:1px solid var(--line);padding:12px 20px 18px;display:none;
-  }
-  .nav-links.open{display:flex}
-  .nav-links a,.nav-links button.tab{padding:12px;text-align:left}
-  .nav-cta{display:none}
-  .hero-stats{flex-direction:column}
-  .hero-stats div{border-right:none;border-bottom:1px solid var(--line)}
-  .hero-stats div:last-child{border-bottom:none}
+  .status-stats{display:grid;grid-template-columns:1fr 1fr}
+  .status-stats>div{padding:14px 18px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .status-stats>div:nth-child(2n){border-right:none}
+  .status-stats>div:nth-child(n+3){border-bottom:none}
   section{padding:80px 20px 30px}
   .footer-inner{grid-template-columns:1fr}
 }
@@ -448,3 +442,80 @@ footer{
 .dl-row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 8px}
 .dl-row .btn{font-size:13px}
 .dl-meta{font-size:14px;color:var(--muted);margin:0}
+
+/* ---------- header actions: discord + github icons, download ---------- */
+.nav-actions{display:flex;align-items:center;gap:6px;flex:none}
+.nav-icon{
+  display:grid;place-items:center;width:38px;height:38px;color:var(--muted);
+  border:1px solid var(--line);transition:color .2s,border-color .2s;
+}
+.nav-icon:hover{color:var(--amber);border-color:var(--line-bright)}
+.nav-actions .nav-cta{margin-left:6px;white-space:nowrap}
+.nav-links button.tab{white-space:nowrap}
+
+/* ---------- hero: one primary action, secondary links, step strip ---------- */
+.hero-cta{display:flex;flex-direction:column;align-items:center;gap:10px}
+.btn-xl{font-size:clamp(15px,2.2vw,19px);padding:20px 44px}
+.hero-cta-meta{font-family:var(--font-mono);font-size:13px;letter-spacing:.1em;color:var(--muted);margin:0}
+.hero-links{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 12px;margin:6px 0 0;font-family:var(--font-mono);font-size:14px;letter-spacing:.06em}
+.hero-links a{color:var(--cyan);text-decoration:none;border-bottom:1px dotted rgba(0,176,255,.5)}
+.hero-links a:hover{color:#fff}
+.hero-links span{color:var(--gunmetal)}
+.hero-steps{
+  list-style:none;margin:56px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  width:min(920px,100%);border:1px solid var(--line);background:rgba(18,21,28,.6);backdrop-filter:blur(8px);
+}
+.hero-steps li+li{border-left:1px solid var(--line)}
+.hero-steps a{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:16px 18px;text-decoration:none;text-align:left;height:100%;transition:background .2s}
+.hero-steps a:hover{background:rgba(255,107,0,.07)}
+.hero-steps .n{font-family:var(--font-head);font-weight:800;font-size:13px;color:var(--amber)}
+.hero-steps .t{font-family:var(--font-body);font-weight:700;font-size:17px;letter-spacing:.04em;text-transform:uppercase;color:var(--text)}
+.hero-steps .d{font-size:14px;color:var(--muted)}
+
+/* ---------- play panel: discord + help cards ---------- */
+.side-stack{display:flex;flex-direction:column;gap:24px}
+.discord-card,.help-card{padding:32px 36px}
+.discord-card h3,.help-card h3,.panel-h{font-family:var(--font-head);font-size:18px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+.discord-card p{color:var(--muted);font-size:17px;margin-bottom:20px}
+.btn-discord{display:inline-block;color:#fff;font-weight:bold;background:#5865f2}
+.btn-discord:hover{box-shadow:0 0 30px rgba(88,101,242,.6);transform:translateY(-2px)}
+.help-card ul{margin:0 0 0 20px;color:var(--muted);font-size:16.5px}
+.help-card li{margin-bottom:8px}
+.help-card a,.known-issues a{color:var(--cyan);text-decoration:none;border-bottom:1px dotted rgba(0,176,255,.5)}
+.help-card a:hover,.known-issues a:hover{color:#fff}
+.help-card strong{color:var(--text)}
+.btn-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+
+/* ---------- patch notes: known issues box ---------- */
+.known-issues{padding:26px 30px;margin-bottom:36px;border-color:var(--line-bright)}
+.known-issues h3{font-family:var(--font-head);font-size:16px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:12px}
+.known-issues h3 span{font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;color:var(--muted);text-transform:none;margin-left:6px}
+.known-issues ul{margin:0 0 12px 20px;color:var(--muted);font-size:16.5px}
+.known-issues li{margin-bottom:6px}
+.known-issues b{color:var(--text)}
+.known-issues p{color:var(--muted);font-size:15.5px;margin:0}
+
+/* seven tabs plus the actions no longer fit beside the brand: drop the
+   brand text first, then fold the tabs into the menu */
+@media (max-width:1320px){ .brand span{display:none} }
+@media (max-width:1100px){
+  .burger{display:inline-flex}
+  .nav-links{
+    position:absolute;top:68px;left:0;right:0;flex-direction:column;align-items:stretch;
+    background:rgba(10,11,14,.97);border-bottom:1px solid var(--line);padding:12px 20px 18px;display:none;
+  }
+  .nav-links.open{display:flex}
+  .nav-links a,.nav-links button.tab{padding:12px;text-align:left}
+  .nav{justify-content:flex-start}
+  .nav-actions{margin-left:auto}
+  .brand span{display:inline}
+}
+@media (max-width:760px){
+  .hero-steps{grid-template-columns:1fr 1fr}
+  .hero-steps li:nth-child(3){border-left:none}
+  .hero-steps li:nth-child(n+3){border-top:1px solid var(--line)}
+  .nav-actions .nav-icon{display:none}
+}
+@media (max-width:520px){
+  .brand span{display:none}
+}

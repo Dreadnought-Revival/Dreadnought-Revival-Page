@@ -69,7 +69,13 @@
 
   /* ---------- tabs (the nav is a tablist; panels switch, hash routes deep links) ---------- */
 
-  var TABS = ['briefing', 'systems', 'gallery', 'patch-notes', 'roadmap', 'community'];
+  var TABS = ['play', 'status', 'modes', 'patch-notes', 'gallery', 'roadmap', 'contribute'];
+  /* tab ids before the 2026-11 reorganisation, so old links still land */
+  var ALIASES = { briefing: 'status', systems: 'status', community: 'play' };
+  function tabFromHash() {
+    var id = location.hash.slice(1);
+    return ALIASES[id] || id;
+  }
   var tabButtons = $all('[role="tab"]');
   var panelsEl = $('#panels');
 
@@ -125,7 +131,7 @@
   });
 
   function onHashChange() {
-    var id = location.hash.slice(1);
+    var id = tabFromHash();
     /* #top and unknown hashes: leave the tabs alone */
     if (TABS.indexOf(id) === -1) return;
     if (selectTab(id, false, false)) scrollToPanels(true);
@@ -133,9 +139,9 @@
   window.addEventListener('hashchange', onHashChange);
   window.addEventListener('popstate', onHashChange);
 
-  /* initial state: deep link selects the tab, otherwise briefing */
-  if (!selectTab(location.hash.slice(1), false, false)) {
-    selectTab('briefing', false, false);
+  /* initial state: deep link selects the tab, otherwise play */
+  if (!selectTab(tabFromHash(), false, false)) {
+    selectTab('play', false, false);
   } else {
     scrollToPanels(false);
   }
@@ -175,15 +181,15 @@
         if (online) {
           badge.classList.remove('offline');
           badge.classList.add('online');
-          text.textContent = 'Status: Servers Online';
+          text.textContent = 'Public Test Server Live';
         } else {
           badge.classList.remove('online');
           badge.classList.add('offline');
-          text.textContent = 'Status: Offline';
+          text.textContent = 'Public Test Server Offline';
         }
       })
       .catch(function () {
-        /* keep default text: Active Development — Revival in Progress */
+        /* keep the default text: Public Test Server Live */
       });
   }
 

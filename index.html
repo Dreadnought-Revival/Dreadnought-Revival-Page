@@ -33,16 +33,21 @@
       <img src="assets/logo.svg" alt="Dreadnought Revival logo">
       <span>DREAD<em>NOUGHT</em> // REVIVAL</span>
     </a>
-    <button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false">[ MENU ]</button>
+    <button class="burger" id="burger" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links"><span class="burger-ico" aria-hidden="true">☰</span> Menu</button>
     <ul class="nav-links" id="nav-links" role="tablist" aria-label="Site sections">
-      <li role="presentation"><button class="tab" type="button" role="tab" id="tab-briefing" data-panel="briefing" aria-controls="briefing" aria-selected="true">Briefing</button></li>
-      <li role="presentation"><button class="tab" type="button" role="tab" id="tab-systems" data-panel="systems" aria-controls="systems" aria-selected="false" tabindex="-1">Systems</button></li>
-      <li role="presentation"><button class="tab" type="button" role="tab" id="tab-gallery" data-panel="gallery" aria-controls="gallery" aria-selected="false" tabindex="-1">Fleet</button></li>
+      <li role="presentation"><button class="tab" type="button" role="tab" id="tab-play" data-panel="play" aria-controls="play" aria-selected="true">Play</button></li>
+      <li role="presentation"><button class="tab" type="button" role="tab" id="tab-status" data-panel="status" aria-controls="status" aria-selected="false" tabindex="-1">Status</button></li>
+      <li role="presentation"><button class="tab" type="button" role="tab" id="tab-modes" data-panel="modes" aria-controls="modes" aria-selected="false" tabindex="-1">Game Modes</button></li>
       <li role="presentation"><button class="tab" type="button" role="tab" id="tab-patch-notes" data-panel="patch-notes" aria-controls="patch-notes" aria-selected="false" tabindex="-1">Patch Notes</button></li>
+      <li role="presentation"><button class="tab" type="button" role="tab" id="tab-gallery" data-panel="gallery" aria-controls="gallery" aria-selected="false" tabindex="-1">Fleet</button></li>
       <li role="presentation"><button class="tab" type="button" role="tab" id="tab-roadmap" data-panel="roadmap" aria-controls="roadmap" aria-selected="false" tabindex="-1">Roadmap</button></li>
-      <li role="presentation"><button class="tab" type="button" role="tab" id="tab-community" data-panel="community" aria-controls="community" aria-selected="false" tabindex="-1">Community</button></li>
+      <li role="presentation"><button class="tab" type="button" role="tab" id="tab-contribute" data-panel="contribute" aria-controls="contribute" aria-selected="false" tabindex="-1">Contribute</button></li>
     </ul>
-    <a class="nav-cta" href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases" target="_blank" rel="noopener">Get the Launcher ↗</a>
+    <div class="nav-actions">
+      <a class="nav-icon" href="https://discord.gg/yKYUt5Qh2c" target="_blank" rel="noopener" aria-label="Join the Discord" title="Discord"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M4 5h16v11H9l-5 4z"/><circle cx="9" cy="10.5" r="1.2" fill="currentColor"/><circle cx="15" cy="10.5" r="1.2" fill="currentColor"/></svg></a>
+      <a class="nav-icon" href="https://github.com/Dreadnought-Revival" target="_blank" rel="noopener" aria-label="GitHub organization" title="GitHub"><svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="nav-cta" href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases/latest/download/Dreadnought-Revival.exe">⬇ Download</a>
+    </div>
   </nav>
 </header>
 
@@ -52,49 +57,95 @@
   <section class="hero" id="top">
     <div class="hero-bg" aria-hidden="true"></div>
     <img class="hero-ship" src="assets/market-images/UI_DreadnoughtM_Morningstar.png" alt="" aria-hidden="true">
-    <div class="status-badge" id="status-badge"><span class="pulse-dot" aria-hidden="true"></span> <span id="status-text">Status: Active Development — Revival in Progress</span></div>
+    <div class="status-badge online" id="status-badge"><span class="pulse-dot" aria-hidden="true"></span> <span id="status-text">Public Test Server Live</span></div>
     <h1><span class="hollow">DREAD</span><span class="amber">NOUGHT</span><br>REVIVAL</h1>
-    <p class="tagline">The guns of the fleet are hot again. A community-operated private server bringing the discontinued sci-fi space combat game <b>Dreadnought</b> (UE4 · Steam 835860) back online — unmodified client, emulated backend, full matches from orbit drop to victory screen.</p>
-    <div class="cta-row">
-      <a class="btn btn-primary" href="#community">▶ Join the Playtest</a>
-      <a class="btn btn-ghost" href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases" target="_blank" rel="noopener">Get the Launcher</a>
-      <a class="btn btn-dim" href="https://github.com/Dreadnought-Revival" target="_blank" rel="noopener">GitHub ↗</a>
+    <p class="tagline">The guns of the fleet are hot again. Play the discontinued space combat game <b>Dreadnought</b> on a community-run server — your own unmodified Steam copy, one small launcher, full matches.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary btn-xl" href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases/latest/download/Dreadnought-Revival.exe">⬇ Download for Windows</a>
+      <p class="hero-cta-meta">Dreadnought-Revival.exe · free · updates itself</p>
+      <p class="hero-links">
+        <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases/latest/download/Dreadnought-Revival-linux.tar.gz">Linux (Proton/Wine)</a><span aria-hidden="true">·</span>
+        <a href="#play">How to play</a><span aria-hidden="true">·</span>
+        <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases/latest" target="_blank" rel="noopener">Release notes</a><span aria-hidden="true">·</span>
+        <a href="https://discord.gg/yKYUt5Qh2c" target="_blank" rel="noopener">Join Discord</a>
+      </p>
     </div>
-    <div class="hero-stats" aria-label="Project stats">
-      <div><div class="num">7</div><div class="lbl">Backend Services</div></div>
-      <div><div class="num">0</div><div class="lbl">Client Mods Required</div></div>
-      <div><div class="num">6</div><div class="lbl">Game Modes Live</div></div>
-      <div><div class="num">1</div><div class="lbl">Launcher Install</div></div>
-    </div>
+    <ol class="hero-steps" aria-label="How to get in-game">
+      <li><a href="#play"><span class="n">01</span><span class="t">Own the game</span><span class="d">Steam App 835860</span></a></li>
+      <li><a href="#play"><span class="n">02</span><span class="t">Download</span><span class="d">One file, no installer</span></a></li>
+      <li><a href="#play"><span class="n">03</span><span class="t">Pick a server</span><span class="d">Trust its certificate</span></a></li>
+      <li><a href="#play"><span class="n">04</span><span class="t">Play</span><span class="d">Register &amp; queue up</span></a></li>
+    </ol>
     <div class="scroll-hint" aria-hidden="true">▼ SCROLL</div>
   </section>
 
   <div id="panels">
 
-  <!-- ============ BRIEFING ============ -->
-  <section id="briefing" role="tabpanel" aria-labelledby="tab-briefing">
-    <p class="sec-tag reveal">01 // Mission Briefing</p>
-    <h2 class="reveal">The Mission: <em>Bring Her Back</em></h2>
+  <!-- ============ GET IN-GAME ============ -->
+  <section id="play" role="tabpanel" aria-labelledby="tab-play">
+    <p class="sec-tag reveal">01 // Get In-Game</p>
+    <h2 class="reveal">How to <em>Play</em></h2>
+    <div class="community-grid">
+      <div class="panel steps reveal">
+        <h3>Four Steps to the Front</h3>
+        <div class="step">
+          <div class="n">01</div>
+          <div><h4>Own the game</h4><p>You need your own copy of Dreadnought on Steam (App 835860). No game files are distributed by this project.</p></div>
+        </div>
+        <div class="step">
+          <div class="n">02</div>
+          <div><h4>Download the launcher</h4>
+            <p>One file, nothing to install. It keeps itself up to date.</p>
+            <div class="dl-row">
+              <a class="btn btn-primary" href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases/latest/download/Dreadnought-Revival.exe">⬇ Windows</a>
+              <a class="btn btn-ghost" href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases/latest/download/Dreadnought-Revival-linux.tar.gz">⬇ Linux (Proton/Wine)</a>
+            </div>
+            <p class="dl-meta"><code>Dreadnought-Revival.exe</code> · latest release · <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases/latest" target="_blank" rel="noopener">release notes &amp; SHA-256 checksums ↗</a></p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="n">03</div>
+          <div><h4>Pick a server, trust its certificate</h4><p>The launcher lists the available servers and picks the project's own by default. On first start it shows the server's certificate fingerprint and asks Windows to trust it, for your user only — no admin rights. Certificates you stop using are removed again after 30 days.</p></div>
+        </div>
+        <div class="step">
+          <div class="n">04</div>
+          <div><h4>Create an account &amp; play</h4><p>Register in the launcher, hit <strong>PLAY GAME</strong>, queue for a match and fly. On Linux, run the bundled <code>dn-launcher-linux.sh</code>: it finds the game's Proton prefix and opens the launcher in your browser.</p></div>
+        </div>
+      </div>
+      <div class="side-stack">
+        <div class="panel discord-card reveal">
+          <h3>Join the Community</h3>
+          <p>Find other captains for a match, hear about playtests first, get help with setup and report what breaks.</p>
+          <a class="btn btn-discord" href="https://discord.gg/yKYUt5Qh2c" target="_blank" rel="noopener">Join the Discord ↗</a>
+        </div>
+        <div class="panel help-card reveal">
+          <h3>Something Not Working?</h3>
+          <ul>
+            <li>Check the <a href="#patch-notes">known issues</a> first — it may already be on the list.</li>
+            <li>Ask in the <a href="https://discord.gg/yKYUt5Qh2c" target="_blank" rel="noopener">Discord</a>, or open a <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/issues" target="_blank" rel="noopener">bug report on GitHub</a>.</li>
+            <li>The launcher's menu has <strong>Game logs</strong> — attach them to a report.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SERVER STATUS ============ -->
+  <section id="status" role="tabpanel" aria-labelledby="tab-status" hidden>
+    <p class="sec-tag reveal">02 // Server Status</p>
+    <h2 class="reveal">What Works <em>Today</em></h2>
+    <div class="status-stats reveal" aria-label="Project stats">
+      <div><div class="num">7</div><div class="lbl">Backend Services</div></div>
+      <div><div class="num">0</div><div class="lbl">Client Mods Required</div></div>
+      <div><div class="num">6</div><div class="lbl">Game Modes Live</div></div>
+      <div><div class="num">1</div><div class="lbl">Launcher Install</div></div>
+    </div>
     <div class="briefing-grid">
       <div class="panel briefing-main reveal">
         <p><strong>Dreadnought</strong> was a massive-scale space combat game — dreadnoughts, cruisers and fighters clashing across open maps — shut down with its publisher. This project is a fan-led revival: a <strong>community-operated private server</strong> that runs the <strong>completely unmodified game client</strong> against our own backend.</p>
         <p>Everything is emulated server-side — login, hangar, inventory, market, tech tree, loadouts, contracts, career progression and matchmaking. The only thing a player installs is a <strong>replacement launcher</strong> that signs them into a server, trusts its certificate and starts the game. No game files are modified, and no game code or assets are distributed here.</p>
         <p>Matches are played on battle servers the backend starts on demand: the original game executable run headless under Wine, one process per match, on UDP 7777–7877. Anyone can run the whole stack and list their server in the launcher.</p>
         <div class="mono-line">&gt; objective: preserve a piece of online-game history — playable, forever.</div>
-        <ul class="repo-cards">
-          <li>
-            <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server">Dreadnought-Revival-server</a>
-            <span>backend services, battle-server mod, data and docs</span>
-          </li>
-          <li>
-            <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher">Dreadnought-Revival-Launcher</a>
-            <span>the Windows launcher — the only thing a player installs</span>
-          </li>
-          <li>
-            <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Page">Dreadnought-Revival-Page</a>
-            <span>this website</span>
-          </li>
-        </ul>
         <p class="disclaimer">Fan-run project, not affiliated with Greybox or Yager. Dreadnought and all related assets belong to their respective owners. You need your own copy of the game client (Steam App 835860).</p>
       </div>
       <div class="panel briefing-side reveal">
@@ -113,13 +164,7 @@
         <p class="kv-note">Provisional: the system works, but its numbers (reward amounts, goal targets, research and purchase costs) are placeholders until the original values are recovered.</p>
       </div>
     </div>
-  </section>
-
-  <!-- ============ FEATURES ============ -->
-  <section id="systems" role="tabpanel" aria-labelledby="tab-systems" hidden>
-    <p class="sec-tag reveal">02 // Key Systems</p>
-    <h2 class="reveal">Game Systems <em>Online</em></h2>
-    <p class="sec-lead reveal">Everything below runs today on the community server. <strong>No client patch is ever required</strong> — the server speaks the original protocol.</p>
+    <h3 class="modes-head reveal">Key Systems</h3>
     <div class="feature-grid">
       <article class="panel feature reveal">
         <div class="ico">◈</div>
@@ -158,8 +203,13 @@
         <span class="tag cyan">New</span>
       </article>
     </div>
+  </section>
 
-    <h3 class="modes-head reveal">Game Modes</h3>
+  <!-- ============ GAME MODES ============ -->
+  <section id="modes" role="tabpanel" aria-labelledby="tab-modes" hidden>
+    <p class="sec-tag reveal">03 // Game Modes</p>
+    <h2 class="reveal">Pick Your <em>Fight</em></h2>
+    <p class="sec-lead reveal">Every mode below plays a full match on the public test server — orbit drop, your own fitted ships, scores and the victory screen. Matches size themselves to who is queued.</p>
     <ul class="mode-list">
       <li class="panel reveal"><b>Team Deathmatch</b><span>Start in fighters, unlock bigger ships as you score. Turbo TDM variant included.</span></li>
       <li class="panel reveal"><b>Team Elimination</b><span>Best of three rounds; a lost ship sends you back out in a fighter.</span></li>
@@ -171,9 +221,30 @@
     </ul>
   </section>
 
-  <!-- ============ GALLERY ============ -->
+  <!-- ============ PATCH NOTES ============ -->
+  <section id="patch-notes" role="tabpanel" aria-labelledby="tab-patch-notes" hidden>
+    <p class="sec-tag reveal">04 // Patch Notes</p>
+    <h2 class="reveal">Patch <em>Notes</em></h2>
+    <p class="sec-lead reveal">What plays differently after each server and launcher update. Newest first.</p>
+    <aside class="panel known-issues reveal" aria-labelledby="known-issues-h">
+      <h3 id="known-issues-h">Known Issues <span>// please report anything else</span></h3>
+      <ul>
+        <li><b>Placeholder numbers.</b> Match reward amounts, career goal targets and research/purchase costs are stand-ins until the original values are found.</li>
+        <li><b>Havoc</b> (wave defence) is experimental and is not offered on every server.</li>
+        <li><b>Custom games:</b> lobby rooms work, but starting a match from one is not built yet.</li>
+        <li><b>Empty ship list after joining</b> happens on a small share of joins — leave and queue again.</li>
+      </ul>
+      <p>Found something else? Tell us in the <a href="https://discord.gg/yKYUt5Qh2c" target="_blank" rel="noopener">Discord</a> or open a <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/issues" target="_blank" rel="noopener">GitHub issue</a>.</p>
+    </aside>
+    <div id="patch-notes-list" class="patch-notes">
+      <p class="patch-fallback reveal">Loading patch notes…</p>
+    </div>
+    <noscript><p class="patch-fallback">Patch notes require JavaScript — or read the commit history directly on GitHub.</p></noscript>
+  </section>
+
+  <!-- ============ FLEET GALLERY ============ -->
   <section id="gallery" role="tabpanel" aria-labelledby="tab-gallery" hidden>
-    <p class="sec-tag reveal">03 // Fleet Gallery</p>
+    <p class="sec-tag reveal">05 // Fleet Gallery</p>
     <h2 class="reveal">Ships of the <em>Line</em></h2>
     <p class="sec-lead reveal">Real in-game ship art from the project's extracted game data — 31 hulls across five classes. Click any ship to inspect it.</p>
       <h3 class="gallery-group">DREADNOUGHTS <span class="cnt">// CAPITALS OF THE LINE · 6 HULLS</span></h3>
@@ -319,20 +390,9 @@
     <p class="gallery-note">// Artwork: extracted from the game's own UI assets — fan-preservation use only. Click a card for full view.</p>
   </section>
 
-  <!-- ============ PATCH NOTES ============ -->
-  <section id="patch-notes" role="tabpanel" aria-labelledby="tab-patch-notes" hidden>
-    <p class="sec-tag reveal">04 // Patch Notes</p>
-    <h2 class="reveal">Patch <em>Notes</em></h2>
-    <p class="sec-lead reveal">Player-facing notes for the <strong>server</strong> and <strong>launcher</strong> — what plays differently, not how it was fixed. Newest first.</p>
-    <div id="patch-notes-list" class="patch-notes">
-      <p class="patch-fallback reveal">Loading patch notes…</p>
-    </div>
-    <noscript><p class="patch-fallback">Patch notes require JavaScript — or read the commit history directly on GitHub.</p></noscript>
-  </section>
-
-  <!-- ============ ROADMAP ============ -->
+  <!-- ============ MISSION TIMELINE ============ -->
   <section id="roadmap" role="tabpanel" aria-labelledby="tab-roadmap" hidden>
-    <p class="sec-tag reveal">05 // Mission Timeline</p>
+    <p class="sec-tag reveal">06 // Mission Timeline</p>
     <h2 class="reveal">The Road <em>Back to War</em></h2>
     <div class="timeline">
       <div class="milestone done reveal">
@@ -368,39 +428,13 @@
     </div>
   </section>
 
-  <!-- ============ COMMUNITY ============ -->
-  <section id="community" role="tabpanel" aria-labelledby="tab-community" hidden>
-    <p class="sec-tag reveal">06 // Join the Fight</p>
-    <h2 class="reveal">How to <em>Play &amp; Contribute</em></h2>
+  <!-- ============ CONTRIBUTE ============ -->
+  <section id="contribute" role="tabpanel" aria-labelledby="tab-contribute" hidden>
+    <p class="sec-tag reveal">07 // Contribute</p>
+    <h2 class="reveal">Developers &amp; <em>Operators</em></h2>
     <div class="community-grid">
-      <div class="panel steps reveal">
-        <h3>Get In-Game (Players)</h3>
-        <div class="step">
-          <div class="n">01</div>
-          <div><h4>Own the game</h4><p>You need your own copy of Dreadnought on Steam (App 835860). No game files are distributed by this project.</p></div>
-        </div>
-        <div class="step">
-          <div class="n">02</div>
-          <div><h4>Download the launcher</h4>
-            <p>One file, nothing to install. It keeps itself up to date.</p>
-            <div class="dl-row">
-              <a class="btn btn-primary" href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases/latest/download/Dreadnought-Revival.exe">⬇ Windows</a>
-              <a class="btn btn-ghost" href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases/latest/download/Dreadnought-Revival-linux.tar.gz">⬇ Linux (Proton/Wine)</a>
-            </div>
-            <p class="dl-meta"><code>Dreadnought-Revival.exe</code> · latest release · <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases/latest" target="_blank" rel="noopener">release notes &amp; SHA-256 checksums ↗</a></p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="n">03</div>
-          <div><h4>Pick a server, trust its certificate</h4><p>The launcher lists the available servers and picks the project's own by default. On first start it shows the server's certificate fingerprint and asks Windows to trust it, for your user only — no admin rights. Certificates you stop using are removed again after 30 days.</p></div>
-        </div>
-        <div class="step">
-          <div class="n">04</div>
-          <div><h4>Create an account &amp; play</h4><p>Register in the launcher, hit <strong>PLAY GAME</strong>, queue for a match and fly. On Linux, run the bundled <code>dn-launcher-linux.sh</code>: it finds the game's Proton prefix and opens the launcher in your browser.</p></div>
-        </div>
-      </div>
       <div class="panel contribute reveal">
-        <h3>Contribute (Developers)</h3>
+        <h3>Help Build It</h3>
         <p>This is a server for a client we cannot change — <strong>never invent data</strong>: everything the server sends must be traceable to the client's own tables or binary. Read the client's parsers before forming a theory.</p>
         <ul>
           <li>Read the <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">contributing guide</a> and the client-data docs in the <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server" target="_blank" rel="noopener">server repository</a>.</li>
@@ -410,7 +444,25 @@
           <li>Running a community server? List it in the launcher with a pull request to <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/blob/main/serverlist.yaml" target="_blank" rel="noopener">serverlist.yaml</a>.</li>
         </ul>
         <p>Testers and bug reporters keep the servers alive — every playtest report matters.</p>
-        <a class="btn btn-primary" style="display:inline-block;margin-top:8px" href="https://github.com/Dreadnought-Revival" target="_blank" rel="noopener">Open the Organization ↗</a>
+        <div class="btn-row"><a class="btn btn-primary" href="https://github.com/Dreadnought-Revival" target="_blank" rel="noopener">Open the Organization ↗</a><a class="btn btn-ghost" href="https://discord.gg/yKYUt5Qh2c" target="_blank" rel="noopener">Discord ↗</a></div>
+      </div>
+      <div class="panel briefing-main reveal">
+        <h3 class="panel-h">The Repositories</h3>
+        <ul class="repo-cards">
+          <li>
+            <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server">Dreadnought-Revival-server</a>
+            <span>backend services, battle-server mod, data and docs</span>
+          </li>
+          <li>
+            <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher">Dreadnought-Revival-Launcher</a>
+            <span>the Windows launcher — the only thing a player installs</span>
+          </li>
+          <li>
+            <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Page">Dreadnought-Revival-Page</a>
+            <span>this website</span>
+          </li>
+        </ul>
+        <p>Everything is open source. Run the whole stack yourself, then list your server in the launcher so players can pick it.</p>
       </div>
     </div>
   </section>
@@ -424,30 +476,31 @@
   <div class="footer-inner">
     <div>
       <h4>Dreadnought Revival</h4>
-      <p>A community-operated private server for the discontinued game Dreadnought (UE4 4.13.1, Steam App 835860). Fan preservation project — not affiliated with the original publisher.</p>
+      <p>A community-operated private server for the discontinued game Dreadnought (UE4 4.13.1, Steam App 835860). Fan preservation project — not affiliated with Greybox or Yager.</p>
     </div>
     <div>
-      <h4>Command Links</h4>
+      <h4>Play</h4>
       <ul>
-        <li><a href="https://github.com/Dreadnought-Revival" target="_blank" rel="noopener">GitHub Organization</a></li>
-        <li><a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases" target="_blank" rel="noopener">Launcher Releases</a></li>
-        <li><a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server" target="_blank" rel="noopener">Server Repository</a></li>
-        <li><a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/blob/main/README.md" target="_blank" rel="noopener">Server Setup Guide</a></li>
+        <li><a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases/latest/download/Dreadnought-Revival.exe">Download for Windows</a></li>
+        <li><a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases/latest/download/Dreadnought-Revival-linux.tar.gz">Download for Linux</a></li>
+        <li><a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Launcher/releases" target="_blank" rel="noopener">All Launcher Releases</a></li>
+        <li><a href="https://discord.gg/yKYUt5Qh2c" target="_blank" rel="noopener">Discord</a></li>
         <li><a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/issues" target="_blank" rel="noopener">Report a Bug</a></li>
       </ul>
     </div>
     <div>
-      <h4>Intel</h4>
+      <h4>Project</h4>
       <ul>
-        <li><a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Page" target="_blank" rel="noopener">This Website (Source)</a></li>
         <li><a href="#patch-notes">Patch Notes</a></li>
         <li><a href="#roadmap">Roadmap</a></li>
+        <li><a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server" target="_blank" rel="noopener">Server Repository</a></li>
         <li><a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a></li>
+        <li><a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-Page" target="_blank" rel="noopener">This Website (Source)</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    © DREADNOUGHT REVIVAL PROJECT · GAME DATA © ORIGINAL OWNER, FAN-PRESERVATION USE ONLY · STATUS: <b>REVIVAL IN PROGRESS</b>
+    © DREADNOUGHT REVIVAL PROJECT · GAME DATA © ORIGINAL OWNER, FAN-PRESERVATION USE ONLY · STATUS: <b>PUBLIC TEST SERVER LIVE</b>
   </div>
 </footer>
 
