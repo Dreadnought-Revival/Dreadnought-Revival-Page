@@ -22,9 +22,11 @@ MAX_COMMITS = 20
 MAX_SUBJECT_LEN = 200
 
 # The section order the skill prescribes: game modes first (in the skill's
-# order), then the cross-mode section, then the out-of-match areas, General,
-# and the closer. ``All game modes`` sits after the modes because a player
-# reads their own mode's section first and then the everything-section.
+# order), then the cross-mode section, then the out-of-match areas, and
+# General. ``All game modes`` sits after the modes because a player reads
+# their own mode's section first and then the everything-section. Batches
+# carry no known-issues closer: issue reporting is the site's link to the
+# server repo's GitHub issue tracker.
 KNOWN_SECTION_TITLES = (
     "Team Deathmatch",
     "Team Elimination",
@@ -42,7 +44,6 @@ KNOWN_SECTION_TITLES = (
     "Tech tree",
     "Social",
     "General",
-    "Known issues / please report",
 )
 SECTION_ORDER = KNOWN_SECTION_TITLES
 
@@ -236,8 +237,16 @@ def build_prompt(date: str, notes_lines: list[str], subjects: list[str]) -> str:
         "bullets for them in the same style, but only for what players can feel "
         "in the game.\n\n"
         "Rules:\n"
+        "- Map each change to the game mode it actually affects, never a mode it "
+        "does not touch: the mode a \"Patch notes:\" line names, or the mode the "
+        "commit's context makes clear. A change that affects every mode (scoring, "
+        "bots, rewards, matchmaker-wide behavior) goes under \"All game modes\"; "
+        "chat, squads and social features under \"Social\"; launcher, hangar, "
+        "market and tech tree under their own sections. When a commit touches two "
+        "modes, give each mode its own bullet. If you cannot tell the mode, use "
+        "\"General\" rather than guessing.\n"
         "- Group bullets into sections titled exactly one of: "
-        + ", ".join(KNOWN_SECTION_TITLES[:-1]) + ".\n"
+        + ", ".join(KNOWN_SECTION_TITLES) + ".\n"
         "- Order the sections exactly like that list.\n"
         "- One change per bullet, one or two plain sentences.\n"
         "- \"Before, ...\" clauses are good when a change replaces behavior players knew.\n"
@@ -248,10 +257,8 @@ def build_prompt(date: str, notes_lines: list[str], subjects: list[str]) -> str:
         "- Never invent. If a value is our best estimate, say so plainly.\n"
         "- No internals: no commit hashes, file names, offsets, function names or "
         "log lines. Never mention commits or repos.\n"
-        "- End with a section titled 'Known issues / please report': one bullet "
-        "inviting players to report problems on the community Discord, and one "
-        "asking them to confirm the changes above in live matches, naming "
-        "exactly what to look for.\n"
+        "- No \"Known issues\" section and no requests to report: the site links "
+        "the server's issue tracker for that.\n"
         "- If nothing is player-facing, return {\"sections\": []}.\n\n"
         "Answer with strict JSON only, no markdown: "
         '{"sections": [{"title": "...", "bullets": ["...", "..."]}]}\n\n'

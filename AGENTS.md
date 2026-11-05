@@ -62,12 +62,15 @@ the Deploy Pages run on purpose. To change the image set: update the gallery
 
 ## Working rules
 
-- **Never hand-edit `data/patch-notes.json`.** The notes are player-facing: dated
-  batches, one section per game mode or area (Team Deathmatch, Team Elimination,
-  Conquest, Onslaught, Ceres Awakens, Proving Grounds, Havoc, Turbo TDM,
-  Escalation, All game modes, or Launcher / Hangar / Market / Tech tree / Social /
-  General), "Before, ..." context lines, and a "Known issues / please report"
-  closer. No internals: no hashes, file names, function names or log lines. The
+- **Never hand-edit `data/patch-notes.json`** (the one exception is an
+  operator-requested rework, landed like any other PR). The notes are
+  player-facing: dated batches, one section per game mode or area (Team
+  Deathmatch, Team Elimination, Conquest, Onslaught, Ceres Awakens, Proving
+  Grounds, Havoc, Turbo TDM, Escalation, All game modes, or Launcher / Hangar /
+  Market / Tech tree / Social / General), each change under the game mode it
+  actually affects, \"Before, ...\" context lines, and no known-issues closer —
+  issue reporting lives in the site's link to the server's GitHub issues. No
+  internals: no hashes, file names, function names or log lines. The
   format is defined by the server repo's patch-notes skill
   (`.claude/skills/dreadnought-patch-notes/` in Dreadnought-Revival-server):
   its commits end with a `Patch notes:` block of player-worded lines
@@ -87,9 +90,10 @@ the Deploy Pages run on purpose. To change the image set: update the gallery
   `releases/latest/download/<asset>` links, so they follow every launcher release
   as long as the asset names (`Dreadnought-Revival.exe`,
   `Dreadnought-Revival-linux.tar.gz`) stay the same.
-- The "Known issues" box at the top of the Patch Notes tab is hand-written in
-  `index.html` (unlike the notes themselves): player-facing, no internals. Remove an
-  entry once its fix ships.
+- The panel at the top of the Patch Notes tab links to the server repo's issue
+  tracker and must keep pointing at
+  https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/issues.
+  Patch-notes batches themselves carry no "Known issues" section.
 - `data/supporters.txt` is the Patreon supporters list on the Support tab, edited by
   hand by the maintainer: one name per line, `## Tier` starts a group, `//` lines are
   comments. `app.js` escapes every name. Only list people who agreed to be named; never
@@ -127,8 +131,9 @@ deployment `revival-ops` on Mistral Cloud. Its single workflow:
   `none (internal)` are dropped, and block-less (pre-convention) commits are
   phrased for players by `mistral-medium-latest`. The batch is ordered by the
   skill's section list (game modes first, then All game modes, Launcher / Hangar /
-  Market / Tech tree / Social, General, and a "Known issues / please report"
-  closer), merged into `data/patch-notes.json` (same-day pushes merge into that
+  Market / Tech tree / Social, General), with each change under the game mode it
+  actually affects and no known-issues closer, merged into
+  `data/patch-notes.json` (same-day pushes merge into that
   day's entry), and opens a PR like `Patch notes <date>: N commit(s)`.
   It never merges the PR itself: the daily Vibe ops run reviews and merges it, and
   the Pages deploy follows.

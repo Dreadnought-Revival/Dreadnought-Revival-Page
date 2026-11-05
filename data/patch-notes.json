@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-11-05T17:45:00Z",
+  "generated_at": "2026-11-05T23:20:00Z",
   "notes": [
     {
       "date": "2026-11-05",
       "sections": [
         {
-          "title": "Market",
+          "title": "Escalation",
           "bullets": [
-            "The store loads faster: the catalog is packed the way the game itself unpacks it."
+            "Losing your ship drops you two levels down the ladder instead of all the way back to a fighter, and dreadnoughts are now their own top level at 500 points."
           ]
         },
         {
-          "title": "Team Deathmatch",
+          "title": "Market",
           "bullets": [
-            "Losing your ship drops you two levels down the ladder instead of all the way back to fighters."
+            "The store loads faster: the catalog is packed the way the game itself unpacks it."
           ]
         }
       ]
@@ -22,15 +22,15 @@
       "date": "2026-11-04",
       "sections": [
         {
-          "title": "Team Deathmatch",
-          "bullets": [
-            "Matches now start everyone in fighters, and bigger ships unlock as you score. Before, everyone spawned straight into their chosen ship."
-          ]
-        },
-        {
           "title": "Conquest",
           "bullets": [
             "Claimed territory now draws on every player's screen."
+          ]
+        },
+        {
+          "title": "Escalation",
+          "bullets": [
+            "**Escalation** is here: a Team Deathmatch where everyone starts in a fighter and unlocks bigger ship classes as their match score grows. It runs on the TDM maps, queued from the Proving Grounds button."
           ]
         },
         {
@@ -59,15 +59,15 @@
           ]
         },
         {
-          "title": "General",
-          "bullets": [
-            "The rewards page shows again after your first match. Before, it stayed hidden."
-          ]
-        },
-        {
           "title": "Hangar",
           "bullets": [
             "Contracts load correctly and refresh after you log in."
+          ]
+        },
+        {
+          "title": "General",
+          "bullets": [
+            "The rewards page shows again after your first match. Before, it stayed hidden."
           ]
         }
       ]
@@ -76,15 +76,15 @@
       "date": "2026-11-02",
       "sections": [
         {
-          "title": "Hangar",
-          "bullets": [
-            "Captains: empty appearance slots are filled, and the **Standard Issue** outfit is free."
-          ]
-        },
-        {
           "title": "Team Elimination",
           "bullets": [
             "The round banner appears once the result is actually shown, and you get your own pick when every side start is blocked."
+          ]
+        },
+        {
+          "title": "Hangar",
+          "bullets": [
+            "Captains: empty appearance slots are filled, and the **Standard Issue** outfit is free."
           ]
         }
       ]
@@ -121,12 +121,6 @@
       "date": "2026-10-29",
       "sections": [
         {
-          "title": "Havoc",
-          "bullets": [
-            "Fighters fly while you are eliminated, and wave 1 never has modifiers."
-          ]
-        },
-        {
           "title": "Team Deathmatch",
           "bullets": [
             "Adds **Elysium (Paradise)**, **Ryugu Haven (Space02)** and **Amirani**."
@@ -157,9 +151,9 @@
           ]
         },
         {
-          "title": "Tech tree",
+          "title": "Havoc",
           "bullets": [
-            "The next-ship gate counts the modules the game counts."
+            "Fighters fly while you are eliminated, and wave 1 never has modifiers."
           ]
         },
         {
@@ -180,10 +174,9 @@
           ]
         },
         {
-          "title": "Tech tree",
+          "title": "Launcher",
           "bullets": [
-            "Officers' briefings sit in every tier III–V ship's tree.",
-            "Ship pages show the next ships and the briefing; fitted items no longer sit under the wrong line."
+            "The launcher gets the original launcher's look, resolves the server on every Play, and scales for your display."
           ]
         },
         {
@@ -193,9 +186,9 @@
           ]
         },
         {
-          "title": "Launcher",
+          "title": "Tech tree",
           "bullets": [
-            "The launcher gets the original launcher's look, resolves the server on every Play, and scales for your display."
+            "Ship pages show the next ships and the briefing; fitted items no longer sit under the wrong line."
           ]
         }
       ]
@@ -255,15 +248,15 @@
       "date": "2026-10-14",
       "sections": [
         {
-          "title": "Market",
-          "bullets": [
-            "Research prices refresh."
-          ]
-        },
-        {
           "title": "Hangar",
           "bullets": [
             "Loadout saves confirm, and hero fits are owned."
+          ]
+        },
+        {
+          "title": "Tech tree",
+          "bullets": [
+            "After you research a module, its credit price shows up without restarting the game."
           ]
         }
       ]
@@ -272,17 +265,23 @@
       "date": "2026-10-09",
       "sections": [
         {
-          "title": "General",
+          "title": "Onslaught",
           "bullets": [
-            "The statistics screen no longer crashes; inventory and Elite status refresh in-session, and the original ribbons are back.",
-            "Bots start halted before the match, and Veteran/Legendary Command Ship guns work."
+            "Veteran and Legendary Command Ship guns fire properly, and bots target Command Ships.",
+            "Onslaught joins the regular map rotation."
+          ]
+        },
+        {
+          "title": "All game modes",
+          "bullets": [
+            "Bots wait for the match to start instead of moving during the countdown."
           ]
         },
         {
           "title": "Hangar",
           "bullets": [
             "Career progression is rebuilt and contract activation times run correctly.",
-            "Daily contracts and PvE season 1 events."
+            "Daily contracts are here — three plus an elite, with progress from your match results, credit payouts and rerolls."
           ]
         },
         {
@@ -292,9 +291,10 @@
           ]
         },
         {
-          "title": "Onslaught",
+          "title": "General",
           "bullets": [
-            "Onslaught joins the regular map rotation."
+            "PvE matches run Season 1 events from the game's own tables.",
+            "The statistics screen no longer crashes; inventory and Elite status refresh in-session, and the original ribbons are back."
           ]
         }
       ]
@@ -303,15 +303,21 @@
       "date": "2026-10-08",
       "sections": [
         {
-          "title": "Onslaught",
+          "title": "Conquest",
           "bullets": [
-            "AI ships move, and Conquest score and capture points work."
+            "Team scores and capture points work — points activate at match start and the scores update as the match runs."
           ]
         },
         {
-          "title": "General",
+          "title": "Onslaught",
           "bullets": [
-            "Chat calls PodTDM by its real name: **Ceres Awakens**."
+            "AI ships move."
+          ]
+        },
+        {
+          "title": "Ceres Awakens",
+          "bullets": [
+            "The queue called PodTDM is really **Ceres Awakens** — its buff pods live on Ryugu Haven (Space02). Before, it was announced as Team Deathmatch."
           ]
         }
       ]
@@ -320,21 +326,21 @@
       "date": "2026-10-07",
       "sections": [
         {
-          "title": "Onslaught",
-          "bullets": [
-            "Onslaught points, AI ships and the original match XP."
-          ]
-        },
-        {
           "title": "Conquest",
           "bullets": [
             "Only on Territory maps; mode names in chat."
           ]
         },
         {
-          "title": "Market",
+          "title": "Onslaught",
           "bullets": [
-            "Other ships' blueprint hulls are no longer granted or sold."
+            "Onslaught points, AI ships and the original match XP."
+          ]
+        },
+        {
+          "title": "All game modes",
+          "bullets": [
+            "Scoring uses the original per-mode table, and match XP counts your in-match events."
           ]
         },
         {
@@ -344,9 +350,9 @@
           ]
         },
         {
-          "title": "General",
+          "title": "Market",
           "bullets": [
-            "The original per-mode scoring table and event XP."
+            "Other ships' blueprint hulls are no longer granted or sold."
           ]
         }
       ]
@@ -355,9 +361,9 @@
       "date": "2026-10-06",
       "sections": [
         {
-          "title": "General",
+          "title": "Hangar",
           "bullets": [
-            "Chat rooms, direct messages, solo squads and a profanity filter."
+            "Flagships use the ship's own loadout slot."
           ]
         },
         {
@@ -367,9 +373,9 @@
           ]
         },
         {
-          "title": "Hangar",
+          "title": "Social",
           "bullets": [
-            "Flagships use the ship's own loadout slot."
+            "Chat rooms, direct messages, solo squads and a profanity filter."
           ]
         }
       ]
@@ -377,15 +383,6 @@
     {
       "date": "2026-10-03",
       "sections": [
-        {
-          "title": "General",
-          "bullets": [
-            "Match results say team names, not 'T'.",
-            "Chat only announces queues that are still open.",
-            "The matchmaker can backfill running matches.",
-            "Clients that failed the secure handshake connect via a compatibility fallback."
-          ]
-        },
         {
           "title": "Hangar",
           "bullets": [
@@ -397,6 +394,25 @@
           "bullets": [
             "Owning a ship owns its blueprint look."
           ]
+        },
+        {
+          "title": "Tech tree",
+          "bullets": [
+            "The next-ship gate counts the modules the game counts."
+          ]
+        },
+        {
+          "title": "Social",
+          "bullets": [
+            "Chat only announces queues that are still open."
+          ]
+        },
+        {
+          "title": "General",
+          "bullets": [
+            "Match results say team names, not 'T'.",
+            "The matchmaker can backfill running matches."
+          ]
         }
       ]
     },
@@ -407,7 +423,32 @@
           "title": "General",
           "bullets": [
             "Hero ships report their own tier.",
-            "Matches start once the host's game mode is running."
+            "Matches start once the host's game mode is running.",
+            "Clients that failed the secure handshake connect via a compatibility fallback."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-01",
+      "sections": [
+        {
+          "title": "Market",
+          "bullets": [
+            "The original bundles — **Rogue Cache**, **Renegade Stash** and the rest — replace the empty placeholders in the store.",
+            "Ship cosmetics sort into their own vanity sections, and hero ships are offered for points (our estimated prices)."
+          ]
+        },
+        {
+          "title": "Tech tree",
+          "bullets": [
+            "Officer briefings join the tech tree — the four 101 briefings come with any tier III–V ship, and each of the other 16 belongs to one specific ship. Before, no tree carried a briefing at all."
+          ]
+        },
+        {
+          "title": "General",
+          "bullets": [
+            "Match rewards use the fleet of the match's type — Veteran and Legendary matches no longer fall back to the Recruit fleet."
           ]
         }
       ]

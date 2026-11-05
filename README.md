@@ -43,9 +43,10 @@ python3 -m http.server 8000
 - `.github/workflows/deploy-pages.yml` — deploys the site to GitHub Pages on every push to `main`.
 - `.github/workflows/workflow-ci.yml` — runs the tests of the workflow project on every change under `workflow/`.
 - Patch notes are written for players by automation — dated batches, sectioned by
-  game mode or area (game modes first, then All game modes, Launcher / Hangar /
-  Market / Tech tree / Social, General, and a "Known issues / please report"
-  closer), no internals. Server commits end with a `Patch notes:` block of
+  the game mode each change actually affects (game modes first, then All game
+  modes, Launcher / Hangar / Market / Tech tree / Social, General), no internals
+  and no known-issues section — the Patch Notes tab links the server's GitHub
+  issues instead. Server commits end with a `Patch notes:` block of
   player-worded lines (per the server repo's patch-notes skill); the workflow
   builds the notes from those blocks, so internal commits
   (`Patch notes: none (internal)`) never reach the site. A GitHub webhook on
