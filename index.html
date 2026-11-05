@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DREADNOUGHT REVIVAL — Community Private Server</title>
-<meta name="description" content="A community-operated private server reviving Dreadnought (UE4, Steam 835860). Unmodified client, emulated backend, full matches in six game modes.">
+<meta name="description" content="A community-operated private server reviving Dreadnought (UE4, Steam 835860). Unmodified client, emulated backend, full matches in seven game modes.">
 <meta property="og:title" content="Dreadnought Revival — Community Private Server">
 <meta property="og:description" content="Play the discontinued space-combat game Dreadnought again on a community-run private server. Unmodified client, server-side emulation, one launcher.">
 <meta property="og:type" content="website">
@@ -122,7 +122,7 @@
         <div class="panel help-card reveal">
           <h3>Something Not Working?</h3>
           <ul>
-            <li>Check the <a href="#patch-notes">known issues</a> first — it may already be on the list.</li>
+            <li>Check the <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/issues" target="_blank" rel="noopener">issue tracker</a> first — it may already be reported.</li>
             <li>Ask in the <a href="https://discord.gg/dreadnought" target="_blank" rel="noopener">Discord</a>, or open a <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/issues" target="_blank" rel="noopener">bug report on GitHub</a>.</li>
             <li>The launcher's menu has <strong>Game logs</strong> — attach them to a report.</li>
           </ul>
@@ -138,7 +138,7 @@
     <div class="status-stats reveal" aria-label="Project stats">
       <div><div class="num">7</div><div class="lbl">Backend Services</div></div>
       <div><div class="num">0</div><div class="lbl">Client Mods Required</div></div>
-      <div><div class="num">6</div><div class="lbl">Game Modes Live</div></div>
+      <div><div class="num">7</div><div class="lbl">Game Modes Live</div></div>
       <div><div class="num">1</div><div class="lbl">Launcher Install</div></div>
     </div>
     <div class="briefing-grid">
@@ -212,7 +212,8 @@
     <h2 class="reveal">Pick Your <em>Fight</em></h2>
     <p class="sec-lead reveal">Every mode below plays a full match on the public test server — orbit drop, your own fitted ships, scores and the victory screen. Matches size themselves to who is queued.</p>
     <ul class="mode-list">
-      <li class="panel reveal"><b>Team Deathmatch</b><span>Start in fighters, unlock bigger ships as you score. Turbo TDM variant included.</span></li>
+      <li class="panel reveal"><b>Team Deathmatch</b><span>Pick your fitted ship and fly straight into the team fight. Turbo TDM variant included.</span></li>
+      <li class="panel reveal"><b>Escalation</b><span>Fighters-first TDM: bigger ship classes unlock as your match score grows, and a lost ship costs you two levels. Queued from the Proving Grounds button.</span></li>
       <li class="panel reveal"><b>Team Elimination</b><span>Best of three rounds; a lost ship sends you back out in a fighter.</span></li>
       <li class="panel reveal"><b>Conquest</b><span>Capture points and claim territory, played by the original rules.</span></li>
       <li class="panel reveal"><b>Onslaught</b><span>Destroy the enemy command ship, with its abilities working.</span></li>
@@ -227,15 +228,11 @@
     <p class="sec-tag reveal">04 // Patch Notes</p>
     <h2 class="reveal">Patch <em>Notes</em></h2>
     <p class="sec-lead reveal">What plays differently after each server and launcher update. Newest first.</p>
-    <aside class="panel known-issues reveal" aria-labelledby="known-issues-h">
-      <h3 id="known-issues-h">Known Issues <span>// please report anything else</span></h3>
-      <ul>
-        <li><b>Placeholder numbers.</b> Match reward amounts, career goal targets and research/purchase costs are stand-ins until the original values are found.</li>
-        <li><b>Havoc</b> (wave defence) is experimental and is not offered on every server.</li>
-        <li><b>Custom games:</b> lobby rooms work, but starting a match from one is not built yet.</li>
-        <li><b>Empty ship list after joining</b> happens on a small share of joins — leave and queue again.</li>
-      </ul>
-      <p>Found something else? Tell us in the <a href="https://discord.gg/dreadnought" target="_blank" rel="noopener">Discord</a> or open a <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/issues" target="_blank" rel="noopener">GitHub issue</a>.</p>
+    <aside class="panel known-issues reveal" aria-labelledby="report-issues-h">
+      <h3 id="report-issues-h">Spot a bug? <span>// tell us on GitHub</span></h3>
+      <p>Something broken in a match, the hangar or the store? Check the issue tracker first — it may already be reported.</p>
+      <p>Open the tracker:
+        <a href="https://github.com/Dreadnought-Revival/Dreadnought-Revival-server/issues" target="_blank" rel="noopener">github.com/Dreadnought-Revival/Dreadnought-Revival-server/issues</a></p>
     </aside>
     <div id="patch-notes-list" class="patch-notes">
       <p class="patch-fallback reveal">Loading patch notes…</p>

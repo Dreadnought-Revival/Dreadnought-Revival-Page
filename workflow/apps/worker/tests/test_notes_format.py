@@ -129,7 +129,7 @@ class TestLlmBatch:
         text = json.dumps(
             {
                 "sections": [
-                    {"title": "known issues / Please Report", "bullets": ["B."]},
+                    {"title": "escalation", "bullets": ["B."]},
                     {"title": "all game modes", "bullets": ["A."]},
                     {"title": "Fresh unknown area", "bullets": ["U."]},
                 ]
@@ -138,7 +138,7 @@ class TestLlmBatch:
         titles = [s["title"] for s in nf.parse_llm_batch(text)]
         # parse canonicalizes titles but keeps the model's order; sorting is sort_sections' job
         assert titles == [
-            "Known issues / please report",
+            "Escalation",
             "All game modes",
             "Fresh unknown area",
         ]
@@ -155,13 +155,15 @@ class TestLlmBatch:
         assert "Escalation" in prompt
         assert "All game modes" in prompt
         assert "Social" in prompt
-        assert "Known issues / please report" in prompt
         assert "Ryugu Haven" in prompt
         assert "strict JSON" in prompt
+        # mapping guidance, and no known-issues closer (the site links the tracker)
+        assert "actually affects" in prompt
+        assert "please report" not in prompt
+        assert "Known issues / please report" not in prompt
 
     def test_sort_sections_orders_per_skill(self):
         sections = [
-            {"title": "Known issues / please report", "bullets": ["z"]},
             {"title": "General", "bullets": ["g"]},
             {"title": "Conquest", "bullets": ["c"]},
             {"title": "Unknown thing", "bullets": ["u"]},
@@ -172,7 +174,6 @@ class TestLlmBatch:
             "Conquest",
             "All game modes",
             "General",
-            "Known issues / please report",
             "Unknown thing",
         ]
 
