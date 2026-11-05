@@ -131,6 +131,6 @@ class TestMergeBatch:
 
 def test_pr_body_lists_commits():
     body = nf.build_pr_body("2026-11-05", [{"sha": "abc1234", "subject": "add map"}])
-    assert "`abc123` add map" in body
+    assert "`abc1234` add map" in body
     assert "2026-11-05" in body
     assert "revival-patch-notes" in body
