@@ -21,6 +21,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Keep the published site free of non-site files
+        run: rm -rf workflow
+
       - name: Validate site
         run: |
           set -e
