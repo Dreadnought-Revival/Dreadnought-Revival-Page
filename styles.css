@@ -73,7 +73,7 @@ header.scrolled{box-shadow:0 0 40px rgba(255,107,0,.12),0 8px 30px rgba(0,0,0,.6
 .nav-links{display:flex;align-items:center;gap:6px;list-style:none}
 .nav-links a,.nav-links button.tab{
   font-family:var(--font-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--muted);text-decoration:none;padding:8px 12px;border:1px solid transparent;
+  color:var(--muted);text-decoration:none;padding:8px 10px;border:1px solid transparent;
   clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
   transition:color .2s,border-color .2s,background .2s;
 }
