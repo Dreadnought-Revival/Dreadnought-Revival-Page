@@ -37,9 +37,54 @@ class TestPushPayload:
         assert [e["subject"] for e in entries] == ["add havoc rotation", "fix corvette spread"]
         assert entries[0]["sha"] == "a" * 40
 
+    def test_commit_entries_keep_full_message(self):
+        push = _push(
+            commits=[{"id": "a" * 40, "message": "subject\n\nPatch notes:\n- General: X."}]
+        )
+        entries = nf.commit_entries(push)
+        assert entries[0]["message"].startswith("subject\n")
+        assert "Patch notes:" in entries[0]["message"]
+
     def test_commit_entries_caps_at_20(self):
         push = _push(commits=[{"id": str(i), "message": f"change {i}"} for i in range(50)])
         assert len(nf.commit_entries(push)) == nf.MAX_COMMITS
+
+
+class TestPatchNotesBlock:
+    def test_block_lines_with_trailer_after(self):
+        msg = (
+            "havoc: rotate waves\n\n"
+            "Body text.\n\n"
+            "Patch notes:\n"
+            "- Havoc: Waves rotate on every map.\n"
+            "- All game modes: Rewards pay at the end screen.\n"
+            "\n"
+            "Co-Authored-By: Someone <x>"
+        )
+        assert nf.patch_note_lines(msg) == [
+            "Havoc: Waves rotate on every map.",
+            "All game modes: Rewards pay at the end screen.",
+        ]
+
+    def test_first_bullet_on_the_same_line(self):
+        assert nf.patch_note_lines("x\n\nPatch notes: - Launcher: Self-updates.") == [
+            "Launcher: Self-updates."
+        ]
+        assert nf.patch_note_lines("x\n\nPatch notes: Launcher: Self-updates.") == [
+            "Launcher: Self-updates."
+        ]
+
+    def test_none_internal_is_an_empty_block(self):
+        assert nf.patch_note_lines("x\n\nPatch notes: none (internal)") == []
+        assert nf.patch_note_lines("x\n\nPatch Notes: None (Internal)") == []
+
+    def test_missing_block_returns_none(self):
+        assert nf.patch_note_lines("add feature\n\nbody") is None
+        assert nf.patch_note_lines("") is None
+
+    def test_block_ends_at_paragraph(self):
+        msg = "x\n\nPatch notes:\n- General: G.\nA trailing paragraph."
+        assert nf.patch_note_lines(msg) == ["General: G."]
 
 
 class TestConnectorShapes:
@@ -80,13 +125,56 @@ class TestLlmBatch:
         sections = nf.parse_llm_batch('{"sections": [{"title": "General", "bullets": ["", "ok"]}, {"title": "X"}]}')
         assert sections == [{"title": "General", "bullets": ["ok"]}]
 
-    def test_prompt_embeds_subjects_and_format(self):
-        prompt = nf.build_prompt("2026-11-05", ["add new map", "fix dreadnought hp"])
+    def test_parse_canonicalizes_known_titles(self):
+        text = json.dumps(
+            {
+                "sections": [
+                    {"title": "known issues / Please Report", "bullets": ["B."]},
+                    {"title": "all game modes", "bullets": ["A."]},
+                    {"title": "Fresh unknown area", "bullets": ["U."]},
+                ]
+            }
+        )
+        titles = [s["title"] for s in nf.parse_llm_batch(text)]
+        # parse canonicalizes titles but keeps the model's order; sorting is sort_sections' job
+        assert titles == [
+            "Known issues / please report",
+            "All game modes",
+            "Fresh unknown area",
+        ]
+
+    def test_prompt_embeds_blocks_subjects_and_format(self):
+        prompt = nf.build_prompt(
+            "2026-11-05",
+            ["Conquest: Points show as your team's territory."],
+            ["fix dreadnought hp"],
+        )
         assert "2026-11-05" in prompt
-        assert "- add new map" in prompt
-        assert "**bold**" in prompt
+        assert "- Conquest: Points show as your team's territory." in prompt
+        assert "- fix dreadnought hp" in prompt
+        assert "Escalation" in prompt
+        assert "All game modes" in prompt
+        assert "Social" in prompt
         assert "Known issues / please report" in prompt
+        assert "Ryugu Haven" in prompt
         assert "strict JSON" in prompt
+
+    def test_sort_sections_orders_per_skill(self):
+        sections = [
+            {"title": "Known issues / please report", "bullets": ["z"]},
+            {"title": "General", "bullets": ["g"]},
+            {"title": "Conquest", "bullets": ["c"]},
+            {"title": "Unknown thing", "bullets": ["u"]},
+            {"title": "All game modes", "bullets": ["a"]},
+        ]
+        titles = [s["title"] for s in nf.sort_sections(sections)]
+        assert titles == [
+            "Conquest",
+            "All game modes",
+            "General",
+            "Known issues / please report",
+            "Unknown thing",
+        ]
 
 
 class TestMergeBatch:

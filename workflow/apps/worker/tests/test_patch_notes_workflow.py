@@ -1,10 +1,11 @@
 """End-to-end test of the revival-patch-notes workflow with side-effect activities faked.
 
 The workflow's deterministic orchestration is what's under test: filtering,
-batch merging and the dry-run/publish decision. The GitHub REST and model
-activities are replaced by fakes registered under the same activity names, so
-no GitHub or Mistral credentials are touched. The dry-run input path exercises
-everything except publishing; the publish test captures what would be pushed.
+patch-notes block extraction, batch merging and the dry-run/publish decision.
+The GitHub REST and model activities are replaced by fakes registered under the
+same activity names, so no GitHub or Mistral credentials are touched. The
+dry-run input path exercises everything except publishing; the publish test
+captures what would be pushed.
 """
 
 import asyncio
@@ -32,10 +33,13 @@ async def fake_fetch_patch_notes() -> str:
 
 
 @workflows.activity(name="generate-note-batch")
-async def fake_generate_note_batch(date: str, subjects: list[str]) -> str:
-    return json.dumps(
-        {"sections": [{"title": "General", "bullets": [f"Shipped **{subjects[0]}**."]}]}
-    )
+async def fake_generate_note_batch(date: str, notes_lines: list[str], subjects: list[str]) -> str:
+    fake_generate_note_batch.called = True  # type: ignore[attr-defined]
+    fake_generate_note_batch.captured_inputs = {  # type: ignore[attr-defined]
+        "notes_lines": list(notes_lines),
+        "subjects": list(subjects),
+    }
+    return json.dumps({"sections": [{"title": "Havoc", "bullets": list(notes_lines)}]})
 
 
 @workflows.activity(name="publish-patch-notes")
@@ -59,8 +63,23 @@ def push_event(dry_run: bool = True) -> dict:
             "repository": {"name": "Dreadnought-Revival-server", "default_branch": "master"},
             "ref": "refs/heads/master",
             "commits": [
-                {"id": "abc1234def", "message": "add havoc rotation\n\ninternal: refs #12"},
+                {
+                    "id": "abc1234def",
+                    "message": (
+                        "add havoc rotation\n\n"
+                        "internal: refs #12\n\n"
+                        "Patch notes:\n"
+                        "- Havoc: New wave rotation on every map.\n"
+                        "\n"
+                        "Co-Authored-By: Someone <x>"
+                    ),
+                },
+                {
+                    "id": "222abcd333",
+                    "message": "tune corvette spread\n\nPatch notes: none (internal)",
+                },
                 {"id": "fff0001111", "message": "Merge branch 'feature'"},
+                {"id": "444aaa5555", "message": "fix dreadnought hp"},
             ],
             "dry_run": dry_run,
         },
@@ -99,7 +118,13 @@ def as_text(result, label: str) -> str:
     return result
 
 
+def _reset_fakes():
+    fake_generate_note_batch.called = False  # type: ignore[attr-defined]
+    fake_generate_note_batch.captured_inputs = None  # type: ignore[attr-defined]
+
+
 async def test_dry_run_skips_publishing(temporal_env):
+    _reset_fakes()
     result = await _run(
         temporal_env,
         push_event(dry_run=True),
@@ -111,10 +136,18 @@ async def test_dry_run_skips_publishing(temporal_env):
     assert "1 section(s)" in text
     assert "1 bullet(s)" in text
     assert not hasattr(fake_publish_patch_notes, "captured")
+    # the block line feeds the model; the internal commit is dropped; the
+    # block-less commit falls back to its subject
+    captured = fake_generate_note_batch.captured_inputs  # type: ignore[attr-defined]
+    assert captured == {
+        "notes_lines": ["Havoc: New wave rotation on every map."],
+        "subjects": ["fix dreadnought hp"],
+    }, f"model inputs: {captured!r}"
 
 
 async def test_publish_branch_and_pr(temporal_env):
     captured_before = getattr(fake_publish_patch_notes, "captured", None)
+    _reset_fakes()
     result = await _run(
         temporal_env,
         push_event(dry_run=False),
@@ -130,11 +163,29 @@ async def test_publish_branch_and_pr(temporal_env):
     data = json.loads(captured["content"])
     newest = data["notes"][0]
     assert newest["date"] != "2026-11-01"  # today's batch prepended before the old one
-    assert any(s["title"] == "General" for s in newest["sections"])
+    assert any(s["title"] == "Havoc" for s in newest["sections"])
     assert data["notes"][1]["date"] == "2026-11-01"
     assert "`abc1234` add havoc rotation" in captured["body"], f"body: {captured['body']!r}"
     if captured_before is None:
         del fake_publish_patch_notes.captured  # type: ignore[attr-defined]
+
+
+async def test_all_internal_commits_publish_nothing(temporal_env):
+    _reset_fakes()
+    event = push_event(dry_run=False)
+    event["body"]["commits"] = [
+        {"id": "999eee8888", "message": "refactor internals\n\nPatch notes: none (internal)"},
+    ]
+    result = await _run(
+        temporal_env,
+        event,
+        [fake_fetch_patch_notes, fake_generate_note_batch, fake_publish_patch_notes],
+        "test-revival-patch-notes-all-internal",
+    )
+    text = as_text(result, "all-internal")
+    assert text.startswith("no player-facing changes in 1 commit(s)"), f"text: {text!r}"
+    assert not fake_generate_note_batch.called  # type: ignore[attr-defined]
+    assert not hasattr(fake_publish_patch_notes, "captured")
 
 
 async def test_ignores_non_push_events(temporal_env):
