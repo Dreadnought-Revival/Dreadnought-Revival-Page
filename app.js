@@ -1,152 +1,253 @@
+/* Dreadnought Revival — HUD landing page script.
+ * Sections: header/nav behaviour, scrollspy, reveal-on-scroll, status badge,
+ * patch-notes renderer, ship gallery lightbox, copy button. */
 (function () {
-  "use strict";
+  'use strict';
 
-  var TABS = ["about", "join", "status", "patch-notes", "community"];
+  /* ---------- helpers ---------- */
 
-  // Mobile nav toggle
-  var toggle = document.querySelector(".nav-toggle");
-  var links = document.getElementById("nav-links");
-  if (toggle && links) {
-    toggle.addEventListener("click", function () {
-      var open = links.classList.toggle("open");
-      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+  function $(sel, root) { return (root || document).querySelector(sel); }
+  function $all(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
 
-  // Tabs: the nav is a tablist; panels switch, hash routes deep links
-  function selectTab(id, updateHash) {
-    if (TABS.indexOf(id) === -1) id = "about";
-    TABS.forEach(function (t) {
-      var panel = document.getElementById(t);
-      var tab = document.getElementById("tab-" + t);
-      if (!panel || !tab) return;
-      var on = t === id;
-      panel.hidden = !on;
-      tab.setAttribute("aria-selected", on ? "true" : "false");
-      tab.tabIndex = on ? 0 : -1;
-      tab.classList.toggle("active", on);
-    });
-    if (updateHash !== false && location.hash !== "#" + id) {
-      history.pushState(null, "", "#" + id);
+  /* render **bold** markers inside escaped text */
+  function fmt(s) {
+    var parts = String(s).split('**');
+    var out = '';
+    for (var i = 0; i < parts.length; i++) {
+      out += i % 2 ? '<b>' + escapeHtml(parts[i]) + '</b>' : escapeHtml(parts[i]);
     }
+    return out;
   }
 
-  function wireTabs() {
-    var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
-    tabs.forEach(function (tab) {
-      tab.addEventListener("click", function () {
-        selectTab(tab.getAttribute("data-panel"));
-        if (links && links.classList.contains("open")) {
-          links.classList.remove("open");
-          if (toggle) toggle.setAttribute("aria-expanded", "false");
+  function dayLabel(iso) {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return String(iso);
+    var months = ['January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'];
+    return months[d.getUTCMonth()] + ' ' + d.getUTCDate() + ', ' + d.getUTCFullYear();
+  }
+
+  var prefersReduced = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- header / burger ---------- */
+
+  var header = $('#site-header');
+  var burger = $('#burger');
+  var navLinks = $('#nav-links');
+
+  function onScrollHeader() {
+    if (!header) return;
+    if (window.scrollY > 40) header.classList.add('scrolled');
+    else header.classList.remove('scrolled');
+  }
+  window.addEventListener('scroll', onScrollHeader, { passive: true });
+  onScrollHeader();
+
+  if (burger && navLinks) {
+    burger.addEventListener('click', function () {
+      var open = navLinks.classList.toggle('open');
+      burger.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    navLinks.addEventListener('click', function (e) {
+      if (e.target && e.target.tagName === 'A') {
+        navLinks.classList.remove('open');
+        burger.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  /* ---------- reveal on scroll ---------- */
+
+  var revealEls = $all('.reveal');
+
+  if (!prefersReduced && 'IntersectionObserver' in window) {
+    var revealObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          en.target.classList.add('visible');
+          revealObs.unobserve(en.target);
         }
       });
-      tab.addEventListener("keydown", function (e) {
-        var i = tabs.indexOf(tab);
-        var n = null;
-        if (e.key === "ArrowRight") n = (i + 1) % tabs.length;
-        else if (e.key === "ArrowLeft") n = (i - 1 + tabs.length) % tabs.length;
-        else if (e.key === "Home") n = 0;
-        else if (e.key === "End") n = tabs.length - 1;
-        if (n === null) return;
-        e.preventDefault();
-        tabs[n].focus();
-        selectTab(tabs[n].getAttribute("data-panel"));
-      });
-    });
-    window.addEventListener("hashchange", function () {
-      selectTab(location.hash.slice(1), false);
-    });
-    window.addEventListener("popstate", function () {
-      selectTab(location.hash.slice(1), false);
-    });
-    selectTab(location.hash.slice(1), false);
+    }, { threshold: 0.12 });
+    revealEls.forEach(function (el) { revealObs.observe(el); });
+  } else {
+    revealEls.forEach(function (el) { el.classList.add('visible'); });
   }
 
-  // Server status badge: static fallback, upgraded if data/server-status.json exists
+  /* ---------- scrollspy ---------- */
+
+  var navAnchors = $all('.nav-links a[href^="#"]');
+  var sections = navAnchors.map(function (a) {
+    return document.getElementById(a.getAttribute('href').slice(1));
+  }).filter(Boolean);
+
+  function onScrollSpy() {
+    if (!sections.length) return;
+    var pos = window.scrollY + window.innerHeight * 0.35;
+    var current = sections[0];
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i].offsetTop <= pos) current = sections[i];
+    }
+    navAnchors.forEach(function (a) {
+      var active = a.getAttribute('href') === '#' + current.id;
+      a.classList.toggle('active', active);
+      if (active) a.setAttribute('aria-current', 'true');
+      else a.removeAttribute('aria-current');
+    });
+  }
+  window.addEventListener('scroll', onScrollSpy, { passive: true });
+  onScrollSpy();
+
+  /* ---------- status badge ---------- */
+
   function loadStatus() {
-    var badge = document.getElementById("status-badge");
-    var detail = document.getElementById("status-detail");
-    if (!badge) return;
-    fetch("data/server-status.json")
-      .then(function (r) {
-        if (!r.ok) throw new Error("no status file");
-        return r.json();
-      })
-      .then(function (s) {
-        badge.textContent = s.online ? "Online" : "Offline";
-        badge.classList.add(s.online ? "online" : "offline");
-        if (typeof s.players === "number") {
-          detail.textContent = s.players + " player" + (s.players === 1 ? "" : "s") + " online" +
-            (s.updated_at ? " (updated " + s.updated_at + ")" : "");
+    var badge = $('#status-badge');
+    var text = $('#status-text');
+    if (!badge || !text) return;
+    fetch('data/server-status.json', { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error('status ' + r.status); return r.json(); })
+      .then(function (data) {
+        var online = !!(data && (data.online === true ||
+          (typeof data.online === 'string' && data.online.toLowerCase() === 'true')));
+        if (online) {
+          badge.classList.remove('offline');
+          badge.classList.add('online');
+          text.textContent = 'Status: Servers Online';
+        } else {
+          badge.classList.remove('online');
+          badge.classList.add('offline');
+          text.textContent = 'Status: Offline';
         }
       })
       .catch(function () {
-        badge.textContent = "Community-run";
-        detail.textContent = "Live status is reported by the community — see the links below.";
+        /* keep default text: Active Development — Revival in Progress */
       });
   }
 
-  // Patch notes: player-facing, rendered from data/patch-notes.json
-  var state = { notes: [] };
+  /* ---------- patch notes ---------- */
 
-  function dayLabel(iso) {
-    var d = new Date(iso + "T00:00:00Z");
-    if (isNaN(d.getTime())) return iso;
-    return d.toLocaleDateString(undefined, { day: "numeric", month: "long", timeZone: "UTC" });
-  }
-
-  function escapeHtml(s) {
-    return s.replace(/[&<>"']/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
-    });
-  }
-
-  // minimal markdown: **bold** for new or returning maps and features
-  function fmt(s) {
-    return escapeHtml(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-  }
-
-  function render() {
-    var host = document.getElementById("patch-notes-list");
-    if (!host) return;
-    if (!state.notes.length) {
-      host.innerHTML = '<p class="muted">No patch notes yet.</p>';
+  function renderPatchNotes(data) {
+    var list = $('#patch-notes-list');
+    if (!list) return;
+    var notes = (data && Array.isArray(data.notes)) ? data.notes : [];
+    if (!notes.length) {
+      list.innerHTML = '<p class="patch-fallback">No patch notes yet — check back after the next server update.</p>';
       return;
     }
-    var html = "";
-    state.notes.forEach(function (n) {
-      html += '<div class="patch-day"><h3>Patch notes – ' + escapeHtml(dayLabel(n.date)) + "</h3>";
-      (n.sections || []).forEach(function (sec) {
-        html += "<h4>" + fmt(sec.title) + "</h4><ul>";
-        (sec.bullets || []).forEach(function (b) {
-          html += '<li><span class="msg">' + fmt(b) + "</span></li>";
+    var html = '';
+    notes.forEach(function (note) {
+      html += '<article class="patch-day">';
+      html += '<h3>' + escapeHtml(dayLabel(note.date)) + '</h3>';
+      (note.sections || []).forEach(function (section) {
+        var title = String(section.title || '').toLowerCase();
+        var h = /^summary|release|general/.test(title) ? 'h4' : 'h4';
+        html += '<' + h + '>' + escapeHtml(section.title || '') + '</' + h + '>';
+        html += '<ul>';
+        (section.bullets || []).forEach(function (b) {
+          html += '<li>' + fmt(b) + '</li>';
         });
-        html += "</ul>";
+        html += '</ul>';
       });
-      html += "</div>";
+      html += '</article>';
     });
-    host.innerHTML = html;
+    list.innerHTML = html;
   }
 
   function loadPatchNotes() {
-    var host = document.getElementById("patch-notes-list");
-    if (!host) return;
-    fetch("data/patch-notes.json")
-      .then(function (r) {
-        if (!r.ok) throw new Error("no patch notes file");
-        return r.json();
-      })
-      .then(function (data) {
-        state.notes = data.notes || [];
-        render();
-      })
+    var list = $('#patch-notes-list');
+    if (!list) return;
+    fetch('data/patch-notes.json', { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error('notes ' + r.status); return r.json(); })
+      .then(renderPatchNotes)
       .catch(function () {
-        host.innerHTML = '<p class="muted">Patch notes could not be loaded. See the commit history on GitHub instead.</p>';
+        list.innerHTML = '<p class="patch-fallback">Patch notes could not be loaded — read the commit history on GitHub.</p>';
       });
   }
 
-  wireTabs();
+  /* ---------- gallery lightbox ---------- */
+
+  var lightbox = $('#lightbox');
+
+  function openLightbox(card) {
+    if (!lightbox) return;
+    var img = $('#lightbox-img');
+    var name = $('#lightbox-name');
+    var cls = $('#lightbox-cls');
+    if (!img || !name || !cls) return;
+    var srcImg = card.querySelector('img');
+    img.src = srcImg ? srcImg.getAttribute('src') : '';
+    img.alt = srcImg ? srcImg.alt : '';
+    name.textContent = card.getAttribute('data-name') || '';
+    cls.textContent = card.getAttribute('data-cls') || '';
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    var closeBtn = $('#lightbox-close');
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function closeLightbox() {
+    if (!lightbox) return;
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  $all('.ship-card').forEach(function (card) {
+    card.addEventListener('click', function () { openLightbox(card); });
+    card.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openLightbox(card);
+      }
+    });
+  });
+
+  if (lightbox) {
+    lightbox.addEventListener('click', function (e) {
+      if (e.target === lightbox) closeLightbox();
+    });
+    var closeBtn = $('#lightbox-close');
+    if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+    });
+  }
+
+  /* ---------- copy button ---------- */
+
+  var copyBtn = $('#copy-btn');
+  var copyCmd = $('#clone-cmd');
+  if (copyBtn && copyCmd) {
+    copyBtn.addEventListener('click', function () {
+      var done = function () {
+        copyBtn.textContent = 'Copied!';
+        setTimeout(function () { copyBtn.textContent = 'Copy'; }, 1500);
+      };
+      var text = copyCmd.textContent;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, done);
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (err) { /* noop */ }
+        document.body.removeChild(ta);
+        done();
+      }
+    });
+  }
+
+  /* ---------- boot ---------- */
+
   loadStatus();
   loadPatchNotes();
 })();

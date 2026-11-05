@@ -22,15 +22,30 @@ workflow project (see below); it is stripped from the Pages artifact before uplo
 never ships to the site.
 
 ```
-index.html      single page: hero, about, how to join, status, patch notes, community
-styles.css      dark space-combat theme
-app.js          nav toggle, server-status badge, patch-notes rendering (fetches data/)
-404.html        custom not-found page
-assets/         logo.svg, favicon.svg, og-image.png (social preview)
+index.html      one-page HUD landing: hero, mission briefing, key systems, fleet gallery,
+                patch notes, roadmap, community, footer (scrollspy nav — no tabs)
+styles.css      dark space-combat HUD theme (void bg, amber/cyan accents, clipped
+                panels/buttons, grid + scanline overlays, reveal-on-scroll)
+app.js          burger nav, scrollspy, reveal-on-scroll, server-status badge,
+                patch-notes rendering (fetches data/), gallery lightbox, copy button
+404.html        custom not-found page (same theme)
+assets/         logo.svg, favicon.svg, og-image.png (social preview); ship art is
+                fetched at deploy time (see below) — assets/market-images/ is NOT in the repo
 data/           patch-notes.json (player-facing notes — see below), server-status.json (optional)
 workflow/       Mistral Studio workflow project: revival-patch-notes (see below)
 .github/workflows/  ci.yml, deploy-pages.yml, workflow-ci.yml
 ```
+
+### Ship art (deploy-time fetch)
+
+The hero and the fleet gallery use the game's own ship images. They are binary game
+data (cannot round-trip through text-only tooling and must not be committed by hand),
+so `deploy-pages.yml` fetches a pinned list from the old
+`darkace1998/Dreadnought-Revival-project` repo (pinned commit SHA) into
+`assets/market-images/` during every Pages build, after stripping `workflow/` and
+before validation. The fetch uses `--fail` and `test -s`, so a broken upstream fails
+the Deploy Pages run on purpose. To change the image set: update the gallery
+(`index.html`), the fetch list (`deploy-pages.yml`) and the raw-URL source together.
 
 ## Working rules
 
