@@ -100,17 +100,24 @@ deployment `revival-ops` on Mistral Cloud. Its single workflow:
 How to work on it:
 
 - Code: `workflow/apps/worker/src/worker/workflows/` (`patch_notes.py` is the workflow,
-  `notes_format.py` the stdlib-only helpers). The Workflows SDK docs are at
+  `notes_format.py` the stdlib-only formatting helpers, `github_rest.py` the stdlib
+  GitHub REST client). The Workflows SDK docs are at
   https://docs.mistral.ai/studio/workflows (start with "build your first workflow"
   and "connectors in workflows").
 - Tests: `workflow/apps/worker/tests/` — pure-logic tests plus SDK tests with the
-  connector/model activities faked. `bash tools/uv.sh sync --all-packages` then
+  GitHub/model activities faked. `bash tools/uv.sh sync --all-packages` then
   `bash tools/uv.sh run --all-packages pytest apps/worker/tests -q` from `workflow/`.
   GitHub Actions runs them on every change under `workflow/` (workflow-ci.yml).
 - The Docker build resolves dependencies at build time (no committed `uv.lock`); keep
   it that way unless you also start committing a lockfile.
-- The deployment is unattended: it authenticates GitHub through the workspace-scope
-  credential on the `github_app` connector in Mistral Studio, and model calls through
-  the worker identity. Never enable `on_behalf_of` on this workflow.
+- The deployment is unattended: it authenticates GitHub with a fine-grained PAT
+  (read/write Contents and Pull requests on the page repo) stored as the workspace
+  secret `github_token` (https://console.mistral.ai/secrets) and bound to the
+  `GITHUB_TOKEN` environment variable on the `revival-ops` deployment, reaching
+  GitHub through `github_rest.py` instead of the OAuth connector (whose
+  workspace-shared credential this workspace does not offer). Model calls
+  authenticate through the worker identity. Never enable `on_behalf_of` on this
+  workflow.
 - After merging changes to `workflow/`, redeploy the `revival-ops` deployment
-  (Mistral Studio, or ask the Vibe agent) so the running worker picks them up.
+  (Mistral Studio, or ask the Vibe agent), keeping the `github_token` → `GITHUB_TOKEN`
+  secret binding, so the running worker picks them up.

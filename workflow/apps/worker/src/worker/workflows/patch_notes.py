@@ -1,9 +1,11 @@
 """Patch-notes pipeline: a push to the server repo becomes a player-facing PR on the site.
 
 Unattended by design: a GitHub webhook trigger starts this workflow, so it runs
-under the deployment's service identity, not a user's. The GitHub connector
-therefore resolves the workspace-scope credential configured in Studio; model
-calls authenticate through the same worker identity. Never enable
+under the deployment's service identity, not a user's. GitHub is therefore not
+reached through the OAuth connector (that would need a workspace-shared
+credential) but through :mod:`worker.workflows.github_rest`, authenticating with
+the fine-grained PAT bound to ``GITHUB_TOKEN`` from the workspace Secrets
+Manager; model calls authenticate through the same worker identity. Never enable
 ``on_behalf_of`` here: webhook-started runs have no triggering user and OBO
 runs would be rejected.
 """
@@ -18,11 +20,6 @@ import pydantic
 import mistralai.workflows as workflows
 from mistralai.workflows import Depends, workflow
 from mistralai.workflows.plugins.mistralai import ChatCompletionResponse, get_mistral_client
-from mistralai.workflows.plugins.mistralai.connectors import (
-    ToolCallClient,
-    connector,
-    uses_connectors,
-)
 
 from worker.workflows import notes_format
 
@@ -32,11 +29,20 @@ SERVER_REPO = "Dreadnought-Revival-server"
 NOTES_PATH = "data/patch-notes.json"
 MODEL = "mistral-medium-latest"
 
-# Unattended runs resolve the deployment's service identity, so the workspace-scope
-# credential on the GitHub connector serves these calls. auto_auth=False: the trigger
-# path has no interactive user, credentials must already exist, and skipping the
-# preflight keeps test workers from needing them.
-github = connector("github_app", run_as="deployment", auto_auth=False)
+
+def _github_token() -> str:
+    # Imported inside the activity (not at module import): the workflow module is
+    # re-imported inside Temporal's sandbox, where reading the environment at import
+    # time is restricted; activities run unsandboxed, so this stays safe.
+    from env.github import env as github_settings
+
+    token = github_settings.github_token
+    if not token:
+        raise RuntimeError(
+            "github_token is not configured: bind the workspace secret github_token "
+            "to the GITHUB_TOKEN environment variable on the revival-ops deployment"
+        )
+    return token
 
 
 class WebhookEvent(pydantic.BaseModel):
@@ -59,16 +65,13 @@ class WebhookEvent(pydantic.BaseModel):
 
 
 @workflows.activity(name="fetch-patch-notes")
-async def fetch_patch_notes(client: ToolCallClient = Depends(github)) -> str:
+async def fetch_patch_notes() -> str:
     """Read the current data/patch-notes.json from the page repo."""
-    result = await client.call_tool(
-        tool_name="get_file_contents",
-        arguments={"owner": OWNER, "repo": PAGE_REPO, "path": NOTES_PATH},
+    from worker.workflows import github_rest
+
+    return await github_rest.get_file_text(
+        OWNER, PAGE_REPO, NOTES_PATH, token=_github_token()
     )
-    text = notes_format.extract_file_text(result)
-    if not text:
-        raise RuntimeError(f"empty response reading {NOTES_PATH} from {OWNER}/{PAGE_REPO}")
-    return text
 
 
 @workflows.activity(name="generate-note-batch")
@@ -103,36 +106,24 @@ async def publish_patch_notes(
     title: str,
     body: str,
     date: str,
-    client: ToolCallClient = Depends(github),
 ) -> str:
     """Branch, commit the updated notes and open a PR against the page repo's main."""
-    await client.call_tool(
-        tool_name="create_branch",
-        arguments={"branch": branch, "owner": OWNER, "repo": PAGE_REPO, "from_branch": "main"},
+    from worker.workflows import github_rest
+
+    token = _github_token()
+    await github_rest.create_branch(OWNER, PAGE_REPO, branch, token=token)
+    await github_rest.put_file(
+        OWNER,
+        PAGE_REPO,
+        NOTES_PATH,
+        branch,
+        message=f"update patch notes for {date}",
+        content=content,
+        token=token,
     )
-    await client.call_tool(
-        tool_name="push_files",
-        arguments={
-            "branch": branch,
-            "owner": OWNER,
-            "repo": PAGE_REPO,
-            "message": f"update patch notes for {date}",
-            "files": [{"path": NOTES_PATH, "content": content}],
-        },
+    return await github_rest.create_pull_request(
+        OWNER, PAGE_REPO, title=title, head=branch, base="main", body=body, token=token
     )
-    result = await client.call_tool(
-        tool_name="create_pull_request",
-        arguments={
-            "owner": OWNER,
-            "repo": PAGE_REPO,
-            "base": "main",
-            "head": branch,
-            "title": title,
-            "body": body,
-            "draft": False,
-        },
-    )
-    return notes_format.extract_pr_url(result)
 
 
 # ---------------------------------------------------------------------------
@@ -148,7 +139,6 @@ async def publish_patch_notes(
         "player-facing patch notes on the Dreadnought-Revival-Page site."
     ),
 )
-@uses_connectors(github)
 class PatchNotesWorkflow:
     @workflows.workflow.entrypoint
     async def run(self, event: WebhookEvent) -> str:
