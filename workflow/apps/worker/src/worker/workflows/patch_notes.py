@@ -14,7 +14,10 @@ end their body with a ``Patch notes:`` block of per-mode, player-worded lines,
 and the notes batch is built starting from those blocks. Commits marked
 ``Patch notes: none (internal)`` are dropped; commits without a block
 (pre-convention) fall back to their subject, which the model phrases for
-players.
+players. The generation activity validates its own batch before returning —
+JSON shape and coverage of every block line's named section — so a retry
+regenerates the batch and, once retries are exhausted, the execution is marked
+failed instead of publishing incomplete notes.
 """
 
 from __future__ import annotations
@@ -81,7 +84,7 @@ async def fetch_patch_notes() -> str:
     )
 
 
-@workflows.activity(name="generate-note-batch")
+@workflows.activity(name="generate-note-batch", retry_policy_max_attempts=3)
 async def generate_note_batch(
     date: str,
     notes_lines: list[str],
@@ -112,6 +115,15 @@ async def generate_note_batch(
         content = "".join(str(part) for part in content)
     if not content or not content.strip():
         raise RuntimeError("empty completion from patch-notes model")
+    # Validate inside the activity, before returning: a raise here retries the
+    # whole activity, which re-runs the model call, so a batch that dropped a
+    # "Patch notes:" line gets regenerated instead of published (PR #25 showed
+    # a silent skip is otherwise easy to miss). parse_llm_batch raises on
+    # malformed JSON, validate_block_coverage on a batch missing a section a
+    # block line names. Once retries are exhausted the failure propagates and
+    # the execution is marked failed: incomplete notes never reach the site.
+    sections = notes_format.parse_llm_batch(content)
+    notes_format.validate_block_coverage(sections, notes_lines)
     return content
 
 
@@ -197,10 +209,6 @@ class PatchNotesWorkflow:
         batch_json = await generate_note_batch(
             date=date, notes_lines=notes_lines, subjects=fallback_subjects
         )
-        # Parsing, validation and ordering are deterministic: keep them on the
-        # workflow path so a malformed model answer retries the activity without
-        # re-publishing, and the skill's section order holds regardless of the
-        # model's output order.
         try:
             notes_data = json.loads(existing)
             if not isinstance(notes_data, dict):
@@ -208,6 +216,10 @@ class PatchNotesWorkflow:
         except ValueError:
             notes_data = {}
 
+        # Ordering is deterministic: parsing and sorting stay on the workflow
+        # path so the skill's section order holds regardless of the model's
+        # output order. Shape and block-line coverage are already validated
+        # inside the generation activity, whose retries regenerate the batch.
         sections = notes_format.sort_sections(notes_format.parse_llm_batch(batch_json))
         if not sections:
             return f"no player-facing changes in {len(commits)} commit(s); nothing published"

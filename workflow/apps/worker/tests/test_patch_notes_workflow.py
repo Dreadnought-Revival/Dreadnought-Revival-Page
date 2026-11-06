@@ -12,9 +12,11 @@ import asyncio
 import json
 from datetime import timedelta
 
+import pytest
 import mistralai.workflows as workflows
 from mistralai.workflows.testing import create_test_worker
 
+from worker.workflows import notes_format
 from worker.workflows.patch_notes import PatchNotesWorkflow
 
 WORKFLOW_EXECUTION_TIMEOUT = timedelta(seconds=30)
@@ -32,14 +34,19 @@ async def fake_fetch_patch_notes() -> str:
     return json.dumps(EXISTING)
 
 
-@workflows.activity(name="generate-note-batch")
+@workflows.activity(name="generate-note-batch", retry_policy_max_attempts=3)
 async def fake_generate_note_batch(date: str, notes_lines: list[str], subjects: list[str]) -> str:
     fake_generate_note_batch.called = True  # type: ignore[attr-defined]
+    fake_generate_note_batch.calls = getattr(fake_generate_note_batch, "calls", 0) + 1  # type: ignore[attr-defined]
     fake_generate_note_batch.captured_inputs = {  # type: ignore[attr-defined]
         "notes_lines": list(notes_lines),
         "subjects": list(subjects),
     }
-    return json.dumps({"sections": [{"title": "Havoc", "bullets": list(notes_lines)}]})
+    content = json.dumps({"sections": [{"title": "Havoc", "bullets": list(notes_lines)}]})
+    # same contract as the real activity: a batch that drops a section a block
+    # line names must raise (the activity retries, then the run fails)
+    notes_format.validate_block_coverage(notes_format.parse_llm_batch(content), notes_lines)
+    return content
 
 
 @workflows.activity(name="publish-patch-notes")
@@ -120,6 +127,7 @@ def as_text(result, label: str) -> str:
 
 def _reset_fakes():
     fake_generate_note_batch.called = False  # type: ignore[attr-defined]
+    fake_generate_note_batch.calls = 0  # type: ignore[attr-defined]
     fake_generate_note_batch.captured_inputs = None  # type: ignore[attr-defined]
 
 
@@ -170,6 +178,19 @@ async def test_publish_branch_and_pr(temporal_env):
         del fake_publish_patch_notes.captured  # type: ignore[attr-defined]
 
 
+def _chain_text(exc: BaseException) -> str:
+    """Every message of an exception chain: workflow errors arrive wrapped, so
+    the original ValueError (which names the dropped section) may live in a
+    __cause__ or __context__ link rather than the top message."""
+    parts = []
+    seen: set[int] = set()
+    while exc is not None and id(exc) not in seen:
+        seen.add(id(exc))
+        parts.append(f"{type(exc).__name__}: {exc}")
+        exc = exc.__cause__ or exc.__context__  # type: ignore[assignment]
+    return "\n".join(parts)
+
+
 async def test_all_internal_commits_publish_nothing(temporal_env):
     _reset_fakes()
     event = push_event(dry_run=False)
@@ -186,6 +207,43 @@ async def test_all_internal_commits_publish_nothing(temporal_env):
     assert text.startswith("no player-facing changes in 1 commit(s)"), f"text: {text!r}"
     assert not fake_generate_note_batch.called  # type: ignore[attr-defined]
     assert not hasattr(fake_publish_patch_notes, "captured")
+
+
+async def test_dropped_block_section_fails_the_run(temporal_env):
+    # PR #25's failure mode: the model dropped one of a commit's two block
+    # lines. The generation activity validates its own batch (same contract as
+    # the real one, mirrored by the fake): a batch missing a section a block
+    # line names raises, the activity retries, and once retries are exhausted
+    # the run is marked failed naming the dropped section — nothing publishes,
+    # so the site can never ship incomplete notes. The fake puts every block
+    # line under "Havoc", so the "Escalation" line's section is missing on
+    # purpose, on every attempt.
+    _reset_fakes()
+    event = push_event(dry_run=False)
+    event["body"]["commits"] = [
+        {
+            "id": "abc1234def",
+            "message": (
+                "add escalation queue\n\n"
+                "Patch notes:\n"
+                "- Havoc: Waves rotate on every map.\n"
+                "- Escalation: **Escalation** returns to the queues.\n"
+                "\n"
+                "Co-Authored-By: Someone <x>"
+            ),
+        },
+    ]
+    with pytest.raises(Exception) as exc_info:
+        await _run(
+            temporal_env,
+            event,
+            [fake_fetch_patch_notes, fake_generate_note_batch, fake_publish_patch_notes],
+            "test-revival-patch-notes-dropped-section",
+        )
+    chain = _chain_text(exc_info.value)
+    assert "Escalation" in chain, f"failure must name the dropped section: {chain!r}"
+    assert fake_generate_note_batch.called  # type: ignore[attr-defined]
+    assert not hasattr(fake_publish_patch_notes, "captured")  # nothing published
 
 
 async def test_ignores_non_push_events(temporal_env):

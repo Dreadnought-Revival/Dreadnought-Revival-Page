@@ -161,6 +161,10 @@ class TestLlmBatch:
         assert "actually affects" in prompt
         assert "please report" not in prompt
         assert "Known issues / please report" not in prompt
+        # the coverage rule: block lines must survive into the batch
+        assert "MUST appear" in prompt
+        assert "never drop a line" in prompt
+        assert "A dropped block line fails the run" in prompt
 
     def test_sort_sections_orders_per_skill(self):
         sections = [
@@ -176,6 +180,46 @@ class TestLlmBatch:
             "General",
             "Unknown thing",
         ]
+
+
+class TestBlockCoverage:
+    def test_present_sections_pass(self):
+        sections = [
+            {"title": "Havoc", "bullets": ["Waves rotate."]},
+            {"title": "All game modes", "bullets": ["Rewards at end screen."]},
+        ]
+        lines = ["Havoc: Waves rotate on every map.", "All game modes: Rewards pay at the end screen."]
+        assert nf.missing_block_sections(sections, lines) == []
+        nf.validate_block_coverage(sections, lines)  # no raise
+
+    def test_dropped_section_is_reported(self):
+        sections = [{"title": "Proving Grounds", "bullets": ["P."]}]
+        lines = ["Proving Grounds: P.", "Escalation: E."]
+        assert nf.missing_block_sections(sections, lines) == ["Escalation"]
+        with pytest.raises(ValueError) as exc:
+            nf.validate_block_coverage(sections, lines)
+        assert "Escalation" in str(exc.value)
+
+    def test_every_missing_section_named_once(self):
+        sections = [{"title": "General", "bullets": ["G."]}]
+        lines = [
+            "Havoc: A.",
+            "Havoc: B.",
+            "Escalation: C.",
+        ]
+        assert nf.missing_block_sections(sections, lines) == ["Havoc", "Escalation"]
+
+    def test_unknown_prefix_and_colonless_lines_are_the_models_call(self):
+        sections = [{"title": "General", "bullets": ["G."]}]
+        # "Some new area" is not a known title, and a line without a colon names
+        # no section at all: placement is the model's decision, never a failure
+        assert nf.missing_block_sections(sections, ["Some new area: X.", "no prefix at all"]) == []
+
+    def test_prefix_is_canonicalized(self):
+        assert nf.missing_block_sections([], ["all game modes: X."]) == ["All game modes"]
+        assert nf.missing_block_sections([], ["escalation: X."]) == ["Escalation"]
+        # an alias the skill does not list (like "TDM") is not a known title either
+        assert nf.missing_block_sections([], ["TDM: X."]) == []
 
 
 class TestMergeBatch:

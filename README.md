@@ -50,7 +50,10 @@ python3 -m http.server 8000
   issues instead. Server commits end with a `Patch notes:` block of
   player-worded lines (per the server repo's patch-notes skill); the workflow
   builds the notes from those blocks, so internal commits
-  (`Patch notes: none (internal)`) never reach the site. A GitHub webhook on
+  (`Patch notes: none (internal)`) never reach the site, and the generation
+  step validates that every block line's section made it into the batch — a
+  dropped line regenerates the batch on retry and ultimately fails the run
+  instead of publishing incomplete notes. A GitHub webhook on
   [Dreadnought-Revival-server](https://github.com/Dreadnought-Revival/Dreadnought-Revival-server)
   pushes starts the `revival-patch-notes` Mistral Studio workflow, which opens a PR
   with the new notes; the daily Vibe ops run reviews and merges it (launcher releases
