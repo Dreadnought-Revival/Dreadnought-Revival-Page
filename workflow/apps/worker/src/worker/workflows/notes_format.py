@@ -230,8 +230,13 @@ def build_prompt(date: str, notes_lines: list[str], subjects: list[str]) -> str:
         "to (for example \"Conquest: Captured points now show as your team's "
         "territory on the minimap.\"). Those lines are the source of truth: sort "
         "each line into the section its prefix names, stripping the prefix from "
-        "the bullet. Merge lines that describe the same change; when two lines "
-        "correct each other, keep the newer wording. Commits marked "
+        "the bullet. Every block line MUST appear in the batch, under the section "
+        "its prefix names: never drop a line, never merge a line away into "
+        "another section's bullet, and lines naming different modes go to "
+        "different sections, each with at least one bullet of its own. You may "
+        "reword a line for players or merge duplicate lines that describe the "
+        "same change (keeping the newer wording), but the change itself must "
+        "survive. A dropped block line fails the run. Commits marked "
         "\"Patch notes: none (internal)\" have already been dropped.\n\n"
         "Commits without a block (older style) are given as bare subjects: write "
         "bullets for them in the same style, but only for what players can feel "
@@ -306,6 +311,56 @@ def sort_sections(sections: list[dict[str, Any]]) -> list[dict[str, Any]]:
         return (1, title.lower())
 
     return sorted(sections, key=rank)
+
+
+def missing_block_sections(
+    sections: list[dict[str, Any]], notes_lines: list[str]
+) -> list[str]:
+    """Canonical section titles that block lines name but the batch lacks.
+
+    Only lines whose prefix (the text before the first colon) canonicalizes to a
+    known section title are checked: the author of a ``Patch notes:`` block
+    names the mode on purpose, so a batch without that section dropped a change.
+    Lines with no colon or an unknown prefix stay the model's call (it decides
+    placement), so they never fail the gate.
+    """
+    present = {
+        str(s.get("title") or "").strip().casefold()
+        for s in sections
+        if isinstance(s, dict)
+    }
+    missing: list[str] = []
+    for line in notes_lines:
+        if ":" not in line:
+            continue
+        prefix = line.split(":", 1)[0].strip()
+        if not prefix:
+            continue
+        title = _canonical_title(prefix)
+        if title not in KNOWN_SECTION_TITLES:
+            continue
+        if title.casefold() not in present and title not in missing:
+            missing.append(title)
+    return missing
+
+
+def validate_block_coverage(
+    sections: list[dict[str, Any]], notes_lines: list[str]
+) -> None:
+    """Fail loudly when the model drops a ``Patch notes:`` block line's section.
+
+    A silent skip (a mode's change never reaching the site) is the pipeline's
+    worst failure mode: it publishes incomplete notes and nobody notices. So
+    the workflow calls this before merging, and a raise here fails the run and
+    lets the trigger retry instead of publishing an incomplete batch.
+    """
+    missing = missing_block_sections(sections, notes_lines)
+    if missing:
+        raise ValueError(
+            "patch-notes batch dropped section(s) named by commit block lines: "
+            + ", ".join(missing)
+            + "; refusing to publish incomplete notes"
+        )
 
 
 # ---------------------------------------------------------------------------

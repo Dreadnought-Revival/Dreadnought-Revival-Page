@@ -138,7 +138,10 @@ deployment `revival-ops` on Mistral Cloud. Its single workflow:
   It reads each commit's `Patch notes:` block (the convention set by the server
   repo's patch-notes skill): those lines are the source of truth, commits marked
   `none (internal)` are dropped, and block-less (pre-convention) commits are
-  phrased for players by `mistral-medium-latest`. The batch is ordered by the
+  phrased for players by `mistral-medium-latest`. Every block line's named
+  section must survive into the batch (`notes_format.validate_block_coverage`):
+  a dropped line fails the run, so the trigger retries instead of the site
+  shipping incomplete notes. The batch is ordered by the
   skill's section list (game modes first, then All game modes, Launcher / Hangar /
   Market / Tech tree / Social, General), with each change under the game mode it
   actually affects and no known-issues closer, merged into

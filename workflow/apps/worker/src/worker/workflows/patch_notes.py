@@ -14,7 +14,9 @@ end their body with a ``Patch notes:`` block of per-mode, player-worded lines,
 and the notes batch is built starting from those blocks. Commits marked
 ``Patch notes: none (internal)`` are dropped; commits without a block
 (pre-convention) fall back to their subject, which the model phrases for
-players.
+players. Before publishing, the batch is validated to cover every block line's
+named section: a dropped line fails the run (the trigger retries) instead of
+publishing incomplete notes.
 """
 
 from __future__ import annotations
@@ -209,6 +211,11 @@ class PatchNotesWorkflow:
             notes_data = {}
 
         sections = notes_format.sort_sections(notes_format.parse_llm_batch(batch_json))
+        # Coverage gate: every "Patch notes:" block line names the mode or area
+        # its change belongs to, so a batch without that section dropped a
+        # change. Fail the run (the trigger retries) instead of publishing
+        # incomplete notes; PR #25 showed a silent skip is otherwise easy to miss.
+        notes_format.validate_block_coverage(sections, notes_lines)
         if not sections:
             return f"no player-facing changes in {len(commits)} commit(s); nothing published"
 
