@@ -7,7 +7,13 @@
         {
           "title": "Proving Grounds",
           "bullets": [
-            "Back to the normal Proving Grounds. You start in your own ship."
+            "Back to the normal Proving Grounds — you start in your own ships again instead of in a fighter."
+          ]
+        },
+        {
+          "title": "Escalation",
+          "bullets": [
+            "**Escalation** is off the queues for now. Before, it was playable from the Proving Grounds button."
           ]
         }
       ]
