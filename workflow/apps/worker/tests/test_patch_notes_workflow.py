@@ -294,6 +294,49 @@ async def test_dropped_block_section_fails_the_run(temporal_env):
     assert not hasattr(fake_publish_patch_notes, "captured")  # nothing published
 
 
+async def test_dropped_unprefixed_block_line_fails_the_run(temporal_env):
+    # 2026-11-07's failure mode: the model dropped a block line with no
+    # section prefix ("New players start with 10000 GP."). The section half
+    # of validate_block_coverage cannot see such a line; the content half
+    # (distinctive words and numbers must be recognizable in the batch)
+    # catches it, so the run fails instead of publishing incomplete notes.
+    _reset_fakes()
+
+    @workflows.activity(name="generate-note-batch", retry_policy_max_attempts=3)
+    async def dropping_generate_note_batch(date: str, notes_lines: list[str], subjects: list[str]) -> str:
+        # drops the unprefixed line on purpose, on every attempt
+        content = json.dumps(
+            {"sections": [{"title": "Daily contracts", "bullets": [notes_lines[0]]}]}
+        )
+        notes_format.validate_block_coverage(
+            notes_format.parse_llm_batch(content), notes_lines
+        )
+        return content
+
+    event = push_event(dry_run=False)
+    event["body"]["commits"] = [
+        {
+            "id": "f700742e4",
+            "message": (
+                "daily contracts pay GP on claim\n\n"
+                "Patch notes:\n"
+                "- All modes: Claiming a finished daily contract now also gives 200 GP.\n"
+                "- New players start with 10000 GP.\n"
+            ),
+        },
+    ]
+    with pytest.raises(Exception) as exc_info:
+        await _run(
+            temporal_env,
+            event,
+            [fake_fetch_patch_notes, dropping_generate_note_batch, fake_publish_patch_notes],
+            "test-revival-patch-notes-dropped-line",
+        )
+    chain = _chain_text(exc_info.value)
+    assert "10000" in chain, f"failure must name the dropped line: {chain!r}"
+    assert not hasattr(fake_publish_patch_notes, "captured")  # nothing published
+
+
 async def test_ignores_non_push_events(temporal_env):
     event = push_event()
     event["headers"] = {"x-github-event": "ping"}

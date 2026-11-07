@@ -45,15 +45,18 @@ python3 -m http.server 8000
 - `.github/workflows/workflow-ci.yml` — runs the tests of the workflow project on every change under `workflow/`.
 - Patch notes are written for players by automation — dated batches, sectioned by
   the game mode each change actually affects (game modes first, then All game
-  modes, Launcher / Hangar / Market / Tech tree / Social, General), no internals
-  and no known-issues section — the Patch Notes tab links the server's GitHub
-  issues instead. Server commits end with a `Patch notes:` block of
-  player-worded lines (per the server repo's patch-notes skill); the workflow
-  builds the notes from those blocks, so internal commits
+  modes, Daily contracts, Launcher / Hangar / Market / Tech tree / Social,
+  General), no internals and no known-issues section — the Patch Notes tab
+  links the server's GitHub issues instead. Server commits end with a
+  `Patch notes:` block of player-worded lines (per the server repo's
+  patch-notes skill); the workflow builds the notes from those blocks (wrapped
+  block lines are joined to one bullet first), so internal commits
   (`Patch notes: none (internal)`) never reach the site, and the generation
-  step validates that every block line's section made it into the batch — a
-  dropped line regenerates the batch on retry and ultimately fails the run
-  instead of publishing incomplete notes. A GitHub webhook on
+  step validates that every block line's section made it into the batch — and
+  that a line naming no known section is still recognizable in some bullet by
+  its distinctive words or numbers — so a dropped line regenerates the batch
+  on retry and ultimately fails the run instead of publishing incomplete
+  notes. A GitHub webhook on
   [Dreadnought-Revival-server](https://github.com/Dreadnought-Revival/Dreadnought-Revival-server)
   pushes starts the `revival-patch-notes` Mistral Studio workflow, which opens a PR
   with the new notes and squash-merges it automatically once its CI is green

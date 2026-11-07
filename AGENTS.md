@@ -75,8 +75,8 @@ the Deploy Pages run on purpose. To change the image set: update the gallery
   operator-requested rework, landed like any other PR). The notes are
   player-facing: dated batches, one section per game mode or area (Team
   Deathmatch, Team Elimination, Conquest, Onslaught, Ceres Awakens, Proving
-  Grounds, Havoc, Turbo TDM, Escalation, All game modes, or Launcher / Hangar /
-  Market / Tech tree / Social / General), each change under the game mode it
+  Grounds, Havoc, Turbo TDM, Escalation, All game modes, or Daily contracts /
+  Launcher / Hangar / Market / Tech tree / Social / General), each change under the game mode it
   actually affects, \"Before, ...\" context lines, and no known-issues closer —
   issue reporting lives in the site's link to the server's GitHub issues. No
   internals: no hashes, file names, function names or log lines. The
@@ -139,12 +139,17 @@ deployment `revival-ops` on Mistral Cloud. Its single workflow:
   repo's patch-notes skill): those lines are the source of truth, commits marked
   `none (internal)` are dropped, and block-less (pre-convention) commits are
   phrased for players by `mistral-medium-latest`. The generation activity
-  validates its own batch (`notes_format.validate_block_coverage`): every block
-  line's named section must survive into it, so a dropped line raises, the
-  activity retry regenerates the batch, and once retries are exhausted the run
-  is marked failed instead of the site shipping incomplete notes. The batch is ordered by the
-  skill's section list (game modes first, then All game modes, Launcher / Hangar /
-  Market / Tech tree / Social, General), with each change under the game mode it
+  validates its own batch (`notes_format.validate_block_coverage`): every
+  block line's named section must survive into it, and a block line with no
+  (or unknown) section prefix must still be recognizable in some bullet by
+  its distinctive words or numbers — so a dropped line raises, the activity
+  retry regenerates the batch, and once retries are exhausted the run is
+  marked failed instead of the site shipping incomplete notes (wrapped block
+  lines are joined back to one bullet before all this, so a line wrapped in
+  the commit message never arrives truncated). The batch is ordered by the
+  skill's section list (game modes first, then All game modes, Daily
+  contracts, Launcher / Hangar / Market / Tech tree / Social, General), with
+  each change under the game mode it
   actually affects and no known-issues closer, merged into
   `data/patch-notes.json` (same-day pushes merge into that
   day's entry), and opens a PR like `Patch notes <date>: N commit(s)`. The
