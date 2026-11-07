@@ -1,11 +1,12 @@
 """End-to-end test of the revival-patch-notes workflow with side-effect activities faked.
 
 The workflow's deterministic orchestration is what's under test: filtering,
-patch-notes block extraction, batch merging and the dry-run/publish decision.
-The GitHub REST and model activities are replaced by fakes registered under the
-same activity names, so no GitHub or Mistral credentials are touched. The
-dry-run input path exercises everything except publishing; the publish test
-captures what would be pushed.
+patch-notes block extraction, batch merging, the dry-run/publish decision and
+the auto-merge handoff. The GitHub REST and model activities are replaced by
+fakes registered under the same activity names, so no GitHub or Mistral
+credentials are touched. The dry-run input path exercises everything except
+publishing; the publish test captures what would be pushed and verifies the
+finalize (auto-merge) activity receives the right branch and PR number.
 """
 
 import asyncio
@@ -58,7 +59,27 @@ async def fake_publish_patch_notes(branch: str, content: str, title: str, body: 
         "body": body,
         "date": date,
     }
-    return "https://github.com/Dreadnought-Revival/Dreadnought-Revival-Page/pull/99"
+    # tests may point this at a URL without a readable PR number
+    url = getattr(fake_publish_patch_notes, "url", None)  # type: ignore[attr-defined]
+    return (
+        url
+        if url
+        else "https://github.com/Dreadnought-Revival/Dreadnought-Revival-Page/pull/99"
+    )
+
+
+@workflows.activity(name="finalize-patch-notes")
+async def fake_finalize_patch_notes(branch: str, number: int, date: str, pr_url: str) -> str:
+    fake_finalize_patch_notes.captured = {  # type: ignore[attr-defined]
+        "branch": branch,
+        "number": number,
+        "date": date,
+        "pr_url": pr_url,
+    }
+    return (
+        f"published patch notes for {date}: {pr_url} "
+        "(auto-merged deadbee, branch deleted)"
+    )
 
 
 def push_event(dry_run: bool = True) -> dict:
@@ -129,6 +150,11 @@ def _reset_fakes():
     fake_generate_note_batch.called = False  # type: ignore[attr-defined]
     fake_generate_note_batch.calls = 0  # type: ignore[attr-defined]
     fake_generate_note_batch.captured_inputs = None  # type: ignore[attr-defined]
+    fake_finalize_patch_notes.captured = None  # type: ignore[attr-defined]
+    if hasattr(fake_publish_patch_notes, "captured"):  # type: ignore[attr-defined]
+        del fake_publish_patch_notes.captured  # type: ignore[attr-defined]
+    if hasattr(fake_publish_patch_notes, "url"):  # type: ignore[attr-defined]
+        del fake_publish_patch_notes.url  # type: ignore[attr-defined]
 
 
 async def test_dry_run_skips_publishing(temporal_env):
@@ -154,16 +180,14 @@ async def test_dry_run_skips_publishing(temporal_env):
 
 
 async def test_publish_branch_and_pr(temporal_env):
-    captured_before = getattr(fake_publish_patch_notes, "captured", None)
     _reset_fakes()
     result = await _run(
         temporal_env,
         push_event(dry_run=False),
-        [fake_fetch_patch_notes, fake_generate_note_batch, fake_publish_patch_notes],
+        [fake_fetch_patch_notes, fake_generate_note_batch, fake_publish_patch_notes, fake_finalize_patch_notes],
         "test-revival-patch-notes-publish",
     )
     text = as_text(result, "publish")
-    assert text.endswith("pull/99"), f"publish text: {text!r}"
     captured = fake_publish_patch_notes.captured  # type: ignore[attr-defined]
     assert captured["branch"].startswith("vibe/patch-notes-"), f"branch: {captured['branch']!r}"
     assert captured["branch"].endswith("-abc1234"), f"branch: {captured['branch']!r}"
@@ -174,8 +198,32 @@ async def test_publish_branch_and_pr(temporal_env):
     assert any(s["title"] == "Havoc" for s in newest["sections"])
     assert data["notes"][1]["date"] == "2026-11-01"
     assert "`abc1234` add havoc rotation" in captured["body"], f"body: {captured['body']!r}"
-    if captured_before is None:
-        del fake_publish_patch_notes.captured  # type: ignore[attr-defined]
+    # publish hands the PR to the finalize (auto-merge) activity: same branch,
+    # the number parsed from the PR URL, and the run reports the merge
+    finalized = fake_finalize_patch_notes.captured  # type: ignore[attr-defined]
+    assert finalized == {
+        "branch": captured["branch"],
+        "number": 99,
+        "date": captured["date"],
+        "pr_url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-Page/pull/99",
+    }, f"finalize inputs: {finalized!r}"
+    assert "(auto-merged deadbee, branch deleted)" in text, f"publish text: {text!r}"
+
+
+async def test_unreadable_pr_number_skips_auto_merge(temporal_env):
+    # a PR URL without a number cannot be auto-merged; the run must complete
+    # (the PR exists, it just waits for the daily ops run), not fail
+    _reset_fakes()
+    fake_publish_patch_notes.url = "https://github.com/Dreadnought-Revival/Dreadnought-Revival-Page/commits/abc1234"  # type: ignore[attr-defined]
+    result = await _run(
+        temporal_env,
+        push_event(dry_run=False),
+        [fake_fetch_patch_notes, fake_generate_note_batch, fake_publish_patch_notes, fake_finalize_patch_notes],
+        "test-revival-patch-notes-no-number",
+    )
+    text = as_text(result, "no-number")
+    assert "not auto-merged: unreadable PR number" in text, f"text: {text!r}"
+    assert fake_finalize_patch_notes.captured is None  # type: ignore[attr-defined]
 
 
 def _chain_text(exc: BaseException) -> str:

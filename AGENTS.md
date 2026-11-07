@@ -147,9 +147,14 @@ deployment `revival-ops` on Mistral Cloud. Its single workflow:
   Market / Tech tree / Social, General), with each change under the game mode it
   actually affects and no known-issues closer, merged into
   `data/patch-notes.json` (same-day pushes merge into that
-  day's entry), and opens a PR like `Patch notes <date>: N commit(s)`.
-  It never merges the PR itself: the daily Vibe ops run reviews and merges it, and
-  the Pages deploy follows.
+  day's entry), and opens a PR like `Patch notes <date>: N commit(s)`. The
+  workflow then auto-merges that PR itself: the `finalize-patch-notes`
+  activity polls the PR head's check runs, and once every check is green
+  (success/skipped) squash-merges with `expected_head_sha` (commit subject
+  `add patch notes for <date>`) and deletes the branch; the Pages deploy
+  follows the merge. Fail-safe: if CI fails, stays pending past 15 minutes,
+  or GitHub refuses the merge, the PR is left open with its branch for the
+  daily Vibe ops run to review — nothing is force-merged.
 
 How to work on it:
 

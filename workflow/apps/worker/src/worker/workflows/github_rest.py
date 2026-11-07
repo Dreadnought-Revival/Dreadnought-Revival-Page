@@ -162,3 +162,74 @@ async def create_pull_request(
         body={"title": title, "head": head, "base": base, "body": body},
     )
     return str(json.loads(text)["html_url"])
+
+
+async def get_pull_request(owner: str, repo: str, number: int, token: str = "") -> dict:
+    """One pull request's state: ``{"state": "open"|"closed", "merged": bool, ...}``.
+
+    The auto-merge step reads it first so an activity retry can never merge
+    twice: an already-merged PR only gets its branch deleted.
+    """
+    _, text = await _request("GET", f"/repos/{owner}/{repo}/pulls/{number}", token)
+    data = json.loads(text)
+    return data if isinstance(data, dict) else {}
+
+
+async def list_check_runs(owner: str, repo: str, ref: str, token: str = "") -> list[dict]:
+    """A ref's (branch name or SHA) check runs: ``[{"name", "status", "conclusion"}]``.
+
+    Used to wait out a PR's CI before merging; an empty list means GitHub has
+    not created any checks yet, so the caller keeps polling.
+    """
+    _, text = await _request(
+        "GET",
+        f"/repos/{owner}/{repo}/commits/{quote(ref, safe='/')}/check-runs",
+        token,
+    )
+    runs = json.loads(text).get("check_runs") or []
+    return [
+        {
+            "name": str(run.get("name") or ""),
+            "status": str(run.get("status") or ""),
+            "conclusion": run.get("conclusion"),
+        }
+        for run in runs
+        if isinstance(run, dict)
+    ]
+
+
+async def merge_pull_request(
+    owner: str,
+    repo: str,
+    number: int,
+    *,
+    expected_head_sha: str,
+    merge_method: str = "squash",
+    commit_title: str = "",
+    token: str = "",
+) -> dict:
+    """Merge PR ``number``; ``expected_head_sha`` refuses the merge if the branch moved."""
+    body: dict[str, Any] = {
+        "merge_method": merge_method,
+        "expected_head_sha": expected_head_sha,
+    }
+    if commit_title:
+        body["commit_title"] = commit_title
+    _, text = await _request(
+        "PUT", f"/repos/{owner}/{repo}/pulls/{number}/merge", token, body=body
+    )
+    data = json.loads(text)
+    return data if isinstance(data, dict) else {}
+
+
+async def delete_branch(owner: str, repo: str, branch: str, token: str = "") -> None:
+    """Delete ``refs/heads/<branch>``; an already-missing ref (404/422) is tolerated."""
+    try:
+        await _request(
+            "DELETE",
+            f"/repos/{owner}/{repo}/git/refs/heads/{quote(branch, safe='/')}",
+            token,
+        )
+    except GitHubError as error:
+        if error.status not in (404, 422):
+            raise

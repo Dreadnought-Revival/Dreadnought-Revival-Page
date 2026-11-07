@@ -103,6 +103,14 @@ class TestConnectorShapes:
         assert nf.extract_pr_url(["h", {"url": "https://github.com/y"}]) == "https://github.com/y"
         assert nf.extract_pr_url({}) == "created"
 
+    def test_pr_url_number(self):
+        assert nf.pr_url_number("https://github.com/o/r/pull/42") == 42
+        assert nf.pr_url_number("https://github.com/o/r/pull/999/files") == 999
+        # no PR number in the URL: auto-merge is skipped, not failed
+        assert nf.pr_url_number("https://github.com/o/r/issues/7") is None
+        assert nf.pr_url_number("created") is None
+        assert nf.pr_url_number("") is None
+
 
 class TestLlmBatch:
     def test_parse_plain_json(self):
@@ -267,3 +275,5 @@ def test_pr_body_lists_commits():
     assert "`abc1234` add map" in body
     assert "2026-11-05" in body
     assert "revival-patch-notes" in body
+    # the body must tell the reviewer what happens to the PR
+    assert "squash-merges this PR automatically" in body
