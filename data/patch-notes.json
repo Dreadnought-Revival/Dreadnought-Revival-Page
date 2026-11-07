@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-07T15:06:18.400311+00:00",
+  "generated_at": "2026-11-07T15:16:16.537909+00:00",
   "notes": [
     {
       "date": "2026-11-07",
@@ -19,7 +19,8 @@
         {
           "title": "Team Deathmatch",
           "bullets": [
-            "With the 40-per-team setting, bots can now fill a side past 24 players."
+            "With the 40-per-team setting, bots can now fill a side past 24 players.",
+            "With a team size set (now 20), each side fills with bots up to it."
           ]
         }
       ]
