@@ -46,6 +46,11 @@ NOTES = "/repos/o/r/contents/data/patch-notes.json"
 REF_MAIN = "/repos/o/r/git/ref/heads/main"
 REFS = "/repos/o/r/git/refs"
 PULLS = "/repos/o/r/pulls"
+PR = "/repos/o/r/pulls/42"
+PR_MERGE = "/repos/o/r/pulls/42/merge"
+REF_BRANCH = "/repos/o/r/git/ref/heads/vibe/patch-notes-x"
+REF_DELETE = "/repos/o/r/git/refs/heads/vibe/patch-notes-x"
+CHECKS = "/repos/o/r/commits/vibe/patch-notes-x/check-runs"
 
 
 def test_get_file_text_uses_raw_accept_and_ref(monkeypatch):
@@ -181,3 +186,84 @@ def test_create_pull_request_returns_html_url(monkeypatch):
         "base": "main",
         "body": "- body",
     }
+
+
+def test_get_pull_request_returns_state(monkeypatch):
+    fake = FakeAPI([("GET", PR, 200, json.dumps({"state": "open", "merged": False}), None)])
+    monkeypatch.setattr(github_rest, "_request_sync", fake)
+
+    pr = asyncio.run(github_rest.get_pull_request("o", "r", 42, token=TOKEN))
+
+    assert pr == {"state": "open", "merged": False}
+
+
+def test_list_check_runs_maps_name_status_conclusion(monkeypatch):
+    payload = {
+        "check_runs": [
+            {"name": "checks", "status": "completed", "conclusion": "success"},
+            {"name": "alert-on-failure", "status": "completed", "conclusion": "skipped"},
+            {"name": "tests", "status": "queued", "conclusion": None},
+            "junk entry",
+        ]
+    }
+    fake = FakeAPI([("GET", CHECKS, 200, json.dumps(payload), None)])
+    monkeypatch.setattr(github_rest, "_request_sync", fake)
+
+    runs = asyncio.run(
+        github_rest.list_check_runs("o", "r", "vibe/patch-notes-x", token=TOKEN)
+    )
+
+    assert runs == [
+        {"name": "checks", "status": "completed", "conclusion": "success"},
+        {"name": "alert-on-failure", "status": "completed", "conclusion": "skipped"},
+        {"name": "tests", "status": "queued", "conclusion": None},
+    ]
+
+
+def test_merge_pull_request_sends_method_head_sha_and_title(monkeypatch):
+    fake = FakeAPI([("PUT", PR_MERGE, 200, json.dumps({"merged": True, "sha": "mergeesha"}), None)])
+    monkeypatch.setattr(github_rest, "_request_sync", fake)
+
+    out = asyncio.run(
+        github_rest.merge_pull_request(
+            "o",
+            "r",
+            42,
+            expected_head_sha="headsha",
+            merge_method="squash",
+            commit_title="add patch notes for 2026-11-06",
+            token=TOKEN,
+        )
+    )
+
+    assert out == {"merged": True, "sha": "mergeesha"}
+    assert fake.calls[0]["body"] == {
+        "merge_method": "squash",
+        "expected_head_sha": "headsha",
+        "commit_title": "add patch notes for 2026-11-06",
+    }
+
+
+def test_delete_branch_deletes_ref_and_tolerates_missing(monkeypatch):
+    fake = FakeAPI([("DELETE", REF_DELETE, 204, "", None)])
+    monkeypatch.setattr(github_rest, "_request_sync", fake)
+    asyncio.run(github_rest.delete_branch("o", "r", "vibe/patch-notes-x", token=TOKEN))
+    assert fake.calls[0]["method"] == "DELETE"
+
+    # an already-deleted branch is fine (retry after a partial success)
+    gone = FakeAPI(
+        [("DELETE", REF_DELETE, 0, "", github_rest.GitHubError(422, "DELETE", REF_DELETE, "Reference does not exist"))]
+    )
+    monkeypatch.setattr(github_rest, "_request_sync", gone)
+    asyncio.run(github_rest.delete_branch("o", "r", "vibe/patch-notes-x", token=TOKEN))  # no raise
+
+
+def test_delete_branch_reraises_other_errors(monkeypatch):
+    fake = FakeAPI(
+        [("DELETE", REF_DELETE, 0, "", github_rest.GitHubError(403, "DELETE", REF_DELETE, "Forbidden"))]
+    )
+    monkeypatch.setattr(github_rest, "_request_sync", fake)
+
+    with pytest.raises(github_rest.GitHubError) as excinfo:
+        asyncio.run(github_rest.delete_branch("o", "r", "vibe/patch-notes-x", token=TOKEN))
+    assert excinfo.value.status == 403

@@ -56,8 +56,9 @@ python3 -m http.server 8000
   instead of publishing incomplete notes. A GitHub webhook on
   [Dreadnought-Revival-server](https://github.com/Dreadnought-Revival/Dreadnought-Revival-server)
   pushes starts the `revival-patch-notes` Mistral Studio workflow, which opens a PR
-  with the new notes; the daily Vibe ops run reviews and merges it (launcher releases
-  are covered by that daily run too). Never hand-edit `data/patch-notes.json`.
+  with the new notes and squash-merges it automatically once its CI is green
+  (deleting the branch); if CI fails the PR stays open for the daily Vibe ops
+  run (which covers launcher releases too). Never hand-edit `data/patch-notes.json`.
 
 ## Agents
 

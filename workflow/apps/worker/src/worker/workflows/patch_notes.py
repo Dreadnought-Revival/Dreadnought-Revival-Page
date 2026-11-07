@@ -17,12 +17,17 @@ and the notes batch is built starting from those blocks. Commits marked
 players. The generation activity validates its own batch before returning —
 JSON shape and coverage of every block line's named section — so a retry
 regenerates the batch and, once retries are exhausted, the execution is marked
-failed instead of publishing incomplete notes.
+failed instead of publishing incomplete notes. The PR is then squash-merged
+automatically once its CI is green and its branch deleted; if CI fails or stays
+pending the PR is left open for the daily ops run — nothing is force-merged.
 """
 
 from __future__ import annotations
 
+import asyncio
 import json
+import time
+from datetime import timedelta
 from typing import Any
 
 import pydantic
@@ -38,6 +43,13 @@ PAGE_REPO = "Dreadnought-Revival-Page"
 SERVER_REPO = "Dreadnought-Revival-server"
 NOTES_PATH = "data/patch-notes.json"
 MODEL = "mistral-medium-latest"
+
+# Auto-merge budget: CI on a patch-notes PR (only data/ changes, so just the
+# "checks" job) takes seconds; 15 minutes is the cap before the PR is left
+# open for the daily ops run. The finalize activity's start-to-close timeout
+# sits above it so the deadline is always the activity's own decision.
+CI_WAIT_SECONDS = 15 * 60
+CI_POLL_SECONDS = 15.0
 
 
 def _github_token() -> str:
@@ -154,6 +166,85 @@ async def publish_patch_notes(
     )
 
 
+@workflows.activity(
+    name="finalize-patch-notes",
+    start_to_close_timeout=timedelta(minutes=20),
+    retry_policy_max_attempts=2,
+)
+async def finalize_patch_notes(
+    branch: str,
+    number: int,
+    date: str,
+    pr_url: str,
+) -> str:
+    """Wait for the PR's CI, squash-merge it and delete its branch.
+
+    Fail-safe by design: if CI fails, stays pending past ``CI_WAIT_SECONDS``,
+    or GitHub refuses the merge, the PR is left open with its branch for the
+    daily ops run — nothing is force-merged. The state check up front keeps a
+    retry idempotent: an already-merged PR only gets its branch deleted, never
+    a second merge. Polling sleeps here (inside the activity), not on the
+    workflow path: activities are the SDK's home for side-effectful waiting.
+    """
+    from worker.workflows import github_rest
+
+    token = _github_token()
+
+    pr = await github_rest.get_pull_request(OWNER, PAGE_REPO, number, token=token)
+    if str(pr.get("state") or "") == "closed":
+        if pr.get("merged"):
+            await github_rest.delete_branch(OWNER, PAGE_REPO, branch, token=token)
+            return f"published patch notes for {date}: {pr_url} (auto-merged, branch deleted)"
+        return f"patch notes PR was closed without merging: {pr_url}"
+
+    deadline = time.monotonic() + CI_WAIT_SECONDS
+    while True:
+        runs = await github_rest.list_check_runs(OWNER, PAGE_REPO, branch, token=token)
+        pending = [r for r in runs if r["status"] != "completed"]
+        if runs and not pending:
+            failed = sorted(
+                r["name"]
+                for r in runs
+                if r["conclusion"] not in ("success", "skipped", "neutral")
+            )
+            if failed:
+                return (
+                    "patch notes PR left open, CI failed ("
+                    + ", ".join(failed)
+                    + f"): {pr_url}"
+                )
+            break
+        if time.monotonic() >= deadline:
+            return f"patch notes PR left open, CI still pending: {pr_url}"
+        await asyncio.sleep(CI_POLL_SECONDS)
+
+    head_sha = await github_rest.ref_sha(OWNER, PAGE_REPO, f"heads/{branch}", token=token)
+    try:
+        merged = await github_rest.merge_pull_request(
+            OWNER,
+            PAGE_REPO,
+            number,
+            expected_head_sha=head_sha,
+            merge_method="squash",
+            commit_title=f"add patch notes for {date}",
+            token=token,
+        )
+    except github_rest.GitHubError as error:
+        if error.status in (405, 409, 422):
+            return f"patch notes PR left open, merge refused: {pr_url}"
+        raise
+    if not merged.get("merged"):
+        return f"patch notes PR left open, merge refused: {pr_url}"
+    await github_rest.delete_branch(OWNER, PAGE_REPO, branch, token=token)
+    merged_sha = str(merged.get("sha") or "")[:7]
+    suffix = (
+        f" (auto-merged {merged_sha}, branch deleted)"
+        if merged_sha
+        else " (auto-merged, branch deleted)"
+    )
+    return f"published patch notes for {date}: {pr_url}{suffix}"
+
+
 # ---------------------------------------------------------------------------
 # Workflow: deterministic orchestration only
 # ---------------------------------------------------------------------------
@@ -164,7 +255,8 @@ async def publish_patch_notes(
     workflow_display_name="Revival patch notes",
     workflow_description=(
         "Turn a push to Dreadnought-Revival-server into a pull request of "
-        "player-facing patch notes on the Dreadnought-Revival-Page site."
+        "player-facing patch notes on the Dreadnought-Revival-Page site, "
+        "auto-merged once its CI is green (branch deleted after merge)."
     ),
 )
 class PatchNotesWorkflow:
@@ -242,4 +334,15 @@ class PatchNotesWorkflow:
         pr_url = await publish_patch_notes(
             branch=branch, content=content, title=title, body=body, date=date
         )
-        return f"published patch notes for {date}: {pr_url}"
+        # Auto-merge: wait for the PR's CI, squash-merge it, delete the branch.
+        # A PR the finalize activity leaves open (CI failed or still pending) is
+        # the daily ops run's queue; the run result says which happened.
+        number = notes_format.pr_url_number(pr_url)
+        if number is None:
+            return (
+                f"published patch notes for {date}: {pr_url} "
+                "(not auto-merged: unreadable PR number)"
+            )
+        return await finalize_patch_notes(
+            branch=branch, number=number, date=date, pr_url=pr_url
+        )
