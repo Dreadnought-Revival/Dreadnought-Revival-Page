@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-07T10:05:17.791473+00:00",
+  "generated_at": "2026-11-07T15:06:18.400311+00:00",
   "notes": [
     {
       "date": "2026-11-07",
@@ -14,6 +14,12 @@
           "title": "General",
           "bullets": [
             "New players start with 10000 GP."
+          ]
+        },
+        {
+          "title": "Team Deathmatch",
+          "bullets": [
+            "With the 40-per-team setting, bots can now fill a side past 24 players."
           ]
         }
       ]
