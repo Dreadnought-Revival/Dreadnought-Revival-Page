@@ -1,13 +1,19 @@
 {
-  "generated_at": "2026-11-07T09:40:12.772291+00:00",
+  "generated_at": "2026-11-07T10:05:17.791473+00:00",
   "notes": [
     {
       "date": "2026-11-07",
       "sections": [
         {
-          "title": "All game modes",
+          "title": "Daily contracts",
           "bullets": [
-            "Claiming a finished daily contract now also grants 200 GP."
+            "Claiming a finished daily contract now also gives 200 GP on top of its credits. The contract card still shows only the credits; the GP appears in your balance."
+          ]
+        },
+        {
+          "title": "General",
+          "bullets": [
+            "New players start with 10000 GP."
           ]
         }
       ]

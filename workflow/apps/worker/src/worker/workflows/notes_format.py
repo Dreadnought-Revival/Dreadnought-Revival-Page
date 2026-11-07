@@ -22,11 +22,11 @@ MAX_COMMITS = 20
 MAX_SUBJECT_LEN = 200
 
 # The section order the skill prescribes: game modes first (in the skill's
-# order), then the cross-mode section, then the out-of-match areas, and
-# General. ``All game modes`` sits after the modes because a player reads
-# their own mode's section first and then the everything-section. Batches
-# carry no known-issues closer: issue reporting is the site's link to the
-# server repo's GitHub issue tracker.
+# order), then the cross-mode section, then the daily contracts progression
+# system, then the out-of-match areas, and General. ``All game modes`` sits
+# after the modes because a player reads their own mode's section first and
+# then the everything-section. Batches carry no known-issues closer: issue
+# reporting is the site's link to the server repo's GitHub issue tracker.
 KNOWN_SECTION_TITLES = (
     "Team Deathmatch",
     "Team Elimination",
@@ -38,6 +38,7 @@ KNOWN_SECTION_TITLES = (
     "Turbo TDM",
     "Escalation",
     "All game modes",
+    "Daily contracts",
     "Launcher",
     "Hangar",
     "Market",
@@ -114,7 +115,9 @@ def commit_entries(push: dict[str, Any]) -> list[dict[str, str]]:
 def patch_note_lines(message: str) -> list[str] | None:
     """The ``Patch notes:`` block of a commit message.
 
-    Returns the block's bullet lines without their leading ``-``, ``[]`` when the
+    Returns the block's bullet lines without their leading ``-``, with
+    wrapped bullets joined back into one line (commit messages wrap, so a
+    bullet may continue on indented follow lines). Returns ``[]`` when the
     block says ``none (internal)`` (explicitly internal: drop the commit), or
     ``None`` when the commit has no block (pre-convention commit: fall back to
     its subject).
@@ -137,11 +140,20 @@ def patch_note_lines(message: str) -> list[str] | None:
                 out.append(rest)
         for follow in lines[idx + 1:]:
             stripped = follow.strip()
-            if not stripped.startswith("-"):
-                break  # blank line, paragraph or trailer: the block is over
-            bullet = stripped[1:].strip()
-            if bullet:
-                out.append(bullet)
+            if not stripped:
+                break  # blank line: the block is over
+            if stripped.startswith("-"):
+                bullet = stripped[1:].strip()
+                if bullet:
+                    out.append(bullet)
+                continue
+            if follow[:1] in (" ", "\t") and out:
+                # An indented follow line continues the previous bullet:
+                # commit messages wrap, so one bullet can span several lines
+                # (its text must survive whole, not just its first line).
+                out[-1] = f"{out[-1]} {stripped}"
+                continue
+            break  # a new paragraph at column 0: the block is over
         return out
     return None
 
@@ -247,7 +259,10 @@ def build_prompt(date: str, notes_lines: list[str], subjects: list[str]) -> str:
         "different sections, each with at least one bullet of its own. You may "
         "reword a line for players or merge duplicate lines that describe the "
         "same change (keeping the newer wording), but the change itself must "
-        "survive. A dropped block line fails the run. Commits marked "
+        "survive, distinctive words and numbers included. When a line's "
+        "prefix is not one of the section titles, do not invent a section "
+        "for it: put the change under the section it actually affects. A "
+        "dropped block line fails the run. Commits marked "
         "\"Patch notes: none (internal)\" have already been dropped.\n\n"
         "Commits without a block (older style) are given as bare subjects: write "
         "bullets for them in the same style, but only for what players can feel "
@@ -257,7 +272,8 @@ def build_prompt(date: str, notes_lines: list[str], subjects: list[str]) -> str:
         "does not touch: the mode a \"Patch notes:\" line names, or the mode the "
         "commit's context makes clear. A change that affects every mode (scoring, "
         "bots, rewards, matchmaker-wide behavior) goes under \"All game modes\"; "
-        "chat, squads and social features under \"Social\"; launcher, hangar, "
+        "chat, squads and social features under \"Social\"; daily contracts "
+        "and their payouts under \"Daily contracts\"; launcher, hangar, "
         "market and tech tree under their own sections. When a commit touches two "
         "modes, give each mode its own bullet. If you cannot tell the mode, use "
         "\"General\" rather than guessing.\n"
@@ -355,23 +371,95 @@ def missing_block_sections(
     return missing
 
 
+def _normalize_text(text: str) -> str:
+    """Lowercased text without markdown noise, for token comparisons."""
+    return re.sub(r"\s+", " ", re.sub(r"[*_`~]", " ", text.casefold())).strip()
+
+
+_WORD_RE = re.compile(r"[0-9a-z]+(?:['-][0-9a-z]+)*")
+
+
+def _distinctive_tokens(text: str) -> list[str]:
+    """The tokens that make a change recognizable: numbers and longer words.
+
+    Short words (\"new\", \"now\", \"GP\") match everything and prove nothing;
+    a number (\"10000\") or a five-plus-character word (\"contract\",
+    \"Escalation\") is what a reworded bullet still carries when the change
+    survived, and what a dropped change leaves behind nowhere.
+    """
+    words = _WORD_RE.findall(_normalize_text(text))
+    return [w for w in dict.fromkeys(words) if len(w) >= 5 or w.isdigit()]
+
+
+def missing_block_lines(
+    sections: list[dict[str, Any]], notes_lines: list[str]
+) -> list[str]:
+    """Block lines whose change never reached the batch.
+
+    A line whose prefix names a known section passes only when that section
+    is in the batch (the author named it on purpose, so the content check
+    must not excuse a wrong placement). Any other line - no prefix, or a
+    prefix the section list does not have - passes when at least one of its
+    distinctive tokens appears in some bullet: the model may reword freely,
+    but the change's recognizable content must survive somewhere. A line
+    failing both was dropped, like 2026-11-07's \"New players start with
+    10000 GP.\".
+    """
+    present = {
+        str(s.get("title") or "").strip().casefold()
+        for s in sections
+        if isinstance(s, dict)
+    }
+    haystack = " ".join(
+        _normalize_text(str(bullet))
+        for section in sections
+        if isinstance(section, dict)
+        for bullet in (section.get("bullets") or [])
+        if str(bullet or "").strip()
+    )
+    missing: list[str] = []
+    for line in notes_lines:
+        if ":" in line:
+            prefix = line.split(":", 1)[0].strip()
+            if prefix:
+                title = _canonical_title(prefix)
+                if title in KNOWN_SECTION_TITLES:
+                    if title.casefold() not in present:
+                        missing.append(line)
+                    continue
+        tokens = _distinctive_tokens(line)
+        if tokens and not any(token in haystack for token in tokens):
+            missing.append(line)
+    return missing
+
+
 def validate_block_coverage(
     sections: list[dict[str, Any]], notes_lines: list[str]
 ) -> None:
-    """Fail loudly when the model drops a ``Patch notes:`` block line's section.
+    """Fail loudly when the model drops a ``Patch notes:`` block line.
 
-    A silent skip (a mode's change never reaching the site) is the pipeline's
+    A silent skip (a change never reaching the site) is the pipeline's
     worst failure mode: it publishes incomplete notes and nobody notices. So
-    the workflow calls this before merging, and a raise here fails the run and
-    lets the trigger retry instead of publishing an incomplete batch.
+    the workflow calls this before merging, and a raise here fails the run
+    and lets the trigger retry instead of publishing an incomplete batch.
+    Both halves are needed: a dropped section (a prefixed line's section
+    missing) and a dropped change (an unprefixed or unknown-prefixed line
+    recognizable nowhere in the batch).
     """
-    missing = missing_block_sections(sections, notes_lines)
-    if missing:
-        raise ValueError(
-            "patch-notes batch dropped section(s) named by commit block lines: "
-            + ", ".join(missing)
-            + "; refusing to publish incomplete notes"
-        )
+    missing_sections = missing_block_sections(sections, notes_lines)
+    missing_lines = missing_block_lines(sections, notes_lines)
+    if not missing_sections and not missing_lines:
+        return
+    parts: list[str] = []
+    if missing_sections:
+        parts.append("missing section(s) named by commit block lines: " + ", ".join(missing_sections))
+    if missing_lines:
+        parts.append("dropped block line(s), recognizable nowhere in the batch: " + " | ".join(missing_lines))
+    raise ValueError(
+        "patch-notes batch dropped commit block content ("
+        + "; ".join(parts)
+        + "); refusing to publish incomplete notes"
+    )
 
 
 # ---------------------------------------------------------------------------

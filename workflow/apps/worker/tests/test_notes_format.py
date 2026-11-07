@@ -86,6 +86,25 @@ class TestPatchNotesBlock:
         msg = "x\n\nPatch notes:\n- General: G.\nA trailing paragraph."
         assert nf.patch_note_lines(msg) == ["General: G."]
 
+    def test_wrapped_bullets_are_joined(self):
+        # 2026-11-07's commit wrapped its first block line across three
+        # lines; only the first line ever reached the model before, so the
+        # published note was truncated. Indented follow lines continue the
+        # previous bullet.
+        msg = (
+            "daily contracts pay GP\n\n"
+            "Patch notes:\n"
+            "- All modes: Claiming a finished daily contract now also gives 200 GP on\n"
+            "  top of its credits. The contract card still shows only the credits.\n"
+            "- New players start with 10000 GP.\n"
+            "\n"
+            "Co-Authored-By: Someone <x>"
+        )
+        assert nf.patch_note_lines(msg) == [
+            "All modes: Claiming a finished daily contract now also gives 200 GP on top of its credits. The contract card still shows only the credits.",
+            "New players start with 10000 GP.",
+        ]
+
 
 class TestConnectorShapes:
     def test_extract_file_text_mcp_shape(self):
@@ -162,6 +181,7 @@ class TestLlmBatch:
         assert "- fix dreadnought hp" in prompt
         assert "Escalation" in prompt
         assert "All game modes" in prompt
+        assert "Daily contracts" in prompt
         assert "Social" in prompt
         assert "Ryugu Haven" in prompt
         assert "strict JSON" in prompt
@@ -177,14 +197,18 @@ class TestLlmBatch:
     def test_sort_sections_orders_per_skill(self):
         sections = [
             {"title": "General", "bullets": ["g"]},
+            {"title": "Launcher", "bullets": ["l"]},
             {"title": "Conquest", "bullets": ["c"]},
             {"title": "Unknown thing", "bullets": ["u"]},
             {"title": "All game modes", "bullets": ["a"]},
+            {"title": "Daily contracts", "bullets": ["d"]},
         ]
         titles = [s["title"] for s in nf.sort_sections(sections)]
         assert titles == [
             "Conquest",
             "All game modes",
+            "Daily contracts",  # the progression system sits between cross-mode and out-of-match areas
+            "Launcher",
             "General",
             "Unknown thing",
         ]
@@ -228,6 +252,63 @@ class TestBlockCoverage:
         assert nf.missing_block_sections([], ["escalation: X."]) == ["Escalation"]
         # an alias the skill does not list (like "TDM") is not a known title either
         assert nf.missing_block_sections([], ["TDM: X."]) == []
+
+
+class TestBlockContentCoverage:
+    """The content half of the gate: unprefixed or unknown-prefixed lines."""
+
+    def test_dropped_unprefixed_line_is_reported(self):
+        # 2026-11-07's second failure: "New players start with 10000 GP."
+        # had no prefix, so the section half of the gate could not see it.
+        sections = [
+            {
+                "title": "Daily contracts",
+                "bullets": ["Claiming a finished daily contract now also gives 200 GP."],
+            }
+        ]
+        lines = [
+            "All modes: Claiming a finished daily contract now also gives 200 GP.",
+            "New players start with 10000 GP.",
+        ]
+        assert nf.missing_block_lines(sections, lines) == ["New players start with 10000 GP."]
+        with pytest.raises(ValueError) as exc:
+            nf.validate_block_coverage(sections, lines)
+        assert "10000" in str(exc.value)
+
+    def test_reworded_but_recognizable_line_passes(self):
+        sections = [{"title": "General", "bullets": ["Fresh accounts begin with 10000 GP."]}]
+        line = "New players start with 10000 GP."
+        assert nf.missing_block_lines(sections, [line]) == []
+        nf.validate_block_coverage(sections, [line])  # no raise
+
+    def test_unknown_prefix_line_covered_by_content(self):
+        # "All modes" is not a section title, so the line passes on content:
+        # the batch keeps the change recognizable even under another title.
+        sections = [
+            {
+                "title": "Daily contracts",
+                "bullets": ["Claiming a finished daily contract now also gives 200 GP on top of its credits."],
+            }
+        ]
+        line = "All modes: Claiming a finished daily contract now also gives 200 GP on top of its credits."
+        assert nf.missing_block_lines(sections, [line]) == []
+        nf.validate_block_coverage(sections, [line])  # no raise
+
+    def test_known_prefix_still_requires_its_section(self):
+        # content present under the wrong section must not excuse the gate:
+        # the author named the section on purpose
+        sections = [{"title": "Havoc", "bullets": ["Escalation returns to the queues."]}]
+        line = "Escalation: Escalation returns to the queues."
+        assert nf.missing_block_lines(sections, [line]) == [line]
+        with pytest.raises(ValueError) as exc:
+            nf.validate_block_coverage(sections, [line])
+        assert "Escalation" in str(exc.value)
+
+    def test_line_without_distinctive_tokens_never_fails(self):
+        # "GP is back." has no number and no five-letter word: nothing to
+        # recognize, so the model's placement is trusted rather than guessed
+        sections = [{"title": "General", "bullets": ["Completely different change."]}]
+        assert nf.missing_block_lines(sections, ["GP is back."]) == []
 
 
 class TestMergeBatch:
