@@ -6,9 +6,6 @@
 //     names before the first group are shown without a heading
 //   - lines starting with "//" and empty lines are ignored
 //   - only list people who agreed to be named publicly
-//
-// Example (remove the "//" to use it):
-// ## Admiral
-// Jane Doe
-// ## Captain
-// SomeCallsign
+
+## Admiral
+Rumpel
