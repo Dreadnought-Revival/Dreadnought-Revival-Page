@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T04:14:57.172521+00:00",
+  "generated_at": "2026-11-10T10:50:29.993535+00:00",
   "notes": [
     {
       "date": "2026-11-10",
@@ -7,20 +7,23 @@
         {
           "title": "All game modes",
           "bullets": [
-            "A leaver's match data can no longer be credited to a player who joins later."
+            "A leaver's match data can no longer be credited to a player who joins later.",
+            "A ship outside the match's fleet tiers can no longer be brought into a match."
           ]
         },
         {
           "title": "General",
           "bullets": [
             "A hole that could have given an account unlimited GP is closed.",
-            "Several exploits that could have granted free ships, items, or another player's name are now closed."
+            "Several exploits that could have granted free ships, items, or another player's name are now closed.",
+            "Credits, GP and XP now stop at 2,147,483,647 instead of breaking the account."
           ]
         },
         {
           "title": "Hangar",
           "bullets": [
-            "A ship can no longer be listed twice in the same fleet."
+            "A ship can no longer be listed twice in the same fleet.",
+            "A ship fit, ship look or captain look can only use items the account owns; a slot with an item that is not owned keeps what it had."
           ]
         },
         {
