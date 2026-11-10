@@ -1,6 +1,23 @@
 {
-  "generated_at": "2026-11-08T22:04:41.337200+00:00",
+  "generated_at": "2026-11-10T03:32:12.970731+00:00",
   "notes": [
+    {
+      "date": "2026-11-10",
+      "sections": [
+        {
+          "title": "All game modes",
+          "bullets": [
+            "A leaver's match data can no longer be credited to a player who joins later."
+          ]
+        },
+        {
+          "title": "General",
+          "bullets": [
+            "A hole that could have given an account unlimited GP is closed."
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-11-08",
       "sections": [
