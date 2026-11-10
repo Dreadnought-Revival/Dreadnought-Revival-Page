@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T03:32:12.970731+00:00",
+  "generated_at": "2026-11-10T04:14:57.172521+00:00",
   "notes": [
     {
       "date": "2026-11-10",
@@ -13,7 +13,23 @@
         {
           "title": "General",
           "bullets": [
-            "A hole that could have given an account unlimited GP is closed."
+            "A hole that could have given an account unlimited GP is closed.",
+            "Several exploits that could have granted free ships, items, or another player's name are now closed."
+          ]
+        },
+        {
+          "title": "Hangar",
+          "bullets": [
+            "A ship can no longer be listed twice in the same fleet."
+          ]
+        },
+        {
+          "title": "Social",
+          "bullets": [
+            "Only the squad leader can start the search for a match.",
+            "Chat now enforces a line length limit and a flood limit.",
+            "Your own chat line reappears after a reconnect during a match.",
+            "You can no longer add yourself as a friend, and ignored players no longer receive your friend requests."
           ]
         }
       ]
