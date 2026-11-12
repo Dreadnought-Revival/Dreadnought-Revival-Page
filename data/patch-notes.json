@@ -1,6 +1,24 @@
 {
-  "generated_at": "2026-11-10T10:50:29.993535+00:00",
+  "generated_at": "2026-11-12T06:25:20.651040+00:00",
   "notes": [
+    {
+      "date": "2026-11-12",
+      "sections": [
+        {
+          "title": "All game modes",
+          "bullets": [
+            "The ship selection in a match now shows the fleet you queued with, even if another fleet was selected in the hangar.",
+            "Queueing with a fleet that has no ships is now refused with the game's own message instead of starting a match without ships."
+          ]
+        },
+        {
+          "title": "Social",
+          "bullets": [
+            "A squad can no longer queue a fleet type that one of its members does not have; the leader will receive the message: 'The selected fleet is not available for all squad members'."
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-11-10",
       "sections": [
