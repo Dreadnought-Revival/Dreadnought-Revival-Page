@@ -22,6 +22,7 @@ jobs:
           test -f 404.html && echo "404.html OK"
           test -f AGENTS.md && echo "AGENTS.md OK"
           python3 -m json.tool data/patch-notes.json > /dev/null && echo "patch-notes.json OK"
+          python3 scripts/generate_rss.py --out /tmp/feed.xml && echo "RSS feed generation OK"
           node --check app.js && echo "app.js syntax OK"
           find . -type f -size +10M -not -path "./.git/*" | tee /tmp/large_files
           test ! -s /tmp/large_files && echo "No accidentally large files"
