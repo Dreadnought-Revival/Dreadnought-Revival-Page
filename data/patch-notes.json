@@ -1,6 +1,19 @@
 {
-  "generated_at": "2026-11-12T06:25:20.651040+00:00",
+  "generated_at": "2026-11-14T22:52:52.258152+00:00",
   "notes": [
+    {
+      "date": "2026-11-14",
+      "sections": [
+        {
+          "title": "All game modes",
+          "bullets": [
+            "Elite Status now grants +100% ship XP and credits and +50% free XP from matches. Each Elite ally on your team also gives you an additional +10% ship XP and +5% free XP.",
+            "Match rewards now include the game's own bonuses: Win Bonus, First Win of the Day (double rewards once per day), and the Battle Ready bonus of your fleet. Legendary fleets earn more than before.",
+            "The rewards screen now displays each bonus on its own line, including which Elite teammates boosted your earnings."
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-11-12",
       "sections": [
