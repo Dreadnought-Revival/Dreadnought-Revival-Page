@@ -1,6 +1,23 @@
 {
-  "generated_at": "2026-11-14T22:52:52.258152+00:00",
+  "generated_at": "2026-11-15T08:12:38.825Z",
   "notes": [
+    {
+      "date": "2026-11-13",
+      "sections": [
+        {
+          "title": "Social",
+          "bullets": [
+            "Moderators can mute a player's chat for a set time; while muted, their lines are not sent to anyone."
+          ]
+        },
+        {
+          "title": "General",
+          "bullets": [
+            "Bans can now be temporary and lift themselves when they run out."
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-11-14",
       "sections": [
@@ -10,6 +27,13 @@
             "Elite Status now grants +100% ship XP and credits and +50% free XP from matches. Each Elite ally on your team also gives you an additional +10% ship XP and +5% free XP.",
             "Match rewards now include the game's own bonuses: Win Bonus, First Win of the Day (double rewards once per day), and the Battle Ready bonus of your fleet. Legendary fleets earn more than before.",
             "The rewards screen now displays each bonus on its own line, including which Elite teammates boosted your earnings."
+          ]
+        },
+        {
+          "title": "Launcher",
+          "bullets": [
+            "The latest patch notes are now shown on the launcher's home screen next to the news, with links to all of them and to our Patreon.",
+            "New \"Remember me\" option on sign-in: you stay signed in instead of having to sign in again every day."
           ]
         }
       ]
