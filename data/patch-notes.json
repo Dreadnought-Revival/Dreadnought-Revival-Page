@@ -1,6 +1,35 @@
 {
-  "generated_at": "2026-11-15T08:12:38.825Z",
+  "generated_at": "2026-11-15T21:39:49.194072+00:00",
   "notes": [
+    {
+      "date": "2026-11-15",
+      "sections": [
+        {
+          "title": "Team Deathmatch",
+          "bullets": [
+            "If you queue while a match of your mode and fleet has just started (first 3 minutes), you join that match instead of getting a new one. You drop in with your flagship and can pick another ship at your next respawn."
+          ]
+        },
+        {
+          "title": "Onslaught",
+          "bullets": [
+            "If you queue while a match of your mode and fleet has just started (first 3 minutes), you join that match instead of getting a new one. You drop in with your flagship and can pick another ship at your next respawn."
+          ]
+        },
+        {
+          "title": "Proving Grounds",
+          "bullets": [
+            "If you queue while a match of your mode and fleet has just started (first 3 minutes), you join that match instead of getting a new one. You drop in with your flagship and can pick another ship at your next respawn."
+          ]
+        },
+        {
+          "title": "All game modes",
+          "bullets": [
+            "You are no longer sent into a match that has already ended."
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-11-13",
       "sections": [
