@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-16T09:28:37.347396+00:00",
+  "generated_at": "2026-11-16T14:13:23.912514+00:00",
   "notes": [
     {
       "date": "2026-11-16",
@@ -9,6 +9,12 @@
           "bullets": [
             "AI ships no longer lose the use of their abilities when the game hands them another ship type's behaviour settings (seen mostly on AI dreadnoughts in Team Deathmatch).",
             "The server can now set, per game mode, how accurately bots aim, how fast they react and how readily they use abilities. Nothing changes until a mode is tuned; the default is the original game."
+          ]
+        },
+        {
+          "title": "Hangar",
+          "bullets": [
+            "Getting your first tier 3 or tier 4 ship now immediately unlocks the Veteran or Legendary fleet; before, it required restarting the game."
           ]
         }
       ]
