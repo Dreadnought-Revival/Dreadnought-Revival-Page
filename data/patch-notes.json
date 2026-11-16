@@ -1,6 +1,18 @@
 {
-  "generated_at": "2026-11-16T08:16:53.782Z",
+  "generated_at": "2026-11-16T09:28:37.347396+00:00",
   "notes": [
+    {
+      "date": "2026-11-16",
+      "sections": [
+        {
+          "title": "All game modes",
+          "bullets": [
+            "AI ships no longer lose the use of their abilities when the game hands them another ship type's behaviour settings (seen mostly on AI dreadnoughts in Team Deathmatch).",
+            "The server can now set, per game mode, how accurately bots aim, how fast they react and how readily they use abilities. Nothing changes until a mode is tuned; the default is the original game."
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-11-15",
       "sections": [
