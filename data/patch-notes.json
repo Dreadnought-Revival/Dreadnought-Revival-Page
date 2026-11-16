@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-15T21:39:49.194072+00:00",
+  "generated_at": "2026-11-16T08:16:53.782Z",
   "notes": [
     {
       "date": "2026-11-15",
@@ -27,22 +27,14 @@
           "bullets": [
             "You are no longer sent into a match that has already ended."
           ]
-        }
-      ]
-    },
-    {
-      "date": "2026-11-13",
-      "sections": [
-        {
-          "title": "Social",
-          "bullets": [
-            "Moderators can mute a player's chat for a set time; while muted, their lines are not sent to anyone."
-          ]
         },
         {
-          "title": "General",
+          "title": "Launcher",
           "bullets": [
-            "Bans can now be temporary and lift themselves when they run out."
+            "After Play the launcher hides and comes back when you close the game, ready to play again. Before, it closed when the game started. A new setting keeps the old behaviour.",
+            "The launcher has a tray icon with Open launcher, Play, Open logs and Quit, and a setting to minimize to the system tray.",
+            "Starting the launcher a second time shows the launcher that is already running.",
+            "The launcher tells you when the game closed unexpectedly and where to find the game's logs."
           ]
         }
       ]
@@ -63,6 +55,23 @@
           "bullets": [
             "The latest patch notes are now shown on the launcher's home screen next to the news, with links to all of them and to our Patreon.",
             "New \"Remember me\" option on sign-in: you stay signed in instead of having to sign in again every day."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-11-13",
+      "sections": [
+        {
+          "title": "Social",
+          "bullets": [
+            "Moderators can mute a player's chat for a set time; while muted, their lines are not sent to anyone."
+          ]
+        },
+        {
+          "title": "General",
+          "bullets": [
+            "Bans can now be temporary and lift themselves when they run out."
           ]
         }
       ]
