@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-17T19:54:40.836976+00:00",
+  "generated_at": "2026-11-17T20:23:43.217185+00:00",
   "notes": [
     {
       "date": "2026-11-17",
@@ -9,7 +9,8 @@
           "bullets": [
             "The rewards screen no longer reports an XP error for ships in fleets of more than 16 ships.",
             "The map loading screen (map picture, description and mode tips) shows again while joining a battle.",
-            "With the new launcher, your game log is sent to the server team when the game closes so bugs can be investigated. Your sign-in token and Windows computer and user names are removed first. You can disable this in the launcher settings."
+            "With the new launcher, your game log is sent to the server team when the game closes so bugs can be investigated. Your sign-in token and Windows computer and user names are removed first. You can disable this in the launcher settings.",
+            "Team Deathmatch, Team Elimination, Conquest and Ceres Awakens matches are now 5v5 again (previously 8v8 with extra bot ships)."
           ]
         },
         {
