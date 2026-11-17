@@ -1,6 +1,17 @@
 {
-  "generated_at": "2026-11-16T14:13:23.912514+00:00",
+  "generated_at": "2026-11-17T16:38:58.820663+00:00",
   "notes": [
+    {
+      "date": "2026-11-17",
+      "sections": [
+        {
+          "title": "All game modes",
+          "bullets": [
+            "The rewards screen no longer reports an XP error for ships in fleets of more than 16 ships."
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-11-16",
       "sections": [
