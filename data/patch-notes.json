@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-18T06:07:52.989533+00:00",
+  "generated_at": "2026-11-18T12:33:11.144804+00:00",
   "notes": [
     {
       "date": "2026-11-18",
@@ -15,6 +15,19 @@
           "bullets": [
             "Custom games are here: hosts pick the map, mode, team size and whether bots fill empty slots.",
             "Custom matches grant no rewards."
+          ]
+        },
+        {
+          "title": "Onslaught",
+          "bullets": [
+            "Team 1 no longer loses a fighter every 2 seconds for no reason.",
+            "Both teams now retain all 12 fighters, and the opposing team no longer gains free points from it."
+          ]
+        },
+        {
+          "title": "All game modes",
+          "bullets": [
+            "Players now get their team assigned immediately upon joining a match."
           ]
         }
       ]
