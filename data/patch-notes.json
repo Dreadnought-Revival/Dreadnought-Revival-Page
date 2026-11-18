@@ -32,6 +32,17 @@
           ]
         },
         {
+          "title": "Launcher",
+          "bullets": [
+            "Patch notes are now shown large in the welcome panel, easier to read.",
+            "\"Show the game's log window\" shows the log again (was black).",
+            "Quitting the game no longer reports \"Dreadnought closed unexpectedly\".",
+            "A server problem at sign-in now says so instead of \"incorrect email or password\".",
+            "Security fixes (browser version, certificate checks at sign-in) and settings that can no longer get lost.",
+            "Only the game's own executable is started."
+          ]
+        },
+        {
           "title": "General",
           "bullets": [
             "Players who join a running match now count on the Battle servers page and in the player numbers."
