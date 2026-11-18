@@ -165,6 +165,23 @@ def as_text(result, label: str) -> str:
     return result
 
 
+@workflows.activity(name="generate-note-batch", retry_policy_max_attempts=3)
+async def dashless_generate_note_batch(date: str, notes_lines: list[str], subjects: list[str]) -> str:
+    # mirrors a model answer for 2026-11-18's dash-less block: one section
+    # per named mode, bullets with the prefix stripped (same contract as the
+    # real activity: validate before returning)
+    sections:dict[str, list[str]] = {}
+    for line in notes_lines:
+        prefix, colon, bullet = line.partition(":")
+        title = prefix.strip() if colon and prefix.strip() else "General"
+        sections.setdefault(title, []).append(bullet.strip())
+    content = json.dumps(
+        {"sections": [{"title": t, "bullets": b} for t, b in sections.items()]}
+    )
+    notes_format.validate_block_coverage(notes_format.parse_llm_batch(content), notes_lines)
+    return content
+
+
 def _reset_fakes():
     fake_generate_note_batch.called = False  # type: ignore[attr-defined]
     fake_generate_note_batch.calls = 0  # type: ignore[attr-defined]
@@ -452,6 +469,41 @@ async def test_context_lines_never_reach_the_model(temporal_env):
         "notes_lines": ["Havoc: Waves rotate on every map."],
         "subjects": [],
     }, f"model inputs: {captured!r}"
+
+
+async def test_dashless_block_lines_reach_the_model(temporal_env):
+    # 2026-11-18's real push, end to end: both block lines were written
+    # without "-" bullets, plain at column 0; the parser saw the block end
+    # immediately and the run completed "no player-facing changes" while two
+    # live player-facing fixes sat in the commits — a silent skip. Dash-less
+    # lines are bullets now, so the run publishes them like dashed ones.
+    _reset_fakes()
+    event = push_event(dry_run=True)
+    event["body"]["commits"] = [
+        {
+            "id": "7778889990",
+            "message": (
+                "onslaught: size the creep manager\n\n"
+                "Body.\n\n"
+                "Patch notes:\n"
+                "Onslaught: team 1 no longer loses a fighter every 2 seconds for nothing.\n"
+                "All game modes: players get their team assigned the moment they join.\n"
+                "\n"
+                "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
+            ),
+        },
+    ]
+    result = await _run(
+        temporal_env,
+        event,
+        [fake_fetch_patch_notes, dashless_generate_note_batch, fake_publish_patch_notes],
+        "test-revival-patch-notes-dashless",
+    )
+    text = as_text(result, "dashless")
+    assert text.startswith("dry run:"), f"dashless text: {text!r}"
+    assert "2 section(s)" in text, f"dashless text: {text!r}"
+    assert "2 bullet(s)" in text, f"dashless text: {text!r}"
+    assert not hasattr(fake_publish_patch_notes, "captured")
 
 
 async def test_ignores_non_push_events(temporal_env):

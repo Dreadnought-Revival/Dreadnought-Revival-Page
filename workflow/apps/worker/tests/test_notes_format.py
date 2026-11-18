@@ -141,6 +141,56 @@ class TestPatchNotesBlock:
         msg = "x\n\nPatch notes:\n- no change for players; maintenance behind the scenes.\n"
         assert nf.patch_note_lines(msg) == []
 
+    def test_dashless_block_lines_are_parsed(self):
+        # 2026-11-18's push wrote its block lines without "-" bullets, plain
+        # at column 0; the parser treated them as the block's end, so a live
+        # player-facing change was silently dropped. A column-0 line that
+        # names its mode or area before the first colon is a dash-less bullet.
+        msg = (
+            "onslaught: size the creep manager\n\n"
+            "Body paragraph.\n\n"
+            "Patch notes:\n"
+            "Onslaught: team 1 no longer loses a fighter every 2 seconds for nothing.\n"
+            "All game modes: players get their team assigned the moment they join.\n"
+            "\n"
+            "Co-Authored-By: Someone <x>"
+        )
+        assert nf.patch_note_lines(msg) == [
+            "Onslaught: team 1 no longer loses a fighter every 2 seconds for nothing.",
+            "All game modes: players get their team assigned the moment they join.",
+        ]
+
+    def test_dashless_and_dashed_lines_can_mix(self):
+        msg = (
+            "x\n\n"
+            "Patch notes:\n"
+            "- Havoc: Waves rotate on every map.\n"
+            "Launcher: Self-updates.\n"
+            "- Onslaught: Creeps hold their cap.\n"
+        )
+        assert nf.patch_note_lines(msg) == [
+            "Havoc: Waves rotate on every map.",
+            "Launcher: Self-updates.",
+            "Onslaught: Creeps hold their cap.",
+        ]
+
+    def test_dashless_context_lines_are_dropped(self):
+        # the context filter applies to dash-less lines exactly like dashed
+        # ones: an operator-side prefix still declares context
+        msg = (
+            "x\n\n"
+            "Patch notes:\n"
+            "Admin panel: game logs tell a crash on exit from a crash during play.\n"
+            "All game modes: no change for players; sign-in is by account only.\n"
+        )
+        assert nf.patch_note_lines(msg) == []
+
+    def test_bare_prose_without_colon_still_ends_the_block(self):
+        # a dash-less line must name its area before the colon to count as a
+        # bullet; plain prose at column 0 (no colon) still ends the block
+        msg = "x\n\nPatch notes:\nOnslaught: Fixed.\nA trailing paragraph without colon."
+        assert nf.patch_note_lines(msg) == ["Onslaught: Fixed."]
+
 
 class TestConnectorShapes:
     def test_extract_file_text_mcp_shape(self):

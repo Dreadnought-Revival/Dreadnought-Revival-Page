@@ -149,7 +149,11 @@ def patch_note_lines(message: str) -> list[str] | None:
 
     Returns the block's bullet lines without their leading ``-``, with
     wrapped bullets joined back into one line (commit messages wrap, so a
-    bullet may continue on indented follow lines). Context lines - ones
+    bullet may continue on indented follow lines). Block lines are also
+    read without their ``-`` bullets: every line that names its mode or
+    area before the first colon is a dash-less bullet (2026-11-18's push
+    lost its whole block to them being treated as the block's end, a
+    silent skip of live player-facing changes). Context lines - ones
     whose prefix names an operator-side area, or whose text opens with "no
     change for players" - are dropped like ``none (internal)``: they explain
     why nothing is publishable, they are not changes. Returns ``[]`` when
@@ -183,13 +187,24 @@ def patch_note_lines(message: str) -> list[str] | None:
                 if bullet:
                     out.append(bullet)
                 continue
-            if follow[:1] in (" ", "\t") and out:
-                # An indented follow line continues the previous bullet:
-                # commit messages wrap, so one bullet can span several lines
-                # (its text must survive whole, not just its first line).
-                out[-1] = f"{out[-1]} {stripped}"
+            if follow[:1] in (" ", "\t"):
+                if out:
+                    # An indented follow line continues the previous bullet:
+                    # commit messages wrap, so one bullet can span several lines
+                    # (its text must survive whole, not just its first line).
+                    out[-1] = f"{out[-1]} {stripped}"
+                    continue
+                break  # indented prose with no bullet yet: not block content
+            # A column-0 line without a "-": block lines are sometimes written
+            # dash-less (2026-11-18's push: "Patch notes:\nOnslaught: team 1
+            # no longer ..."). A block line names its mode or area before the
+            # first colon, so such a line is a dash-less bullet; bare prose
+            # with no colon still ends the block.
+            lead, colon, _ = stripped.partition(":")
+            if colon and lead.strip():
+                out.append(stripped)
                 continue
-            break  # a new paragraph at column 0: the block is over
+            break  # bare prose at column 0: the block is over
         return [line for line in out if not _is_context_line(line)]
     return None
 
