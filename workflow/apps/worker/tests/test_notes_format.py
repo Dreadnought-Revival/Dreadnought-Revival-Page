@@ -105,6 +105,42 @@ class TestPatchNotesBlock:
             "New players start with 10000 GP.",
         ]
 
+    def test_context_lines_are_dropped(self):
+        # 2026-11-17's failure mode: the operator's block carried context
+        # lines, the model rightly published nothing for them, and the
+        # coverage gate failed the run. Context is dropped before the model
+        # now, like "none (internal)" — real changes in the same block stay.
+        msg = (
+            "accounts and sign-in\n\n"
+            "Patch notes:\n"
+            "- All game modes: no change for players; accounts are created in the launcher only.\n"
+            "- Admin panel: game logs tell a crash on exit from a crash during play.\n"
+            "- Havoc: Waves rotate on every map.\n"
+        )
+        assert nf.patch_note_lines(msg) == ["Havoc: Waves rotate on every map."]
+
+    def test_context_only_block_is_empty(self):
+        # a block that is all context is an internal commit: the push
+        # completes with "no player-facing changes" instead of failing
+        msg = (
+            "sign-in wording\n\n"
+            "Patch notes:\n"
+            "- All game modes: no change for players; sign-in is by account only.\n"
+        )
+        assert nf.patch_note_lines(msg) == []
+
+    def test_no_change_words_mid_sentence_are_kept(self):
+        # only a line that OPENS with "no change" declares context; a real
+        # change that merely contains the words mid-sentence stays
+        msg = "x\n\nPatch notes:\n- Launcher: You can no longer change your email in-game."
+        assert nf.patch_note_lines(msg) == [
+            "Launcher: You can no longer change your email in-game."
+        ]
+
+    def test_bare_no_change_line_without_prefix_is_dropped(self):
+        msg = "x\n\nPatch notes:\n- no change for players; maintenance behind the scenes.\n"
+        assert nf.patch_note_lines(msg) == []
+
 
 class TestConnectorShapes:
     def test_extract_file_text_mcp_shape(self):

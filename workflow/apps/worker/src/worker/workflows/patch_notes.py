@@ -12,14 +12,18 @@ runs would be rejected.
 The format follows the server repo's ``dreadnought-patch-notes`` skill: commits
 end their body with a ``Patch notes:`` block of per-mode, player-worded lines,
 and the notes batch is built starting from those blocks. Commits marked
-``Patch notes: none (internal)`` are dropped; commits without a block
-(pre-convention) fall back to their subject, which the model phrases for
-players. The generation activity validates its own batch before returning —
-JSON shape and coverage of every block line's named section — so a retry
-regenerates the batch and, once retries are exhausted, the execution is marked
-failed instead of publishing incomplete notes. The PR is then squash-merged
-automatically once its CI is green and its branch deleted; if CI fails or stays
-pending the PR is left open for the daily ops run — nothing is force-merged.
+``Patch notes: none (internal)`` are dropped; context lines (an operator-side
+prefix like ``Admin panel:``, or a line opening with ``no change for players``)
+are dropped the same way, so a push that changes nothing for players completes
+with "no player-facing changes" instead of failing the coverage gate; commits
+without a block (pre-convention) fall back to their subject, which the model
+phrases for players. The generation activity validates its own batch before
+returning — JSON shape and coverage of every block line's named section — so a
+retry regenerates the batch and, once retries are exhausted, the execution is
+marked failed instead of publishing incomplete notes. The PR is then
+squash-merged automatically once its CI is green and its branch deleted; if CI
+fails or stays pending the PR is left open for the daily ops run — nothing is
+force-merged.
 """
 
 from __future__ import annotations
@@ -281,8 +285,10 @@ class PatchNotesWorkflow:
             return "ignored: no player-relevant commits in payload"
 
         # The commits' "Patch notes:" blocks are the source of truth; commits
-        # marked "none (internal)" are dropped here, pre-convention commits
-        # (no block) fall back to their subject for the model to phrase.
+        # marked "none (internal)" are dropped here, context lines (operator
+        # prefixes, "no change for players" openers) with them, and
+        # pre-convention commits (no block) fall back to their subject for
+        # the model to phrase.
         notes_lines: list[str] = []
         fallback_subjects: list[str] = []
         for entry in commits:

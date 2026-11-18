@@ -7,7 +7,10 @@ The format follows the server repo's ``dreadnought-patch-notes`` skill
 (``.claude/skills/dreadnought-patch-notes``): every commit ends its body with a
 ``Patch notes:`` block of per-mode, player-worded lines (or ``Patch notes:
 none (internal)`` for work players never see), and the notes are built starting
-from those blocks. Commits without a block (pre-convention) fall back to their
+from those blocks. Context lines — a line whose prefix names an operator-side
+area like ``Admin panel``, or whose text opens with ``no change for players`` —
+are dropped like ``none (internal)``: they explain why nothing is publishable,
+they are not changes. Commits without a block (pre-convention) fall back to their
 subject, which the model phrases for players.
 """
 
@@ -51,6 +54,19 @@ SECTION_ORDER = KNOWN_SECTION_TITLES
 _FENCE_RE = re.compile(r"^```[a-zA-Z0-9_-]*\s*|\s*```$")
 _PATCH_NOTES_RE = re.compile(r"^patch notes:\s*(.*)$", re.IGNORECASE)
 _INTERNAL_BLOCK = "none (internal)"
+
+# Context lines: operator-side information, not player-facing changes
+# (2026-11-17's two failed runs: the operator's block carried "All game
+# modes: no change for players; sign-in is by account only." and an
+# "Admin panel: ..." observation; the model rightly published nothing for
+# them, and the coverage gate failed the run demanding the named section).
+# Such lines are dropped before the model, like a "none (internal)" commit.
+_NO_CHANGE_RE = re.compile(
+    r"^no\s+(?:player[-\s]facing\s+|visible\s+)?changes?\b"
+    r"|^nothing\s+(?:changed?\s+)?for\s+players\b",
+    re.IGNORECASE,
+)
+OPERATOR_PREFIXES = ("admin panel", "internal")
 
 
 # ---------------------------------------------------------------------------
@@ -112,15 +128,35 @@ def commit_entries(push: dict[str, Any]) -> list[dict[str, str]]:
     return entries
 
 
+def _is_context_line(line: str) -> bool:
+    """True when a block line is operator context, not a player-facing change.
+
+    Either the prefix names an operator-side area ("Admin panel: ..."), or
+    the change text opens by saying nothing changed for players ("no change
+    for players; sign-in is by account only."). A real change that merely
+    contains the words mid-sentence stays.
+    """
+    prefix, sep, text = line.partition(":")
+    if sep and prefix.strip():
+        if prefix.strip().casefold() in OPERATOR_PREFIXES:
+            return True
+        return bool(_NO_CHANGE_RE.match(text.strip()))
+    return bool(_NO_CHANGE_RE.match(line.strip()))
+
+
 def patch_note_lines(message: str) -> list[str] | None:
     """The ``Patch notes:`` block of a commit message.
 
     Returns the block's bullet lines without their leading ``-``, with
     wrapped bullets joined back into one line (commit messages wrap, so a
-    bullet may continue on indented follow lines). Returns ``[]`` when the
-    block says ``none (internal)`` (explicitly internal: drop the commit), or
-    ``None`` when the commit has no block (pre-convention commit: fall back to
-    its subject).
+    bullet may continue on indented follow lines). Context lines - ones
+    whose prefix names an operator-side area, or whose text opens with "no
+    change for players" - are dropped like ``none (internal)``: they explain
+    why nothing is publishable, they are not changes. Returns ``[]`` when
+    the block says ``none (internal)`` or everything in it is context
+    (explicitly internal or context-only: drop the commit), or ``None``
+    when the commit has no block (pre-convention commit: fall back to its
+    subject).
     """
     if not message:
         return None
@@ -154,7 +190,7 @@ def patch_note_lines(message: str) -> list[str] | None:
                 out[-1] = f"{out[-1]} {stripped}"
                 continue
             break  # a new paragraph at column 0: the block is over
-        return out
+        return [line for line in out if not _is_context_line(line)]
     return None
 
 

@@ -154,7 +154,10 @@ deployment `revival-ops` on Mistral Cloud. Its single workflow:
   are ignored in code; the trigger filter also enforces `event_type == 'push'`).
   It reads each commit's `Patch notes:` block (the convention set by the server
   repo's patch-notes skill): those lines are the source of truth, commits marked
-  `none (internal)` are dropped, and block-less (pre-convention) commits are
+  `none (internal)` are dropped, and so are context lines — a line whose
+  prefix names an operator-side area (`Admin panel:`) or whose text opens
+  with "no change for players" — so a push that changes nothing for players
+  completes with "no player-facing changes" instead of failing the gate; block-less (pre-convention) commits are
   phrased for players by `mistral-medium-latest`. The generation activity
   validates its own batch (`notes_format.validate_block_coverage`): every
   block line's named section must survive into it, and a block line with no
