@@ -5,16 +5,16 @@
       "date": "2026-11-18",
       "sections": [
         {
-          "title": "All game modes",
+          "title": "Daily contracts",
           "bullets": [
-            "Daily contracts now appear immediately after logging in, instead of only after your first match."
+            "Daily contracts now appear right after login, not only after your first match."
           ]
         },
         {
           "title": "General",
           "bullets": [
-            "Custom games are now available. Hosts can choose per team whether empty slots are filled with bots (requires the new battle-server build).",
-            "The custom game lobby is functional: pick the map, mode, team size and bot settings, invite friends, switch teams, choose a fleet, and start the countdown. Matches start with the room's settings and grant no rewards."
+            "Custom games are here: hosts pick the map, mode, team size and whether bots fill empty slots.",
+            "Custom matches grant no rewards."
           ]
         }
       ]
@@ -25,16 +25,16 @@
         {
           "title": "All game modes",
           "bullets": [
-            "The rewards screen no longer reports an XP error for ships in fleets of more than 16 ships.",
-            "The map loading screen (map picture, description and mode tips) shows again while joining a battle.",
-            "With the new launcher, your game log is sent to the server team when the game closes so bugs can be investigated. Your sign-in token and Windows computer and user names are removed first. You can disable this in the launcher settings.",
-            "Team Deathmatch, Team Elimination, Conquest and Ceres Awakens matches are now 5v5 again (previously 8v8 with extra bot ships)."
+            "Fleets of more than 16 ships no longer cause an XP error on the rewards screen.",
+            "The map loading screen shows again while joining a battle.",
+            "The new launcher can send your game log on close to help debugging (token and names removed; opt-out in the settings).",
+            "Team Deathmatch, Team Elimination, Conquest and Ceres Awakens are 5v5 again, without extra bot ships."
           ]
         },
         {
           "title": "General",
           "bullets": [
-            "Players who joined a running match now appear on the Battle servers page and in the player counts."
+            "Players who join a running match now count on the Battle servers page and in the player numbers."
           ]
         }
       ]
@@ -45,14 +45,14 @@
         {
           "title": "All game modes",
           "bullets": [
-            "AI ships no longer lose the use of their abilities when the game hands them another ship type's behaviour settings (seen mostly on AI dreadnoughts in Team Deathmatch).",
-            "The server can now set, per game mode, how accurately bots aim, how fast they react and how readily they use abilities. Nothing changes until a mode is tuned; the default is the original game."
+            "AI ships no longer lose their abilities when handed another ship type's behaviour settings.",
+            "Bots can now be tuned per mode: aim, reactions and ability use; defaults change nothing."
           ]
         },
         {
           "title": "Hangar",
           "bullets": [
-            "Getting your first tier 3 or tier 4 ship now immediately unlocks the Veteran or Legendary fleet; before, it required restarting the game."
+            "Getting your first tier 3 or 4 ship now immediately unlocks the Veteran or Legendary fleet."
           ]
         }
       ]
@@ -61,36 +61,19 @@
       "date": "2026-11-15",
       "sections": [
         {
-          "title": "Team Deathmatch",
-          "bullets": [
-            "If you queue while a match of your mode and fleet has just started (first 3 minutes), you join that match instead of getting a new one. You drop in with your flagship and can pick another ship at your next respawn."
-          ]
-        },
-        {
-          "title": "Onslaught",
-          "bullets": [
-            "If you queue while a match of your mode and fleet has just started (first 3 minutes), you join that match instead of getting a new one. You drop in with your flagship and can pick another ship at your next respawn."
-          ]
-        },
-        {
-          "title": "Proving Grounds",
-          "bullets": [
-            "If you queue while a match of your mode and fleet has just started (first 3 minutes), you join that match instead of getting a new one. You drop in with your flagship and can pick another ship at your next respawn."
-          ]
-        },
-        {
           "title": "All game modes",
           "bullets": [
+            "Queue within the first 3 minutes of a match of your mode and fleet and you join it, dropping in with your flagship.",
             "You are no longer sent into a match that has already ended."
           ]
         },
         {
           "title": "Launcher",
           "bullets": [
-            "After Play the launcher hides and comes back when you close the game, ready to play again. Before, it closed when the game started. A new setting keeps the old behaviour.",
-            "The launcher has a tray icon with Open launcher, Play, Open logs and Quit, and a setting to minimize to the system tray.",
-            "Starting the launcher a second time shows the launcher that is already running.",
-            "The launcher tells you when the game closed unexpectedly and where to find the game's logs."
+            "The launcher now hides while you play and comes back afterwards; a setting keeps the old close behaviour.",
+            "The launcher has a tray icon (Open, Play, Logs, Quit) and can minimize to it.",
+            "Starting the launcher again just shows the one already running.",
+            "The launcher tells you when the game closed unexpectedly, and where its logs are."
           ]
         }
       ]

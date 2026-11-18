@@ -82,6 +82,25 @@ async def fake_finalize_patch_notes(branch: str, number: int, date: str, pr_url:
     )
 
 
+@workflows.activity(name="generate-note-batch", retry_policy_max_attempts=3)
+async def repeating_generate_note_batch(date: str, notes_lines: list[str], subjects: list[str]) -> str:
+    # mirrors 2026-11-15's model output: the same sentence echoed under each
+    # mode its block line named (same contract as the real activity: validate
+    # before returning, so a batch the gate would refuse raises here)
+    dup = "Queue in the first 3 minutes of a match of your mode and fleet and you join it."
+    content = json.dumps(
+        {
+            "sections": [
+                {"title": "Team Deathmatch", "bullets": [dup]},
+                {"title": "Onslaught", "bullets": [dup]},
+                {"title": "Proving Grounds", "bullets": [dup]},
+            ]
+        }
+    )
+    notes_format.validate_block_coverage(notes_format.parse_llm_batch(content), notes_lines)
+    return content
+
+
 def push_event(dry_run: bool = True) -> dict:
     return {
         "method": "POST",
@@ -208,6 +227,42 @@ async def test_publish_branch_and_pr(temporal_env):
         "pr_url": "https://github.com/Dreadnought-Revival/Dreadnought-Revival-Page/pull/99",
     }, f"finalize inputs: {finalized!r}"
     assert "(auto-merged deadbee, branch deleted)" in text, f"publish text: {text!r}"
+
+
+async def test_repeated_mode_bullets_collapse_into_all_game_modes(temporal_env):
+    # 2026-11-15's failure mode, end to end: the operator's block wrote the
+    # same join-in-progress line for three modes, and the model echoed it
+    # under each. The workflow's publish path collapses the repeats into one
+    # "All game modes" bullet, so the published batch says it once.
+    _reset_fakes()
+    event = push_event(dry_run=False)
+    event["body"]["commits"] = [
+        {
+            "id": "abc1234def",
+            "message": (
+                "join running matches\n\n"
+                "Patch notes:\n"
+                "- Team Deathmatch: Queue in the first 3 minutes of a match of your mode and fleet and you join it.\n"
+                "- Onslaught: Queue in the first 3 minutes of a match of your mode and fleet and you join it.\n"
+                "- Proving Grounds: Queue in the first 3 minutes of a match of your mode and fleet and you join it.\n"
+            ),
+        },
+    ]
+    result = await _run(
+        temporal_env,
+        event,
+        [fake_fetch_patch_notes, repeating_generate_note_batch, fake_publish_patch_notes, fake_finalize_patch_notes],
+        "test-revival-patch-notes-collapse",
+    )
+    text = as_text(result, "collapse")
+    assert "(auto-merged deadbee, branch deleted)" in text, f"collapse text: {text!r}"
+    captured = fake_publish_patch_notes.captured  # type: ignore[attr-defined]
+    data = json.loads(captured["content"])
+    newest = data["notes"][0]
+    assert [s["title"] for s in newest["sections"]] == ["All game modes"]
+    bullets = newest["sections"][0]["bullets"]
+    assert len(bullets) == 1, f"expected the repeated change collapsed to one bullet: {bullets!r}"
+    assert "3 minutes" in bullets[0]
 
 
 async def test_unreadable_pr_number_skips_auto_merge(temporal_env):
