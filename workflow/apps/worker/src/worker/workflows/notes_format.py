@@ -253,16 +253,18 @@ def build_prompt(date: str, notes_lines: list[str], subjects: list[str]) -> str:
         "to (for example \"Conquest: Captured points now show as your team's "
         "territory on the minimap.\"). Those lines are the source of truth: sort "
         "each line into the section its prefix names, stripping the prefix from "
-        "the bullet. Every block line MUST appear in the batch, under the section "
-        "its prefix names: never drop a line, never merge a line away into "
-        "another section's bullet, and lines naming different modes go to "
-        "different sections, each with at least one bullet of its own. You may "
-        "reword a line for players or merge duplicate lines that describe the "
-        "same change (keeping the newer wording), but the change itself must "
-        "survive, distinctive words and numbers included. When a line's "
-        "prefix is not one of the section titles, do not invent a section "
-        "for it: put the change under the section it actually affects. A "
-        "dropped block line fails the run. Commits marked "
+        "the bullet. Every block line's change MUST reach the batch: never drop "
+        "a line, and never let a change survive only inside another section's "
+        "bullet. You may reword a line for players, but the change itself must "
+        "survive, distinctive words and numbers included. Publish each change "
+        "ONCE: when several block lines describe the same change (identical or "
+        "near-identical wording under different modes' prefixes), write ONE "
+        "bullet for it under \"All game modes\", never the same sentence "
+        "repeated in each mode's section. Only a genuinely mode-specific "
+        "change gets a mode section's bullet. When a line's prefix is not one "
+        "of the section titles, do not invent a section for it: put the change "
+        "under the section it actually affects. A dropped block line fails "
+        "the run. Commits marked "
         "\"Patch notes: none (internal)\" have already been dropped.\n\n"
         "Commits without a block (older style) are given as bare subjects: write "
         "bullets for them in the same style, but only for what players can feel "
@@ -280,8 +282,20 @@ def build_prompt(date: str, notes_lines: list[str], subjects: list[str]) -> str:
         "- Group bullets into sections titled exactly one of: "
         + ", ".join(KNOWN_SECTION_TITLES) + ".\n"
         "- Order the sections exactly like that list.\n"
-        "- One change per bullet, one or two plain sentences.\n"
-        "- \"Before, ...\" clauses are good when a change replaces behavior players knew.\n"
+        "- Patch-note style, not prose: one bullet is ONE sentence that says "
+        "what changed. Aim for under 20 words, never more than 25.\n"
+        "- No multi-sentence explanations, no side details, no lists of "
+        "everything a feature can do: keep only what a player must know to "
+        "feel the change. \"Matches are 5v5 again.\" is a bullet; \"The custom "
+        "game lobby is functional: pick the map, mode, team size and bot "
+        "settings, invite friends, switch teams, choose a fleet, and start "
+        "the countdown.\" is a blob, not a patch note.\n"
+        "- No two bullets may say the same thing, and the same sentence must "
+        "never appear in two sections.\n"
+        "- A short \"before ...\" contrast inside the same sentence is fine "
+        "when players knew the old behavior.\n"
+        "- Plain present tense, active voice: \"X now does Y\" or \"X no longer "
+        "does Z\".\n"
         "- Bold a map or feature name when it is new or back.\n"
         "- Map names as players know them: Ryugu Haven (Space02), Elysium (Paradise), "
         "Amirani, Juno (Space03), Cronian Rapids (Space04), Thebe (DansMap). "
@@ -340,6 +354,30 @@ def sort_sections(sections: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return sorted(sections, key=rank)
 
 
+def _block_line_groups(
+    notes_lines: list[str],
+) -> list[tuple[str, set[str]]]:
+    """Block lines grouped by change text: (normalized text, named titles).
+
+    The operator sometimes writes the SAME line under several modes' prefixes
+    (2026-11-15: one join-in-progress sentence for Team Deathmatch, Onslaught
+    and Proving Grounds). Grouped, the gate treats those lines as one change
+    that any of its named sections, or the cross-mode section, can carry,
+    instead of three changes demanding three sections of repeated bullets.
+    """
+    groups: dict[str, set[str]] = {}
+    for line in notes_lines:
+        if ":" not in line:
+            continue
+        prefix = line.split(":", 1)[0].strip()
+        title = _canonical_title(prefix)
+        if not prefix or title not in KNOWN_SECTION_TITLES:
+            continue
+        text = _normalize_text(line.split(":", 1)[1])
+        groups.setdefault(text, set()).add(title)
+    return list(groups.items())
+
+
 def missing_block_sections(
     sections: list[dict[str, Any]], notes_lines: list[str]
 ) -> list[str]:
@@ -349,7 +387,10 @@ def missing_block_sections(
     known section title are checked: the author of a ``Patch notes:`` block
     names the mode on purpose, so a batch without that section dropped a change.
     Lines with no colon or an unknown prefix stay the model's call (it decides
-    placement), so they never fail the gate.
+    placement), so they never fail the gate. One exception, learned from
+    2026-11-15's triple bullet: when the same change is named for several
+    modes at once, one bullet under any of those modes, or under "All game
+    modes", covers the whole group.
     """
     present = {
         str(s.get("title") or "").strip().casefold()
@@ -357,17 +398,14 @@ def missing_block_sections(
         if isinstance(s, dict)
     }
     missing: list[str] = []
-    for line in notes_lines:
-        if ":" not in line:
-            continue
-        prefix = line.split(":", 1)[0].strip()
-        if not prefix:
-            continue
-        title = _canonical_title(prefix)
-        if title not in KNOWN_SECTION_TITLES:
-            continue
-        if title.casefold() not in present and title not in missing:
-            missing.append(title)
+    for _text, titles in _block_line_groups(notes_lines):
+        covered = any(title.casefold() in present for title in titles)
+        if not covered and len(titles) > 1:
+            covered = "all game modes" in present
+        if not covered:
+            for title in sorted(titles):
+                if title not in missing:
+                    missing.append(title)
     return missing
 
 
@@ -396,20 +434,23 @@ def missing_block_lines(
 ) -> list[str]:
     """Block lines whose change never reached the batch.
 
-    A line whose prefix names a known section passes only when that section
-    is in the batch (the author named it on purpose, so the content check
-    must not excuse a wrong placement). Any other line - no prefix, or a
-    prefix the section list does not have - passes when at least one of its
-    distinctive tokens appears in some bullet: the model may reword freely,
-    but the change's recognizable content must survive somewhere. A line
-    failing both was dropped, like 2026-11-07's \"New players start with
-    10000 GP.\".
+    A line whose prefix names a known section passes when that section is in
+    the batch (the author named it on purpose, so the content check must not
+    excuse a wrong placement); when the same change is named for several
+    modes at once, any of those sections or the cross-mode section covers
+    every line of the group. Any other line - no prefix, or a prefix the
+    section list does not have - passes when at least one of its distinctive
+    tokens appears in some bullet: the model may reword freely, but the
+    change's recognizable content must survive somewhere. A line failing
+    both was dropped, like 2026-11-07's \"New players start with 10000
+    GP.\".
     """
     present = {
         str(s.get("title") or "").strip().casefold()
         for s in sections
         if isinstance(s, dict)
     }
+    groups = dict(_block_line_groups(notes_lines))
     haystack = " ".join(
         _normalize_text(str(bullet))
         for section in sections
@@ -424,7 +465,13 @@ def missing_block_lines(
             if prefix:
                 title = _canonical_title(prefix)
                 if title in KNOWN_SECTION_TITLES:
-                    if title.casefold() not in present:
+                    titles = groups.get(
+                        _normalize_text(line.split(":", 1)[1]), {title}
+                    )
+                    covered = any(t.casefold() in present for t in titles)
+                    if not covered and len(titles) > 1:
+                        covered = "all game modes" in present
+                    if not covered:
                         missing.append(line)
                     continue
         tokens = _distinctive_tokens(line)
@@ -460,6 +507,83 @@ def validate_block_coverage(
         + "; ".join(parts)
         + "); refusing to publish incomplete notes"
     )
+
+
+def collapse_duplicate_bullets(
+    sections: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Collapse one change repeated across sections into a single bullet.
+
+    2026-11-15's batch published the same join-in-progress sentence under
+    Team Deathmatch, Onslaught and Proving Grounds: a change repeated in
+    several sections is not mode-specific, it is a cross-mode change. When the
+    same (normalized) bullet text appears in more than one section, keep it
+    once, in "All game modes" when no copy is there yet, and drop the
+    repeats, so the mode sections hold only what is truly theirs; empty
+    sections fall away. The coverage gate has already run (inside the
+    generation activity) and this only merges identical text, so a collapsed
+    batch can be terser, never less complete.
+    """
+    locations: dict[str, list[tuple[int, int]]] = {}
+    for i, section in enumerate(sections):
+        if not isinstance(section, dict):
+            continue
+        for j, bullet in enumerate(section.get("bullets") or []):
+            text = _normalize_text(str(bullet))
+            if text:
+                locations.setdefault(text, []).append((i, j))
+    shared = {
+        text: locs
+        for text, locs in locations.items()
+        if len({i for i, _ in locs}) > 1
+    }
+    if not shared:
+        return sections
+    out = [
+        (
+            {
+                "title": str(s.get("title") or "").strip(),
+                "bullets": [str(b) for b in (s.get("bullets") or [])],
+            }
+            if isinstance(s, dict)
+            else {"title": "", "bullets": []}
+        )
+        for s in sections
+    ]
+    for locs in shared.values():
+        keep = next(
+            (
+                pos
+                for pos, (i, _j) in enumerate(locs)
+                if out[i]["title"].casefold() == "all game modes"
+            ),
+            0,
+        )
+        for pos, (i, j) in enumerate(locs):
+            if pos != keep:
+                out[i]["bullets"][j] = ""
+        ki, kj = locs[keep]
+        if out[ki]["title"].casefold() != "all game modes":
+            bullet = out[ki]["bullets"][kj]
+            out[ki]["bullets"][kj] = ""
+            agm = next(
+                (
+                    k
+                    for k, s in enumerate(out)
+                    if s["title"].casefold() == "all game modes"
+                ),
+                None,
+            )
+            if agm is None:
+                out.append({"title": "All game modes", "bullets": [bullet]})
+            else:
+                out[agm]["bullets"].append(bullet)
+    result: list[dict[str, Any]] = []
+    for section in out:
+        bullets = [b for b in section["bullets"] if b.strip()]
+        if bullets:
+            result.append({"title": section["title"], "bullets": bullets})
+    return result
 
 
 # ---------------------------------------------------------------------------

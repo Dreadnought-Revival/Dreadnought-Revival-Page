@@ -308,11 +308,19 @@ class PatchNotesWorkflow:
         except ValueError:
             notes_data = {}
 
-        # Ordering is deterministic: parsing and sorting stay on the workflow
-        # path so the skill's section order holds regardless of the model's
-        # output order. Shape and block-line coverage are already validated
-        # inside the generation activity, whose retries regenerate the batch.
-        sections = notes_format.sort_sections(notes_format.parse_llm_batch(batch_json))
+        # Ordering is deterministic: parsing, duplicate collapsing and sorting
+        # stay on the workflow path so the skill's section order holds
+        # regardless of the model's output order. Shape and block-line
+        # coverage are already validated inside the generation activity, whose
+        # retries regenerate the batch. collapse_duplicate_bullets folds a
+        # change the model echoed into several mode sections (2026-11-15's
+        # triple bullet) into one "All game modes" bullet; sort runs last
+        # because collapsing can add the cross-mode section.
+        sections = notes_format.sort_sections(
+            notes_format.collapse_duplicate_bullets(
+                notes_format.parse_llm_batch(batch_json)
+            )
+        )
         if not sections:
             return f"no player-facing changes in {len(commits)} commit(s); nothing published"
 

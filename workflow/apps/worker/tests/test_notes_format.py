@@ -189,10 +189,18 @@ class TestLlmBatch:
         assert "actually affects" in prompt
         assert "please report" not in prompt
         assert "Known issues / please report" not in prompt
-        # the coverage rule: block lines must survive into the batch
-        assert "MUST appear" in prompt
+        # the coverage rule: every block line's change must survive into the batch
+        assert "MUST reach the batch" in prompt
         assert "never drop a line" in prompt
         assert "A dropped block line fails the run" in prompt
+        # the dedup rule: one change is published once, never repeated per mode
+        assert "publish each change ONCE" in prompt.lower() or "Publish each change ONCE" in prompt
+        assert "never the same sentence repeated" in prompt
+        # the style rules: patch notes, not prose blobs
+        assert "ONE sentence" in prompt
+        assert "never more than 25" in prompt
+        assert "is a blob, not a patch note" in prompt
+        assert "never appear in two sections" in prompt
 
     def test_sort_sections_orders_per_skill(self):
         sections = [
@@ -253,6 +261,54 @@ class TestBlockCoverage:
         # an alias the skill does not list (like "TDM") is not a known title either
         assert nf.missing_block_sections([], ["TDM: X."]) == []
 
+    def test_same_change_under_several_modes_is_one_change(self):
+        # 2026-11-15's failure mode: the operator wrote the SAME join-in-progress
+        # line for Team Deathmatch, Onslaught and Proving Grounds, and the batch
+        # repeated the sentence three times. The gate treats the group as one
+        # change: one bullet under any named mode passes...
+        lines = [
+            "Team Deathmatch: Queue in the first 3 minutes of a match and you join it.",
+            "Onslaught: Queue in the first 3 minutes of a match and you join it.",
+            "Proving Grounds: Queue in the first 3 minutes of a match and you join it.",
+        ]
+        one_mode = [
+            {
+                "title": "Team Deathmatch",
+                "bullets": ["Queue in the first 3 minutes of a match and you join it."],
+            }
+        ]
+        assert nf.missing_block_sections(one_mode, lines) == []
+        nf.validate_block_coverage(one_mode, lines)  # no raise
+        # ...and so does the cross-mode section the dedup rule asks the model for
+        agm = [
+            {
+                "title": "All game modes",
+                "bullets": ["Queue in the first 3 minutes of a match and you join it."],
+            }
+        ]
+        assert nf.missing_block_sections(agm, lines) == []
+        assert nf.missing_block_lines(agm, lines) == []
+        nf.validate_block_coverage(agm, lines)  # no raise
+
+    def test_repeated_change_still_needs_some_section(self):
+        # covered nowhere at all (no named mode, no cross-mode section): the
+        # whole group fails, and every title it named is reported
+        lines = ["Havoc: Waves rotate.", "Onslaught: Waves rotate."]
+        sections = [{"title": "General", "bullets": ["Waves rotate."]}]
+        assert nf.missing_block_sections(sections, lines) == ["Havoc", "Onslaught"]
+        with pytest.raises(ValueError) as exc:
+            nf.validate_block_coverage(sections, lines)
+        assert "Havoc" in str(exc.value)
+
+    def test_single_mode_line_is_not_excused_by_all_game_modes(self):
+        # the cross-mode section only covers a change the block named for
+        # SEVERAL modes; one mode's line still demands its own section
+        sections = [{"title": "All game modes", "bullets": ["Waves rotate."]}]
+        line = "Havoc: Waves rotate on every map."
+        assert nf.missing_block_sections(sections, [line]) == ["Havoc"]
+        with pytest.raises(ValueError):
+            nf.validate_block_coverage(sections, [line])
+
 
 class TestBlockContentCoverage:
     """The content half of the gate: unprefixed or unknown-prefixed lines."""
@@ -309,6 +365,54 @@ class TestBlockContentCoverage:
         # recognize, so the model's placement is trusted rather than guessed
         sections = [{"title": "General", "bullets": ["Completely different change."]}]
         assert nf.missing_block_lines(sections, ["GP is back."]) == []
+
+
+class TestCollapseDuplicateBullets:
+    """The deterministic backstop for 2026-11-15's repeated bullets."""
+
+    def test_repeats_collapse_into_all_game_modes(self):
+        dup = "Queue in the first 3 minutes of a match and you join it."
+        sections = [
+            {"title": "Team Deathmatch", "bullets": [dup]},
+            {"title": "Onslaught", "bullets": [dup]},
+            {"title": "Proving Grounds", "bullets": [dup]},
+            {"title": "Launcher", "bullets": ["Tray icon."]},
+        ]
+        # order is preserved and the cross-mode section is appended; the
+        # workflow path sorts sections after collapsing
+        assert nf.collapse_duplicate_bullets(sections) == [
+            {"title": "Launcher", "bullets": ["Tray icon."]},
+            {"title": "All game modes", "bullets": [dup]},
+        ]
+        sorted_out = nf.sort_sections(nf.collapse_duplicate_bullets(sections))
+        assert [s["title"] for s in sorted_out] == ["All game modes", "Launcher"]
+
+    def test_copy_already_in_all_game_modes_wins(self):
+        dup = "Matches are 5v5 again."
+        sections = [
+            {"title": "All game modes", "bullets": [dup, "Other change."]},
+            {"title": "Onslaught", "bullets": [dup]},
+        ]
+        assert nf.collapse_duplicate_bullets(sections) == [
+            {"title": "All game modes", "bullets": [dup, "Other change."]},
+        ]
+
+    def test_unique_bullets_untouched(self):
+        sections = [
+            {"title": "Havoc", "bullets": ["Waves rotate."]},
+            {"title": "Onslaught", "bullets": ["Command ships fire."]},
+        ]
+        assert nf.collapse_duplicate_bullets(sections) == sections
+
+    def test_markdown_noise_is_ignored_when_matching(self):
+        # bold markers must not hide an identical change
+        sections = [
+            {"title": "Havoc", "bullets": ["Wave mode is here."]},
+            {"title": "General", "bullets": ["**Wave mode** is here."]},
+        ]
+        assert nf.collapse_duplicate_bullets(sections) == [
+            {"title": "All game modes", "bullets": ["Wave mode is here."]},
+        ]
 
 
 class TestMergeBatch:
