@@ -1,6 +1,24 @@
 {
-  "generated_at": "2026-11-17T20:23:43.217185+00:00",
+  "generated_at": "2026-11-18T06:07:52.989533+00:00",
   "notes": [
+    {
+      "date": "2026-11-18",
+      "sections": [
+        {
+          "title": "All game modes",
+          "bullets": [
+            "Daily contracts now appear immediately after logging in, instead of only after your first match."
+          ]
+        },
+        {
+          "title": "General",
+          "bullets": [
+            "Custom games are now available. Hosts can choose per team whether empty slots are filled with bots (requires the new battle-server build).",
+            "The custom game lobby is functional: pick the map, mode, team size and bot settings, invite friends, switch teams, choose a fleet, and start the countdown. Matches start with the room's settings and grant no rewards."
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-11-17",
       "sections": [
