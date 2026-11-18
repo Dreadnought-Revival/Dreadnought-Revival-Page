@@ -166,7 +166,9 @@ deployment `revival-ops` on Mistral Cloud. Its single workflow:
   retry regenerates the batch, and once retries are exhausted the run is
   marked failed instead of the site shipping incomplete notes (wrapped block
   lines are joined back to one bullet before all this, so a line wrapped in
-  the commit message never arrives truncated). The batch is ordered by the
+  the commit message never arrives truncated, and the bullets' `-` dashes
+  are optional: a plain column-0 line naming its mode before the colon is a
+  bullet too). The batch is ordered by the
   skill's section list (game modes first, then All game modes, Daily
   contracts, Launcher / Hangar / Market / Tech tree / Social, General), with
   each change under the game mode it
