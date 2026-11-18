@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-18T22:58:38.175010+00:00",
+  "generated_at": "2026-11-18T23:39:04.004876+00:00",
   "notes": [
     {
       "date": "2026-11-18",
@@ -30,7 +30,14 @@
             "Players now get their team assigned immediately upon joining a match.",
             "Squad, friend and lobby lists now show other players' real rank (previously one rank too high or blank above rank 51).",
             "Scoreboards and end-of-match labels now show each player's own rank instead of yours.",
-            "Hero ships' fixed modules now display as owned in the hangar and module details (no more 99999 placeholder)."
+            "Hero ships' fixed modules now display as owned in the hangar and module details (no more 99999 placeholder).",
+            "Ships saved without an emblem, paint, pattern or decal now show their default ones in battle."
+          ]
+        },
+        {
+          "title": "Hangar",
+          "bullets": [
+            "Ships saved without an emblem, paint, pattern or decal now show their default ones in the hangar and customizer."
           ]
         }
       ]
