@@ -392,6 +392,68 @@ async def test_dropped_unprefixed_block_line_fails_the_run(temporal_env):
     assert not hasattr(fake_publish_patch_notes, "captured")  # nothing published
 
 
+async def test_context_only_commits_publish_nothing(temporal_env):
+    # 2026-11-17's two failed runs, end to end: the operator's block carried
+    # only context lines ("no change for players; ..." and an Admin panel
+    # observation). The model rightly published nothing, but the coverage
+    # gate demanded the named section and failed the run. Context lines are
+    # dropped before the model now, so the push completes gracefully.
+    _reset_fakes()
+    event = push_event(dry_run=False)
+    event["body"]["commits"] = [
+        {
+            "id": "7778889990",
+            "message": (
+                "accounts and sign-in\n\n"
+                "Patch notes:\n"
+                "- All game modes: no change for players; accounts are created in the launcher only.\n"
+                "- Admin panel: game logs tell a crash on exit from a crash during play.\n"
+            ),
+        },
+    ]
+    result = await _run(
+        temporal_env,
+        event,
+        [fake_fetch_patch_notes, fake_generate_note_batch, fake_publish_patch_notes],
+        "test-revival-patch-notes-context-only",
+    )
+    text = as_text(result, "context-only")
+    assert text.startswith("no player-facing changes in 1 commit(s)"), f"text: {text!r}"
+    assert not fake_generate_note_batch.called  # type: ignore[attr-defined]
+    assert not hasattr(fake_publish_patch_notes, "captured")
+
+
+async def test_context_lines_never_reach_the_model(temporal_env):
+    # a mixed block: the context line is filtered out before the model call,
+    # the real change reaches it alone
+    _reset_fakes()
+    event = push_event(dry_run=True)
+    event["body"]["commits"] = [
+        {
+            "id": "7778889990",
+            "message": (
+                "sign-in wording\n\n"
+                "Patch notes:\n"
+                "- All game modes: no change for players; sign-in is by account only.\n"
+                "- Havoc: Waves rotate on every map.\n"
+            ),
+        },
+    ]
+    result = await _run(
+        temporal_env,
+        event,
+        [fake_fetch_patch_notes, fake_generate_note_batch, fake_publish_patch_notes],
+        "test-revival-patch-notes-context-filtered",
+    )
+    text = as_text(result, "context-filtered")
+    assert text.startswith("dry run:"), f"text: {text!r}"
+    captured = fake_generate_note_batch.captured_inputs  # type: ignore[attr-defined]
+    assert captured == {
+        "notes_lines": ["Havoc: Waves rotate on every map."],
+        "subjects": [],
+    }, f"model inputs: {captured!r}"
+
+
 async def test_ignores_non_push_events(temporal_env):
     event = push_event()
     event["headers"] = {"x-github-event": "ping"}
