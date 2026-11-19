@@ -21,7 +21,9 @@
           "title": "Onslaught",
           "bullets": [
             "Team 1 no longer loses a fighter every 2 seconds for no reason.",
-            "Both teams now retain all 12 fighters, and the opposing team no longer gains free points from it."
+            "Both teams now retain all 12 fighters, and the opposing team no longer gains free points from it.",
+            "AI fighters, assault ships and command ships now spawn when the match starts, not during ship selection.",
+            "No team now starts a match with points already scored."
           ]
         },
         {
@@ -32,6 +34,12 @@
             "Scoreboards and end-of-match labels now show each player's own rank instead of yours.",
             "Hero ships' fixed modules now display as owned in the hangar and module details (no more 99999 placeholder).",
             "Ships saved without an emblem, paint, pattern or decal now show their default ones in battle."
+          ]
+        },
+        {
+          "title": "Launcher",
+          "bullets": [
+            "The game now writes its full log, and long logs upload in full so bug reports keep everything."
           ]
         },
         {
@@ -50,7 +58,8 @@
           "bullets": [
             "Fleets of more than 16 ships no longer cause an XP error on the rewards screen.",
             "The map loading screen shows again while joining a battle.",
-            "The new launcher can send your game log on close to help debugging (token and names removed; opt-out in the settings).",
+     
+       "The new launcher can send your game log on close to help debugging (token and names removed; opt-out in the settings).",
             "Team Deathmatch, Team Elimination, Conquest and Ceres Awakens are 5v5 again, without extra bot ships."
           ]
         },
@@ -100,7 +109,8 @@
             "Queue within the first 3 minutes of a match of your mode and fleet and you join it, dropping in with your flagship.",
             "You are no longer sent into a match that has already ended."
           ]
-        },
+  
+      },
         {
           "title": "Launcher",
           "bullets": [
@@ -151,6 +161,7 @@
     },
     {
       "date": "2026-11-12",
+
       "sections": [
         {
           "title": "All game modes",
@@ -198,7 +209,8 @@
             "Only the squad leader can start the search for a match.",
             "Chat now enforces a line length limit and a flood limit.",
             "Your own chat line reappears after a reconnect during a match.",
-            "You can no longer add yourself as a friend, and ignored players no longer receive your friend requests."
+            "You can no longer add
+ yourself as a friend, and ignored players no longer receive your friend requests."
           ]
         }
       ]
@@ -265,7 +277,8 @@
       "date": "2026-11-05",
       "sections": [
         {
-          "title": "Escalation",
+          "title"
+: "Escalation",
           "bullets": [
             "Losing your ship drops you two levels down the ladder instead of all the way back to a fighter, and dreadnoughts are now their own top level at 500 points."
           ]
@@ -327,7 +340,8 @@
         {
           "title": "General",
           "bullets": [
-            "The rewards page shows again after your first match. Before, it stayed hidden."
+            "The rewards page shows again after your first match. Before, i
+t stayed hidden."
           ]
         }
       ]
@@ -404,7 +418,8 @@
             "Adds **Elysium (Paradise)** and Command Ship abilities."
           ]
         },
-        {
+      
+  {
           "title": "Ceres Awakens",
           "bullets": [
             "Tech-cache pickups score and pay credits, and a cache's buff ends when its collector is destroyed."
@@ -480,7 +495,8 @@
       "date": "2026-10-16",
       "sections": [
         {
-          "title": "General",
+     
+     "title": "General",
           "bullets": [
             "Leaderboards and the in-match ribbon popup work."
           ]
@@ -551,7 +567,8 @@
           ]
         },
         {
-          "title": "General",
+          "title": "Genera
+l",
           "bullets": [
             "PvE matches run Season 1 events from the game's own tables.",
             "The statistics screen no longer crashes; inventory and Elite status refresh in-session, and the original ribbons are back."
@@ -627,7 +644,8 @@
           ]
         },
         {
-          "title": "Market",
+          "
+title": "Market",
           "bullets": [
             "Cosmetic ownership in the forms the game checks; free items and templates."
           ]
@@ -700,7 +718,8 @@
           ]
         },
         {
-          "title": "Tech tree",
+          "title": "T
+ech tree",
           "bullets": [
             "Officer briefings join the tech tree — the four 101 briefings come with any tier III–V ship, and each of the other 16 belongs to one specific ship. Before, no tree carried a briefing at all."
           ]
