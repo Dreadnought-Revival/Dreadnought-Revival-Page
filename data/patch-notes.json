@@ -1,6 +1,24 @@
 {
-  "generated_at": "2026-11-18T23:39:04.004876+00:00",
+  "generated_at": "2026-11-19T22:33:29.796677+00:00",
   "notes": [
+    {
+      "date": "2026-11-19",
+      "sections": [
+        {
+          "title": "All game modes",
+          "bullets": [
+            "The Veteran fleet now unlocks once you own any tier II or tier III ship, as the fleet screen states.",
+            "The rewards screen now shows your active Elite status, Win Bonus, First Win and Battle Ready boosters."
+          ]
+        },
+        {
+          "title": "Hangar",
+          "bullets": [
+            "The Elite status panel now displays its bonus values."
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-11-18",
       "sections": [
