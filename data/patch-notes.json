@@ -39,7 +39,9 @@
           "title": "Onslaught",
           "bullets": [
             "Team 1 no longer loses a fighter every 2 seconds for no reason.",
-            "Both teams now retain all 12 fighters, and the opposing team no longer gains free points from it."
+            "Both teams now retain all 12 fighters, and the opposing team no longer gains free points from it.",
+            "AI fighters, assault ships and command ships now spawn when the match starts, not during ship selection.",
+            "No team now starts a match with points already scored."
           ]
         },
         {
@@ -50,6 +52,12 @@
             "Scoreboards and end-of-match labels now show each player's own rank instead of yours.",
             "Hero ships' fixed modules now display as owned in the hangar and module details (no more 99999 placeholder).",
             "Ships saved without an emblem, paint, pattern or decal now show their default ones in battle."
+          ]
+        },
+        {
+          "title": "Launcher",
+          "bullets": [
+            "The game now writes its full log, and long logs upload in full so bug reports keep everything."
           ]
         },
         {
