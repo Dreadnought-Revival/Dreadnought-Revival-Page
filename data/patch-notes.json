@@ -1,6 +1,25 @@
 {
-  "generated_at": "2026-11-19T22:33:29.796677+00:00",
+  "generated_at": "2026-11-20T19:05:24.204738+00:00",
   "notes": [
+    {
+      "date": "2026-11-20",
+      "sections": [
+        {
+          "title": "All game modes",
+          "bullets": [
+            "Players no longer see a ~30 s \"handshake timed out\" delay on first connection."
+          ]
+        },
+        {
+          "title": "General",
+          "bullets": [
+            "Custom Games mode list no longer shows a blank entry.",
+            "**Escalation** now appears as **Proving Grounds** in Custom Games.",
+            "Use \"Fill Team 1/2\" under AI PLAYERS to add bots in Custom Games."
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-11-19",
       "sections": [
