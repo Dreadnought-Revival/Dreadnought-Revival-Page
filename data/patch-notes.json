@@ -1,6 +1,23 @@
 {
-  "generated_at": "2026-11-20T19:05:24.204738+00:00",
+  "generated_at": "2026-11-22T23:55:34.937713+00:00",
   "notes": [
+    {
+      "date": "2026-11-22",
+      "sections": [
+        {
+          "title": "Market",
+          "bullets": [
+            "Currency > Credit Packs now lets you convert GP to credits (105 credits per GP)."
+          ]
+        },
+        {
+          "title": "General",
+          "bullets": [
+            "Custom Game mode and map dropdowns now list their options instead of empty rows."
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-11-20",
       "sections": [
