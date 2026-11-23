@@ -1,6 +1,17 @@
 {
-  "generated_at": "2026-11-22T23:55:34.937713+00:00",
+  "generated_at": "2026-11-23T11:06:37.031014+00:00",
   "notes": [
+    {
+      "date": "2026-11-23",
+      "sections": [
+        {
+          "title": "General",
+          "bullets": [
+            "The launcher can now send crash reports to the server team when the game crashes."
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-11-22",
       "sections": [
