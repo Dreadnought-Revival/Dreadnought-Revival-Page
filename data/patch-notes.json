@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-23T11:19:50.369583+00:00",
+  "generated_at": "2026-11-23T23:23:33.757134+00:00",
   "notes": [
     {
       "date": "2026-11-23",
@@ -14,6 +14,31 @@
           "title": "Market",
           "bullets": [
             "Opening the Currency section no longer crashes the game."
+          ]
+        },
+        {
+          "title": "Onslaught",
+          "bullets": [
+            "Players are now split across both teams instead of all starting on the same side."
+          ]
+        },
+        {
+          "title": "Turbo TDM",
+          "bullets": [
+            "The chat's 'searching for a match' message now says Turbo TDM instead of Team Deathmatch.",
+            "You can now join a match that started less than 3 minutes ago."
+          ]
+        },
+        {
+          "title": "All game modes",
+          "bullets": [
+            "Hero ships now grant their bonus: each hero ship in your fleet (up to 5) adds free XP worth 10% of match XP, even if not flown, and a flown hero ship's XP is paid as 70% ship XP and 30% free XP."
+          ]
+        },
+        {
+          "title": "Hangar",
+          "bullets": [
+            "Titan ship parts can only be fitted to Dreadnought Medium ships; other classes now show their own parts again."
           ]
         }
       ]
