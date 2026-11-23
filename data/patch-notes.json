@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-23T11:06:37.031014+00:00",
+  "generated_at": "2026-11-23T11:19:50.369583+00:00",
   "notes": [
     {
       "date": "2026-11-23",
@@ -8,6 +8,12 @@
           "title": "General",
           "bullets": [
             "The launcher can now send crash reports to the server team when the game crashes."
+          ]
+        },
+        {
+          "title": "Market",
+          "bullets": [
+            "Opening the Currency section no longer crashes the game."
           ]
         }
       ]
