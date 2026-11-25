@@ -1,6 +1,32 @@
 {
-  "generated_at": "2026-11-23T23:23:33.757134+00:00",
+  "generated_at": "2026-11-25T18:58:05.872242+00:00",
   "notes": [
+    {
+      "date": "2026-11-25",
+      "sections": [
+        {
+          "title": "Onslaught",
+          "bullets": [
+            "Veteran and Legendary command ship guns now load their weapon data directly (damage unchanged)."
+          ]
+        },
+        {
+          "title": "All game modes",
+          "bullets": [
+            "Type /pvp-only to queue against players only, with no bots; /pvp reverts to bot-filled matches.",
+            "Your PvP-only preference is saved on your account.",
+            "PvP-only applies to Team Deathmatch, Turbo TDM, Team Elimination, Conquest, Ceres Awakens and Onslaught (command ships and AI ships remain in Onslaught).",
+            "A PvP-only match starts once each team has at least one player."
+          ]
+        },
+        {
+          "title": "Social",
+          "bullets": [
+            "Squad leaders now decide how the squad queues."
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-11-23",
       "sections": [
