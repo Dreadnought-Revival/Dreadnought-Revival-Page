@@ -5,12 +5,6 @@
       "date": "2026-11-23",
       "sections": [
         {
-          "title": "General",
-          "bullets": [
-            "The launcher can now send crash reports to the server team when the game crashes."
-          ]
-        },
-        {
           "title": "Market",
           "bullets": [
             "Opening the Currency section no longer crashes the game."
@@ -33,6 +27,13 @@
           "title": "All game modes",
           "bullets": [
             "Hero ships now grant their bonus: each hero ship in your fleet (up to 5) adds free XP worth 10% of match XP, even if not flown, and a flown hero ship's XP is paid as 70% ship XP and 30% free XP."
+          ]
+        },
+        {
+          "title": "Launcher",
+          "bullets": [
+            "The launcher can now send crash reports to the server team when the game crashes.",
+            "Crash reports no longer include your PC's machine id or Epic account id."
           ]
         },
         {
