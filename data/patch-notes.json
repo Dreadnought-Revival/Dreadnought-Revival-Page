@@ -1,6 +1,29 @@
 {
-  "generated_at": "2026-11-25T18:58:05.872242+00:00",
+  "generated_at": "2026-11-26T20:37:40.665715+00:00",
   "notes": [
+    {
+      "date": "2026-11-26",
+      "sections": [
+        {
+          "title": "All game modes",
+          "bullets": [
+            "Typing /help in chat now lists available commands."
+          ]
+        },
+        {
+          "title": "Launcher",
+          "bullets": [
+            "Reset your password from the launcher with a code sent to your email."
+          ]
+        },
+        {
+          "title": "Social",
+          "bullets": [
+            "Moderators can now warn, mute, kick and ban from in-game chat."
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-11-25",
       "sections": [
