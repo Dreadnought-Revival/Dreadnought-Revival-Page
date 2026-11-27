@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T20:37:40.665715+00:00",
+  "generated_at": "2026-11-27T08:18:17.201Z",
   "notes": [
     {
       "date": "2026-11-26",
@@ -13,7 +13,8 @@
         {
           "title": "Launcher",
           "bullets": [
-            "Reset your password from the launcher with a code sent to your email."
+            "Reset your password from the launcher with a code sent to your email.",
+            "The launcher detects gwog's older Revival Patch, which breaks its games, and offers to uninstall it or turn it off while its games run."
           ]
         },
         {
